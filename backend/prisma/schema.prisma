@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String    @id @default(uuid())
+  first_name     String?
+  last_name      String?
+  email          String    @unique
+  password       String
+  role           Role      @default(STUDENT)
+  about          String?
+  institute      String?
+  designation    String?
+  country        String?
+  city           String?
+  socials        String?
+  profile_pic    String?   @default("")
+  isBlocked      Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  courses        Courses[] @relation("Enrollments") // Students can enroll in multiple courses
+  coursesCreated Courses[] @relation("CreatedBy") // Teachers can create multiple courses
+}
+
+model Courses {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  total_hours  String
+  participants Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  teacher      User     @relation("CreatedBy", fields: [teacherId], references: [id])
+  teacherId    String
+  students     User[]   @relation("Enrollments") // Course can have multiple enrolled students
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}

@@ -1,4 +1,6 @@
 const express = require("express");
+const requireAuth = require('../middleware/requireAuth')
+
 const {
   createCourse,
   getallCourse,
@@ -10,6 +12,9 @@ const {
 } = require("../controllers/courseController");
 
 const router = express.Router();
+
+// check for authentication
+router.use(requireAuth)
 
 // GET all courses
 router.get("/", getallCourse);

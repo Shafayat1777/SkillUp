@@ -73,7 +73,7 @@ const UserDetails = ({ users }) => {
               <td className="p-3 text-sm text-gray-700">
                 <Link
                   to="/profile"
-                  className="font-bold text-blue-500 hover:underline border rounded-full px-4 py-2 hover:bg-blue-200"
+                  className="font-bold text-blue-500 hover:underline hover:border-blue-500 border rounded-full px-4 py-2 hover:bg-blue-200"
                 >
                   {i++}
                 </Link>

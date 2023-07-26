@@ -14,6 +14,7 @@ const {
 
 const router = express.Router();
 
+
 // GET all User
 router.get("/", getallUser);
 

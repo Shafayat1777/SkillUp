@@ -1,6 +1,26 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useSignup } from "../hooks/useSignup";
 
 const SignUp = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [conf_password, setConfPassword] = useState("");
+  const [passError, setPassError] = useState(null);
+  const { signup, error, isLoading } = useSignup();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setPassError(null);
+
+    if (password !== conf_password) {
+      setPassError("Password and Confirm passowrds dont match!");
+    }else{
+      await signup(email, password);
+    }
+    
+  };
+
   return (
     <div className="mx-auto p-40">
       <div className="flex flex-col lg:flex-row w-10/12 lg:w-8/12 rounded-xl mx-auto shadow-lg overflow-hidden border border-gray-200">
@@ -27,9 +47,11 @@ const SignUp = () => {
             now!
           </p>
 
-          <form onSubmit={() => {}}>
+          <form onSubmit={handleSubmit}>
             <div className="mt-5">
               <input
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
                 type="text"
                 placeholder="Email"
                 className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
@@ -37,6 +59,8 @@ const SignUp = () => {
             </div>
             <div className="mt-5">
               <input
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
                 type="password"
                 placeholder="Password"
                 className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
@@ -44,6 +68,8 @@ const SignUp = () => {
             </div>
             <div className="mt-5">
               <input
+                onChange={(e) => setConfPassword(e.target.value)}
+                value={conf_password}
                 type="password"
                 placeholder="Confirm Password"
                 className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
@@ -70,9 +96,26 @@ const SignUp = () => {
               </span>
             </div>
             <div className="mt-5">
-              <button className="w-full border border-orange-500 py-3 text-center text-orange-500 hover:bg-orange-500 hover:text-white tracking-wider">
+              <button
+                disabled={isLoading}
+                className="w-full border border-orange-500 py-3 text-center text-orange-500 hover:bg-orange-500 hover:text-white tracking-wider"
+              >
                 Sign Up
               </button>
+            </div>
+            <div className="mt-5">
+              {error && (
+                <div className="w-full border border-red-500 text-center text-red-500 bg-red-200 tracking-wider">
+                  {error}
+                </div>
+              )}
+            </div>
+            <div className="mt-5">
+              {passError && (
+                <div className="w-full border border-red-500 text-center text-red-500 bg-red-200 tracking-wider">
+                  {passError}
+                </div>
+              )}
             </div>
           </form>
         </div>

@@ -9,7 +9,7 @@ export const userReducer = (state, action) => {
     case "CREATE_USER":
       return { users: [action.payload, ...state.users] };
     case "DELETE_USER":
-      return { users: state.users.filter((u)=> u.id !== action.payload.id)}
+      return { users: state.users.filter((u) => u.id !== action.payload.id) };
     default:
       return state;
   }
@@ -20,8 +20,10 @@ export const UserContextProvider = ({ children }) => {
     users: null,
   });
 
+  console.log('UserContext state:', state)
+
   return (
-    <UserContext.Provider value={{...state, dispatch}}>
+    <UserContext.Provider value={{ ...state, dispatch }}>
       {children}
     </UserContext.Provider>
   );

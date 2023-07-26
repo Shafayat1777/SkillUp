@@ -22,7 +22,7 @@ model User {
   designation    String?
   country        String?
   city           String?
-  socials        String?
+  socials        Json?
   profile_pic    String?   @default("")
   isBlocked      Boolean   @default(false)
   createdAt      DateTime  @default(now())

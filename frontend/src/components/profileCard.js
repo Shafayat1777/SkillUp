@@ -22,7 +22,7 @@ const ProfileCard = () => {
         <div className="flex justify-between p-4">
           <div>
             <h1 className="text-xs uppercase text-gray-500">Role</h1>
-            <h1 className="text-xs  text-yellow-500">Student</h1>
+            <h1 className="text-xs  text-green-500">Student</h1>
           </div>
         </div>
         <div className="flex items-center justify-center mt-3 mb-6">

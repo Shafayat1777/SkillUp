@@ -28,7 +28,7 @@ const getoneUser = async (req, res) => {
   try {
     const data = await prisma.user.findUnique({
       where: {
-        email: id,
+        id: id,
       },
     });
     res.status(200).json(data);
@@ -108,7 +108,7 @@ const loginUser = async (req, res) => {
 
   try {
     // validation
-    if (!name || !email || !password) {
+    if (!email || !password) {
       throw Error("All fields must me filled!");
     }
 
@@ -132,7 +132,7 @@ const loginUser = async (req, res) => {
     // create a token
     const token = createToken(user.id);
 
-    res.status(200).json({ ...user, token });
+    res.status(200).json({ id:user.id, email:user.email, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -179,7 +179,7 @@ const signupUser = async (req, res) => {
     // create a token
     const token = createToken(data.id);
 
-    res.status(200).json({ ...data, token });
+    res.status(200).json({ id: data.id, email: data.email, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

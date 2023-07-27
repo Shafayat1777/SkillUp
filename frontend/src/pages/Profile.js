@@ -2,12 +2,12 @@ import ProfileCard from "../components/profileCard";
 
 const Profile = () => {
   return (
-    <div className=" mx-10 my-8 grid md:grid-cols-2 lg:grid-cols-3">
-      <div className="mx-auto">
+    <div className=" mx-10 my-8 grid  lg:grid-cols-2 xl:grid-cols-3 gap-5">
+      <div className="md:w-72 lg:w-96 mx-auto">
         <ProfileCard />
       </div>
 
-      <div className=" p-5 h-full md:border-l lg:border-r border-gray-200">
+      <div className=" p-5 md:border-l lg:border-r border-gray-200">
         <form onSubmit={() => {}}>
           <div className="mt-5 grid grid-cols-2 gap-5">
             <input
@@ -76,7 +76,7 @@ const Profile = () => {
         </form>
       </div>
 
-      <div className="md:flex md:ml-10 mt-5 p-4 h-full md:justify-center lg:block">
+      <div className="md:ml-10 mt-5 p-4 xl:w-96 xl:col-span-1 col-span-1 w-full md:col-span-2">
         <div>
           <h1 className="font-semibold">Social Accounts</h1>
           <div className="mt-5">

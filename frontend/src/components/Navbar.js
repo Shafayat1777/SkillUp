@@ -65,7 +65,6 @@ const Navbar = () => {
               >
                 Log out
               </button>
-              <span>{user.email}</span>
             </div>
           )}
         </div>

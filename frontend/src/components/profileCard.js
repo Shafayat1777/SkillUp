@@ -1,7 +1,7 @@
 const ProfileCard = () => {
   return (
     <div className="flex items-center justify-center">
-      <div className=" w-1/2 mt-10 rounded-lg border shadow">
+      <div className="  mt-10 rounded-lg border shadow">
         <div className="flex items-center justify-center pt-10 flex-col">
           <img
             className="rounded-full w-32"

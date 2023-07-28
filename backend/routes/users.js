@@ -2,7 +2,6 @@ const express = require("express");
 
 // controller functions
 const {
-  createUser,
   getallUser,
   getoneUser,
   deleteUser,
@@ -20,9 +19,6 @@ router.get("/", getallUser);
 
 // GET single User
 router.get("/:id", getoneUser);
-
-// POST new User
-router.post("/", createUser);
 
 // // DELETE all User
 // router.delete("/deleteAll", deleteAllUser);

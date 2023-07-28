@@ -7,6 +7,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [conf_password, setConfPassword] = useState("");
   const [passError, setPassError] = useState(null);
+  const [role, setRole] = useState("STUDENT");
   const { signup, error, isLoading } = useSignup();
 
   const handleSubmit = async (e) => {
@@ -15,10 +16,9 @@ const SignUp = () => {
 
     if (password !== conf_password) {
       setPassError("Password and Confirm passowrds dont match!");
-    }else{
-      await signup(email, password);
+    } else {
+      await signup(email, password, role);
     }
-    
   };
 
   return (
@@ -74,6 +74,16 @@ const SignUp = () => {
                 placeholder="Confirm Password"
                 className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
               />
+            </div>
+            <div className="mt-5">
+              <select
+                onChange={(e) => setRole(e.target.value)}
+                value={role}
+                className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+              >
+                <option value="STUDENT">Student</option>
+                <option value="TEACHER">Teacher</option>
+              </select>
             </div>
             <div className="mt-5 flex items-center">
               <input type="checkbox" className="border border-gray-400 mr-2" />

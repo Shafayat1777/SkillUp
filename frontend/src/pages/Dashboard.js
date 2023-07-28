@@ -12,9 +12,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const respons = await fetch("/api/courses/", {
+      const respons = await fetch("/api/courses", {
         headers: {
-          Authorization: `Bearer ${user.token}`,
+          'Authorization': `Bearer ${user.token}`,
         },
       });
       const json = await respons.json();

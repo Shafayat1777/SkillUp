@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma = require('../prisma/prisma');
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
@@ -8,8 +8,6 @@ const createToken = (id) => {
   return jwt.sign({ id: id }, process.env.SECRET, { expiresIn: "3d" });
 };
 
-// connect to db
-const prisma = new PrismaClient();
 
 // get all users
 const getallUser = async (req, res) => {
@@ -31,26 +29,6 @@ const getoneUser = async (req, res) => {
         id: id,
       },
     });
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
-
-// create new user
-const createUser = async (req, res) => {
-  const { name, email, password } = req.body;
-
-  // add data to db
-  try {
-    const data = await prisma.user.create({
-      data: {
-        name: name,
-        email: email,
-        password: password,
-      },
-    });
-
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -140,10 +118,10 @@ const loginUser = async (req, res) => {
 
 // signup user
 const signupUser = async (req, res) => {
-  const {email, password } = req.body;
+  const {email, password, role } = req.body;
   try {
     // validation
-    if (!email || !password) {
+    if (!email || !password || !role) {
       throw Error("All fields must me filled!");
     }
     if (!validator.isEmail(email)) {
@@ -171,22 +149,22 @@ const signupUser = async (req, res) => {
     // add user to db
     const data = await prisma.user.create({
       data: {
-        email: email,
-        password: hash,
+        email,
+        password:hash,
+        role,
       },
     });
 
     // create a token
     const token = createToken(data.id);
 
-    res.status(200).json({ id: data.id, email: data.email, token });
+    res.status(200).json({ id: data.id, email: data.email, role:data.role, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
 module.exports = {
-  createUser,
   getallUser,
   getoneUser,
   deleteUser,

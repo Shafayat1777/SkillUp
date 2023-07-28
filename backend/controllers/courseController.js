@@ -1,7 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
-
-// connect to db
-const prisma = new PrismaClient();
+const prisma = require('../prisma/prisma');
 
 // get all Course
 const getallCourse = async (req, res) => {

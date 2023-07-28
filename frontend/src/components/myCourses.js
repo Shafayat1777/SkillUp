@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
-import { useUsersContext } from "../hooks/useUsersContext";
+import { useCoursesContext } from "../hooks/useCourseContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import format from "date-fns/format";
 
-const UserDetails = ({ users }) => {
+const MyCourses = ({ courses }) => {
   const { user } = useAuthContext();
-  const { dispatch } = useUsersContext();
+  const { dispatch } = useCoursesContext();
   let i = 1;
 
   const handleClick = async (id) => {
-    const response = await fetch("/api/users/" + id, {
+    const response = await fetch("/api/courses/" + id, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -19,12 +19,12 @@ const UserDetails = ({ users }) => {
     const json = await response.json();
 
     if (response.ok) {
-      dispatch({ type: "DELETE_USER", payload: json });
+      dispatch({ type: "DELETE_COURSES", payload: json });
     }
   };
 
   return (
-    <div className="mx-20 overflow-auto rounded-lg shadow border">
+    <div className="overflow-auto rounded-lg shadow border">
       <table className="w-full">
         <thead className="bg-gray-50 border-b-2 border-gray-200">
           <tr>
@@ -32,31 +32,13 @@ const UserDetails = ({ users }) => {
               No.
             </th>
             <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              First Name
+              Title
             </th>
             <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              Last Name
+              Category
             </th>
             <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              Email
-            </th>
-            <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              Role
-            </th>
-            <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              Institute
-            </th>
-            <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              Designation
-            </th>
-            <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              Country
-            </th>
-            <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              City
-            </th>
-            <th className="p-3 text-sm font-semibold tracking-wide text-left">
-              Socials
+              Status
             </th>
             <th className="p-3 text-sm font-semibold tracking-wide text-left">
               CreatedAt
@@ -70,11 +52,8 @@ const UserDetails = ({ users }) => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-          {users.map((user) => (
-            <tr
-              key={user.id}
-              className={i % 2 !== 0 ? "bg-white" : "bg-gray-50"}
-            >
+          {courses.map((course) => (
+            <tr className={i % 2 !== 0 ? "bg-white" : "bg-gray-50"}>
               <td className="p-3 text-sm text-gray-700">
                 <Link
                   to="/profile"
@@ -84,43 +63,23 @@ const UserDetails = ({ users }) => {
                 </Link>
               </td>
               <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                {user.first_name}
+                {course.title}
               </td>
               <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                {user.last_name}
+                {course.catagory}
               </td>
               <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                {user.email}
-              </td>
-              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                <span className={user.role === "TEACHER" ? "tch" : "std"}>
-                  {user.role}
-                </span>
-              </td>
-              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                {user.institute}
-              </td>
-              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                {user.designation}
-              </td>
-              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                {user.country}
-              </td>
-              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                {user.city}
-              </td>
-              <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                {user.socials}
+                <span className="pus">{course.course_status}</span>
               </td>
               <td className="p-3 text-sm text-gray-700">
-                {format(new Date(user.createdAt), "dd/MM/yyyy")}
+                {format(new Date(course.createdAt), "dd/MM/yyyy")}
               </td>
               <td className="p-3 text-sm text-gray-700">
-                {format(new Date(user.updatedAt), "dd/MM/yyyy")}
+                {format(new Date(course.updatedAt), "dd/MM/yyyy")}
               </td>
               <td className="p-3 text-sm text-gray-700">
                 <button
-                  onClick={() => handleClick(user.id)}
+                  onClick={() => handleClick(course.id)}
                   className="w-16 h-6 rounded-sm font-bold hover:text-red-800 bg-red-200"
                 >
                   Delete
@@ -134,4 +93,4 @@ const UserDetails = ({ users }) => {
   );
 };
 
-export default UserDetails;
+export default MyCourses;

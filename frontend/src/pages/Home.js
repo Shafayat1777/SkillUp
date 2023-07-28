@@ -4,7 +4,6 @@ import { useAuthContext } from "../hooks/useAuthContext";
 
 // components
 import UserDetails from "../components/userDetails";
-import UserForm from "../components/userForm";
 
 const Home = () => {
   const { users, dispatch } = useUsersContext();
@@ -13,9 +12,9 @@ const Home = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const respons = await fetch("/api/users", {
-        headers:{
-          'Authorization': `Bearer ${user.token}`
-        }
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
       });
       const json = await respons.json();
 
@@ -31,7 +30,7 @@ const Home = () => {
 
   return (
     <div className="home">
-      <UserForm />
+
       <div className="users">{users && <UserDetails users={users} />}</div>
     </div>
   );

@@ -35,15 +35,22 @@ const getoneCourse = async (req, res) => {
 
 // create new Course
 const createCourse = async (req, res) => {
-  const { title, description, total_hours, userId } = req.body;
+  const { title, short_description, description, userId } = req.body;
 
   // add data to db
   try {
+    if (!title || !short_description ||!description) {
+      throw Error("All fields must me filled!");
+    }
+    if(!userId){
+      throw Error("Must be signin to add course!");
+    }
+
     const data = await prisma.courses.create({
       data: {
         title: title,
+        short_description: short_description,
         description: description,
-        total_hours: total_hours,
         teacher: { connect: { id: userId } }, // Step 2: Associate the course with the teacher (user)
       },
     });

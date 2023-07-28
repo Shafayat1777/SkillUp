@@ -32,20 +32,28 @@ model User {
 }
 
 model Courses {
-  id           String   @id @default(uuid())
-  title        String
-  description  String
-  total_hours  String
-  participants Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  teacher      User     @relation("CreatedBy", fields: [teacherId], references: [id])
-  teacherId    String
-  students     User[]   @relation("Enrollments") // Course can have multiple enrolled students
+  id                String        @id @default(uuid())
+  title             String
+  short_description String
+  description       String
+  category          String?
+  total_hours       Int?
+  course_status     Course_Status @default(PROCESSING)
+  participants      Int?          @default(0)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  teacher           User          @relation("CreatedBy", fields: [teacherId], references: [id])
+  teacherId         String
+  students          User[]        @relation("Enrollments") // Course can have multiple enrolled students
 }
 
 enum Role {
   STUDENT
   TEACHER
   ADMIN
+}
+
+enum Course_Status {
+  ACTIVE
+  PROCESSING
 }

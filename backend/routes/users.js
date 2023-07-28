@@ -25,10 +25,10 @@ router.get("/:id", getoneUser);
 router.post("/", createUser);
 
 // // DELETE all User
-router.delete("/deleteAll", deleteAllUser);
+// router.delete("/deleteAll", deleteAllUser);
 
 // DELETE a User
-// router.delete("/:id", deleteUser);
+router.delete("/:id", deleteUser);
 
 // UPDATE a User
 router.patch("/:id", updateUser);

@@ -26,10 +26,10 @@ router.get("/:id", getoneCourse);
 router.post("/", createCourse);
 
 // // DELETE all courses
-router.delete("/deleteAll", deleteAllCourse);
+// router.delete("/deleteAll", deleteAllCourse);
 
 // DELETE a courses
-// router.delete("/:id", deleteCourse);
+router.delete("/:id", deleteCourse);
 
 // UPDATE a courses
 router.patch("/:id", updateCourse);

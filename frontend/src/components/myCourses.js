@@ -9,7 +9,7 @@ const MyCourses = ({ courses }) => {
   let i = 1;
 
   const handleClick = async (id) => {
-    const response = await fetch("/api/courses/" + id, {
+    const response = await fetch("/api/courses/courses/" + id, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${user.token}`,

@@ -14,7 +14,7 @@ export const useAddCourse = () => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("/api/courses/", {
+    const response = await fetch("/api/courses/courses/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

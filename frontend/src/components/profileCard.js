@@ -33,6 +33,14 @@ const ProfileCard = ({ user }) => {
                   {user.role}
                 </h1>
               </div>
+              <div>
+                <h1 className="text-xs  text-gray-500">
+                  {user.designation}
+                </h1>
+                <h1 className="text-xs  text-gray-500">
+                  {user.institute}
+                </h1>
+              </div>
             </div>
             <div className="flex items-center justify-center mt-3 mb-6">
               <h1 className="text-xs text-gray-500">Get Connected</h1>

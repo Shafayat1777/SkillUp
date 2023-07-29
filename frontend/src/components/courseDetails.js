@@ -65,9 +65,47 @@ const CourseDetails = () => {
         <div className="p-5 sm:flex justify-between items-center">
           <h2
             onClick={handleOnClick}
-            className="font-bold text-gray-600 hover:underline hover:text-orange-500 cursor-pointer"
+            className=" font-bold text-gray-600 hover:underline hover:text-orange-500 cursor-pointer"
           >
-            {!isVisible ? "View chapter details" : "Hide chapter details"}
+            {!isVisible ? (
+              <div className="flex  items-center">
+                {" "}
+                View chapter details{" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="w-5 h-5 ml-3"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </div>
+            ) : (
+              <div className="flex  items-center">
+                {" "}
+                Hide chapter details{" "}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-5 h-5 ml-3"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4.5 15.75l7.5-7.5 7.5 7.5"
+                  />
+                </svg>
+              </div>
+            )}
           </h2>
           <button className="mt-2 sm:mt-0 text-lg border w-32 h-10 border-orange-500 hover:bg-orange-200 text-orange-500 text-center rounded ">
             Start Chapter

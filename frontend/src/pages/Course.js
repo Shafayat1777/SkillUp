@@ -3,18 +3,22 @@ import LessionDetails from "../components/LessionDetails";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useAddLesson } from "../hooks/useAddLesson";
 
 const Course = () => {
   const { id } = useParams();
   const { user } = useAuthContext();
+  const { addlesson, isLoading, error } = useAddLesson();
   const [course, setCourse] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [lessionTitle, setLessionTitle] = useState("");
   const [lessionDescription, setLessionDescription] = useState("");
+  const [deleted, setDeleted] = useState(false);
+  let i = 1;
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const respons = await fetch(`/api/courses/${id}`, {
+      const respons = await fetch(`/api/courses/courses/${id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -29,7 +33,16 @@ const Course = () => {
     if (user) {
       fetchCourse();
     }
-  }, [user]);
+  }, [user, isLoading, deleted]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    await addlesson(lessionTitle, lessionDescription, course.id, user.token);
+    setShowForm(false);
+    setLessionTitle("");
+    setLessionDescription("");
+  };
 
   const handleClick = () => {
     if (showForm) {
@@ -40,6 +53,23 @@ const Course = () => {
       setShowForm(true);
     }
   };
+
+  const handleDelete = async (id) => {
+    setDeleted(false)
+    const response = await fetch("/api/courses/lessons/" + id, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
+    const json = await response.json();
+
+    if (response.ok) {
+      setDeleted(true)
+    }
+  };
+
   return (
     // Chapters
 
@@ -55,14 +85,17 @@ const Course = () => {
             <div className="mt-4 text-gray-600">
               <p>{course.description}</p>
             </div>
-            <LessionDetails />
+            {course.lessons &&
+              course.lessons.map((lesson) => (
+                <LessionDetails lesson={lesson} no={i++} handleDelete={handleDelete} />
+              ))}
 
             {/* Teacher sechtion */}
             <div>
               {showForm ? (
                 <div>
                   <div className="mt-10 border rounded-sm bg-orange-50">
-                    <form>
+                    <form onSubmit={handleSubmit}>
                       <div className="p-5 flex items-center">
                         <div className="rounded-full w-6 bg-black text-white text-center">
                           1
@@ -70,6 +103,8 @@ const Course = () => {
                         <div className="ml-3 text-gray-600 font-bold text-xl">
                           <h1 className="flex">
                             <input
+                              onChange={(e) => setLessionTitle(e.target.value)}
+                              value={lessionTitle}
                               className="bg-transparent placeholder-gray-500"
                               type="text"
                               placeholder="Add lesson title..."
@@ -93,12 +128,31 @@ const Course = () => {
                       </div>
                       <div className="px-5 pb-5 text-gray-600 flex">
                         <textarea
+                          onChange={(e) =>
+                            setLessionDescription(e.target.value)
+                          }
+                          value={lessionDescription}
                           className="bg-transparent placeholder-gray-500 w-full"
                           rows="3"
                           placeholder="Add lession description..."
                         ></textarea>
                       </div>
+                      <div className="mt-5 px-5">
+                        <button
+                          disabled={isLoading}
+                          className=" w-full border border-green-500 py-3 text-center text-green-500 hover:bg-green-500 hover:text-white tracking-wider"
+                        >
+                          Add
+                        </button>
+                      </div>
                     </form>
+                    <div className="mt-5">
+                      {error && (
+                        <div className="w-full border border-red-500 text-center text-red-500 bg-red-200 tracking-wider">
+                          {error}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div>
                     <button

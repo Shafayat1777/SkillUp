@@ -1,26 +1,25 @@
 import { useState } from "react";
 
-export const useAddCourse = () => {
+export const useAddLesson = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
 
-  const addcourse = async (
+  const addlesson = async (
     title,
-    short_description,
     description,
-    userId,
+    courseId,
     userToken
   ) => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("/api/courses/", {
+    const response = await fetch("/api/courses/lessons", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${userToken}`,
       },
-      body: JSON.stringify({ title, short_description, description, userId }),
+      body: JSON.stringify({ title, description, courseId }),
     });
 
     const json = await response.json();
@@ -34,5 +33,5 @@ export const useAddCourse = () => {
     }
   };
 
-  return { addcourse, isLoading, error };
+  return { addlesson, isLoading, error };
 };

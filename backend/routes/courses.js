@@ -8,6 +8,10 @@ const {
   deleteCourse,
   updateCourse,
   enrollCourse,
+  createLesson,
+  getallLesson,
+  getoneLesson,
+  deleteLesson,
   deleteAllCourse,
 } = require("../controllers/courseController");
 
@@ -17,24 +21,36 @@ const router = express.Router();
 router.use(requireAuth)
 
 // GET all courses
-router.get("/", getallCourse);
+router.get("/courses", getallCourse); // Use a unique identifier, e.g., "/courses" instead of "/"
 
-// GET single courses
-router.get("/:id", getoneCourse);
+// GET single course
+router.get("/courses/:id", getoneCourse); // Adjust the route for getting a single course as well
 
-// POST new courses
-router.post("/", createCourse);
+// POST new course
+router.post("/courses", createCourse); // Adjust the route for creating a new course
 
-// // DELETE all courses
-// router.delete("/deleteAll", deleteAllCourse);
+// DELETE a course
+router.delete("/courses/:id", deleteCourse); // Adjust the route for deleting a course
 
-// DELETE a courses
-router.delete("/:id", deleteCourse);
+// UPDATE a course
+router.patch("/courses/:id", updateCourse); // Adjust the route for updating a course
 
-// UPDATE a courses
-router.patch("/:id", updateCourse);
+// Create a lesson
+router.post("/lessons", createLesson); // Use "/lessons" instead of "/lesson"
 
-// Enroll a courses
-router.patch("/enrolls/enrol", enrollCourse);
+// GET all lessons
+router.get("/lessons", getallLesson); // Use "/lessons" instead of "/lesson"
+
+// GET a single lesson
+router.get("/lessons/:id", getoneLesson); // Adjust the route for getting a single lesson
+
+// DELETE a lesson
+router.delete("/lessons/:id", deleteLesson); // Adjust the route for deleting a lesson
+
+// Enroll a course
+router.patch("/enrolls/enrol", enrollCourse); // Adjust the route for enrolling a course
+
+// DELETE all courses
+router.delete("/courses/deleteAll", deleteAllCourse); // If you want to keep the delete all courses route, use a unique identifier like "/courses/deleteAll"
 
 module.exports = router;

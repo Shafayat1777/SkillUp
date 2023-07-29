@@ -23,6 +23,7 @@ model User {
   country        String?
   city           String?
   socials        Json?
+  gender         Gender?   @default(DONT_DISCLOSE)
   profile_pic    String?   @default("")
   isBlocked      Boolean   @default(false)
   createdAt      DateTime  @default(now())
@@ -36,7 +37,7 @@ model Courses {
   title             String
   short_description String
   description       String
-  category          String?
+  category          Json?
   total_hours       Int?
   course_status     Course_Status @default(PROCESSING)
   participants      Int?          @default(0)
@@ -45,12 +46,28 @@ model Courses {
   teacher           User          @relation("CreatedBy", fields: [teacherId], references: [id])
   teacherId         String
   students          User[]        @relation("Enrollments") // Course can have multiple enrolled students
+  lessons          Lessons[] // One-to-many relationship with Lessions
+}
+
+model Lessons {
+  id          String  @id @default(uuid())
+  title       String
+  description String
+  courseId    String // Foreign key referencing the Courses table
+  course      Courses @relation(fields: [courseId], references: [id])
 }
 
 enum Role {
   STUDENT
   TEACHER
   ADMIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHERS
+  DONT_DISCLOSE
 }
 
 enum Course_Status {

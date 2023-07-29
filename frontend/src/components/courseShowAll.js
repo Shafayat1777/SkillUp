@@ -1,23 +1,18 @@
 import { Link } from "react-router-dom";
 
-const CourseShowAll = () => {
+const CourseShowAll = ({ course }) => {
   return (
-    <Link to='/course'>
+    <Link to={`/course/${course.id}`}>
       <div className="mt-10">
         <div className="border w-full bg-orange-50 rounded-sm shadow hover:shadow-lg transition-all ease-out duration-1100 cursor-pointer">
           <div className="px-6 mt-6">
-            <h1 className="font-bold text-gray-600">Title</h1>
+            <h1 className="font-bold text-gray-600">{course.title}</h1>
           </div>
-          <div className="px-6 mt-2 text-gray-600">
-            <p className="">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora,
-              nisi, illo porro voluptatum doloremque qui ullam repellendus
-              expedita quis omnis modi tenetur eveniet dolorem similique quidem
-              quibusdam magni non numquam.
-            </p>
+          <div className="px-6 h-32 mt-2 text-gray-600">
+            <p className="">{course.short_description}</p>
           </div>
           <div className="px-6 mt-6 text-gray-600">
-            <h3 className="">4 hours</h3>
+            <h3 className="">{course.hours} hours</h3>
           </div>
           <div className="p-6 mt-6 border-t flex items-center">
             <img
@@ -27,9 +22,9 @@ const CourseShowAll = () => {
             />
             <div className="ml-4">
               <h3 className="font-semibold text-gray-600">
-                Md. Shafayat Hossain
+                {course.teacher.first_name} {course.teacher.last_name}
               </h3>
-              <h4 className=" text-gray-600">Instructor, EWU </h4>
+              <h4 className=" text-gray-600">{course.teacher.designation},{course.teacher.institute} </h4>
             </div>
           </div>
         </div>

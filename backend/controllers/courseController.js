@@ -5,9 +5,22 @@ const getallCourse = async (req, res) => {
   try {
     const data = await prisma.courses.findMany({
         include: {
-            students: true,
+            teacher: {
+              select: {
+                first_name: true,
+                last_name: true,
+                about: true,
+                email: true,
+                role: true,
+                institute: true,
+                designation: true,
+                socials: true,
+              },
+            },
         }
     });
+
+    
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -23,6 +36,20 @@ const getoneCourse = async (req, res) => {
       where: {
         id: id,
       },
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+    }
     });
     res.status(200).json(data);
   } catch (error) {

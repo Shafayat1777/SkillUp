@@ -69,7 +69,7 @@ const updateUser = async (req, res) => {
   try {
     const data = await prisma.user.update({
       where: {
-        email: id,
+        id,
       },
       data: req.body,
     });

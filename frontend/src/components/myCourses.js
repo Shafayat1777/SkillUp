@@ -56,7 +56,7 @@ const MyCourses = ({ courses }) => {
             <tr className={i % 2 !== 0 ? "bg-white" : "bg-gray-50"}>
               <td className="p-3 text-sm text-gray-700">
                 <Link
-                  to="/profile"
+                  to="/course"
                   className="font-bold text-blue-500 hover:underline hover:border-blue-500 border rounded-full px-4 py-2 hover:bg-blue-200"
                 >
                   {i++}

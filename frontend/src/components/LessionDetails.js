@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const CourseDetails = () => {
+const LessionDetails = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const handleOnClick = () => {
@@ -116,4 +116,4 @@ const CourseDetails = () => {
   );
 };
 
-export default CourseDetails;
+export default LessionDetails;

@@ -1,4 +1,4 @@
-const prisma = require('../prisma/prisma');
+const prisma = require("../prisma/prisma");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
@@ -7,7 +7,6 @@ const jwt = require("jsonwebtoken");
 const createToken = (id) => {
   return jwt.sign({ id: id }, process.env.SECRET, { expiresIn: "3d" });
 };
-
 
 // get all users
 const getallUser = async (req, res) => {
@@ -110,7 +109,7 @@ const loginUser = async (req, res) => {
     // create a token
     const token = createToken(user.id);
 
-    res.status(200).json({ id:user.id, email:user.email, token });
+    res.status(200).json({ id: user.id, email: user.email, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -118,7 +117,7 @@ const loginUser = async (req, res) => {
 
 // signup user
 const signupUser = async (req, res) => {
-  const {email, password, role } = req.body;
+  const { email, password, role } = req.body;
   try {
     // validation
     if (!email || !password || !role) {
@@ -150,7 +149,7 @@ const signupUser = async (req, res) => {
     const data = await prisma.user.create({
       data: {
         email,
-        password:hash,
+        password: hash,
         role,
       },
     });
@@ -158,11 +157,20 @@ const signupUser = async (req, res) => {
     // create a token
     const token = createToken(data.id);
 
-    res.status(200).json({ id: data.id, email: data.email, role:data.role, token });
+    res
+      .status(200)
+      .json({ id: data.id, email: data.email, role: data.role, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+
+//upload
+const uploadFile = async (req, res) => {
+  console.log(req.file.path);
+  res.status(200).json({ mssg: "File uploaded" });
+};
+
 
 module.exports = {
   getallUser,
@@ -172,4 +180,5 @@ module.exports = {
   deleteAllUser,
   loginUser,
   signupUser,
+  uploadFile,
 };

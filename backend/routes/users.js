@@ -1,4 +1,5 @@
 const express = require("express");
+const { uploadImage, validateImage } = require("../middleware/fileUpload");
 
 // controller functions
 const {
@@ -9,10 +10,10 @@ const {
   deleteAllUser,
   loginUser,
   signupUser,
+  uploadFile,
 } = require("../controllers/userController");
 
 const router = express.Router();
-
 
 // GET all User
 router.get("/", getallUser);
@@ -35,5 +36,7 @@ router.post("/login", loginUser);
 // Signup user
 router.post("/signup", signupUser);
 
+//upload
+router.post("/upload", uploadImage.single("image"), validateImage, uploadFile);
 
 module.exports = router;

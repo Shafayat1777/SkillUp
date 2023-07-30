@@ -1,5 +1,6 @@
 const express = require("express");
-const requireAuth = require('../middleware/requireAuth')
+const requireAuth = require("../middleware/requireAuth");
+const { uploadPDF, validatePDF } = require("../middleware/fileUpload");
 
 const {
   createCourse,
@@ -13,12 +14,13 @@ const {
   getoneLesson,
   deleteLesson,
   deleteAllCourse,
+  uploadFile,
 } = require("../controllers/courseController");
 
 const router = express.Router();
 
 // check for authentication
-router.use(requireAuth)
+router.use(requireAuth);
 
 // GET all courses
 router.get("/courses", getallCourse); // Use a unique identifier, e.g., "/courses" instead of "/"
@@ -52,5 +54,8 @@ router.patch("/enrolls/enrol", enrollCourse); // Adjust the route for enrolling 
 
 // DELETE all courses
 router.delete("/courses/deleteAll", deleteAllCourse); // If you want to keep the delete all courses route, use a unique identifier like "/courses/deleteAll"
+
+//upload
+router.post("/upload", uploadPDF.single("image"), validatePDF, uploadFile);
 
 module.exports = router;

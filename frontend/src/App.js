@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import Courses from "./pages/Courses";
 import Course from "./pages/Course";
 import Dashboard from "./pages/Dashboard";
+import About from "./pages/About";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/courses" element={<Courses />} />
             <Route path="/course/:id" element={<Course />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/about" element={<About />} />
           </Routes>
         </div>
       </BrowserRouter>

@@ -223,6 +223,12 @@ const enrollCourse = async (req, res) => {
   }
 };
 
+//upload
+const uploadFile = async (req, res) => {
+  // console.log(req.file.path);
+  res.status(200).json({ mssg: "File uploaded" });
+};
+
 module.exports = {
   createCourse,
   getallCourse,
@@ -235,4 +241,5 @@ module.exports = {
   deleteLesson,
   enrollCourse,
   deleteAllCourse,
+  uploadFile,
 };

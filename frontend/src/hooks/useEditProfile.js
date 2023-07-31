@@ -15,7 +15,8 @@ export const useEditProfile = () => {
     designation,
     about,
     city,
-    country
+    country,
+    gender
   ) => {
     setIsLoading(true);
     setError(null);
@@ -35,6 +36,7 @@ export const useEditProfile = () => {
         about,
         city,
         country,
+        gender
       }),
     });
 

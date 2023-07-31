@@ -28,15 +28,15 @@ const Profile = () => {
       const json = await respons.json();
       if (respons.ok) {
         setData(json);
-        setFirstName(json.first_name)
-        setLastName(json.last_name)
-        setEmail(json.email)
-        setInstitute(json.institute)
-        setDesignation(json.designation)
-        setAbout(json.about)
-        setCity(json.city)
-        setCountry(json.country)
-        
+        setFirstName(json.first_name);
+        setLastName(json.last_name);
+        setEmail(json.email);
+        setInstitute(json.institute);
+        setDesignation(json.designation);
+        setAbout(json.about);
+        setCity(json.city);
+        setCountry(json.country);
+        setGender(json.gender);
       }
     };
 
@@ -47,141 +47,159 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-      await editprofile(first_name, last_name, email, institute, designation, about, city, country);
-      setIsSubmitted(true);
-
+    setIsSubmitted(false);
+    await editprofile(
+      first_name,
+      last_name,
+      email,
+      institute,
+      designation,
+      about,
+      city,
+      country,
+      gender
+    );
+    setIsSubmitted(true);
   };
-
   return (
     <div>
       {data && (
-        <div className=" mx-10 my-8 grid  lg:grid-cols-2 xl:grid-cols-3 gap-5">
-          <div className="md:w-72 lg:w-96 mx-auto">
+        <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
+          <div className="mx-8 md:mx-auto">
             <ProfileCard user={data} />
           </div>
 
-          <div className=" p-5 md:border-l lg:border-r border-gray-200">
-            <form onSubmit={handleSubmit}>
-              <div className="mt-5 grid grid-cols-2 gap-5">
-                <input
-                  type="text"
-                  value={first_name}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  placeholder="First Name"
-                  className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
-                />
-                <input
-                  type="text"
-                  value={last_name}
-                  onChange={(e) => setLastName(e.target.value)}
-                  placeholder="Last Name"
-                  className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
-                />
-              </div>
-              <div className="mt-5">
-                <input
-                  type="text"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Email"
-                  className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
-                />
-              </div>
-              <div className="mt-5 grid grid-cols-2 gap-5">
-                <input
-                  type="text"
-                  value={institute}
-                  onChange={(e) => setInstitute(e.target.value)}
-                  placeholder="Institute"
-                  className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
-                />
-                <input
-                  type="text"
-                  value={designation}
-                  placeholder="Designation"
-                  onChange={(e) => setDesignation(e.target.value)}
-                  className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
-                />
-              </div>
-              <div className="mt-5 grid grid-cols-2 gap-5">
-                <input
-                  type="text"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                  placeholder="Country"
-                  className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
-                />
-                <input
-                  type="text"
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  placeholder="City"
-                  className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
-                />
-              </div>
-              <div className="mt-5">
-                <select className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg">
-                  <option value="Don't specify">Don't specify</option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Others">Others</option>
-                </select>
-              </div>
-              <div className="mt-5">
-                <textarea
-                  value={about}
-                  onChange={(e) => setAbout(e.target.value)}
-                  className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
-                  cols="30"
-                  rows="10"
-                  placeholder="Bio"
-                ></textarea>
-              </div>
-              <div className="mt-5">
-                <button disabled={isLoading} className="w-full border border-green-500 py-3 text-center text-green-500 hover:bg-green-500 hover:text-white tracking-wider">
-                  Save
-                </button>
-              </div>
-              <div className="mt-5">
-              {error && (
-                <div className="w-full border border-red-500 text-center text-red-500 bg-red-200 tracking-wider">
-                  {error}
+          <div className="mx-8 md:mx-auto flex items-center justify-center">
+            <div className="border rounded-lg p-4 shadow border-gray-200 w-full">
+              <form onSubmit={handleSubmit}>
+                <div className="grid grid-cols-2 gap-5">
+                  <input
+                    type="text"
+                    value={first_name}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="First Name"
+                    className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+                  />
+                  <input
+                    type="text"
+                    value={last_name}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Last Name"
+                    className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+                  />
                 </div>
-              )}
+                <div className="mt-5">
+                  <input
+                    type="text"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+                  />
+                </div>
+                <div className="mt-5 grid grid-cols-2 gap-5">
+                  <input
+                    type="text"
+                    value={institute}
+                    onChange={(e) => setInstitute(e.target.value)}
+                    placeholder="Institute"
+                    className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+                  />
+                  <input
+                    type="text"
+                    value={designation}
+                    placeholder="Designation"
+                    onChange={(e) => setDesignation(e.target.value)}
+                    className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+                  />
+                </div>
+                <div className="mt-5 grid grid-cols-2 gap-5">
+                  <input
+                    type="text"
+                    value={country}
+                    onChange={(e) => setCountry(e.target.value)}
+                    placeholder="Country"
+                    className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+                  />
+                  <input
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="City"
+                    className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+                  />
+                </div>
+                <div className="mt-5">
+                  <select
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+                  >
+                    <option value="Don't specify">Don't specify</option>
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                    <option value="OTHERS">Others</option>
+                    <option value="DONT_DISCLOSE">Don't Disclose</option>
+                  </select>
+                </div>
+                <div className="mt-5">
+                  <textarea
+                    value={about}
+                    onChange={(e) => setAbout(e.target.value)}
+                    className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+                    cols="30"
+                    rows="10"
+                    placeholder="Bio"
+                  ></textarea>
+                </div>
+                <div className="mt-5">
+                  <button
+                    disabled={isLoading}
+                    className="w-full border border-green-500 py-3 text-center text-green-500 hover:bg-green-500 hover:text-white tracking-wider"
+                  >
+                    Save
+                  </button>
+                </div>
+                <div className="mt-5">
+                  {error && (
+                    <div className="w-full border border-red-500 text-center text-red-500 bg-red-200 tracking-wider">
+                      {error}
+                    </div>
+                  )}
+                </div>
+              </form>
             </div>
-            </form>
           </div>
 
-          <div className="md:ml-10 mt-5 p-4 xl:w-96 xl:col-span-1 col-span-1 w-full md:col-span-2">
-            <div>
+          <div className="mx-8 xl:mx-auto flex justify-center items-start mt-5 lg:mt-0 md:col-span-2 xl:col-span-1">
+            <div className="border rounded-lg p-4 shadow w-full xl:w-96">
               <h1 className="font-semibold">Social Accounts</h1>
               <div className="mt-5">
                 <input
                   type="text"
                   placeholder="Link social profile"
-                  className="border border-gray-400 px-2 py-1 w-80 focus:outline-orange-500 focus:shadow-lg"
+                  className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
                 />
               </div>
               <div className="mt-5">
                 <input
                   type="text"
                   placeholder="Link social profile"
-                  className="border border-gray-400 px-2 py-1 w-80 focus:outline-orange-500 focus:shadow-lg"
+                  className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
                 />
               </div>
               <div className="mt-5">
                 <input
                   type="text"
                   placeholder="Link social profile"
-                  className="border border-gray-400 px-2 py-1 w-80 focus:outline-orange-500 focus:shadow-lg"
+                  className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
                 />
               </div>
               <div className="mt-5">
                 <input
                   type="text"
                   placeholder="Link social profile"
-                  className="border border-gray-400 px-2 py-1 w-80 focus:outline-orange-500 focus:shadow-lg"
+                  className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
                 />
               </div>
             </div>

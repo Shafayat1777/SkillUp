@@ -90,7 +90,7 @@ const Course = () => {
                 <LessionDetails lesson={lesson} no={i++} handleDelete={handleDelete} />
               ))}
 
-            {/* Teacher sechtion */}
+            {/* Teacher section */}
             <div>
               {showForm ? (
                 <div>

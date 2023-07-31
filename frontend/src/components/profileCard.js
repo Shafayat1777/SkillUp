@@ -2,8 +2,8 @@ const ProfileCard = ({ user }) => {
   return (
     <div>
       {user && (
-        <div className="flex items-center justify-center w-72">
-          <div className="  mt-10 rounded-lg border shadow">
+        <div className="flex items-center justify-center">
+          <div className="rounded-lg border shadow w-full md:w-72">
             <div className="flex items-center justify-center pt-10 flex-col">
               <img
                 className="rounded-full w-32"

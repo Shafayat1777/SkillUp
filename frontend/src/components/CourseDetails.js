@@ -66,6 +66,11 @@ const CourseDetails = ({ courseId, reload }) => {
                         </h3>
                       </div>
                     </div>
+                    <div>
+                      {/* {lesson.contents && lesson.contents.map((content)=>(
+                        <div>{content.title}</div>
+                      ))} */}
+                    </div>
                   </div>
                 ))}
             </div>

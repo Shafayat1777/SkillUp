@@ -14,6 +14,8 @@ const {
   getoneLesson,
   deleteLesson,
   deleteAllCourse,
+  addContent,
+  getAllContent,
   uploadFile,
 } = require("../controllers/courseController");
 
@@ -48,6 +50,12 @@ router.get("/lessons/:id", getoneLesson); // Adjust the route for getting a sing
 
 // DELETE a lesson
 router.delete("/lessons/:id", deleteLesson); // Adjust the route for deleting a lesson
+
+// Create a content
+router.post("/contents", uploadPDF.single("file"), validatePDF, addContent); // Use "/lessons" instead of "/lesson"
+
+// GET all content
+router.get("/contents", getAllContent); // Use "/lessons" instead of "/lesson"
 
 // Enroll a course
 router.patch("/enrolls/enrol", enrollCourse); // Adjust the route for enrolling a course

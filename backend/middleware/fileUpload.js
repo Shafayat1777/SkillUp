@@ -46,7 +46,7 @@ const pdfStorage = multer.diskStorage({
     cb(null, "../backend/uploads/pdf");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "_" + req.body.id + ".pdf");
+    cb(null, Date.now() + "_" + req.body.lessonId + ".pdf");
   },
 });
 

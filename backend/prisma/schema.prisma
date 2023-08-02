@@ -46,17 +46,28 @@ model Courses {
   teacher           User          @relation("CreatedBy", fields: [teacherId], references: [id])
   teacherId         String
   students          User[]        @relation("Enrollments") // Course can have multiple enrolled students
-  lessons          Lessons[] // One-to-many relationship with Lessions
+  lessons           Lessons[] // One-to-many relationship with Lessions
 }
 
 model Lessons {
-  id          String  @id @default(uuid())
+  id          String     @id @default(uuid())
   title       String
   description String
   courseId    String // Foreign key referencing the Courses table
-  course      Courses @relation(fields: [courseId], references: [id])
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  course      Courses    @relation(fields: [courseId], references: [id])
+  contents    Contents[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Contents {
+  id        String   @id @default(uuid())
+  title     String
+  file      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Lessons   Lessons? @relation(fields: [lessonsId], references: [id])
+  lessonsId String?
 }
 
 enum Role {

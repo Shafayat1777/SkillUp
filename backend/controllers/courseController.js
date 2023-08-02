@@ -18,10 +18,10 @@ const getallCourse = async (req, res) => {
           },
         },
         lessons: {
-          select:{
-            id:true,
-            title:true,
-            description:true,
+          select: {
+            id: true,
+            title: true,
+            description: true,
           },
           orderBy: {
             createdAt: "asc",
@@ -59,10 +59,10 @@ const getoneCourse = async (req, res) => {
           },
         },
         lessons: {
-          select:{
-            id:true,
-            title:true,
-            description:true,
+          select: {
+            id: true,
+            title: true,
+            description: true,
           },
           orderBy: {
             createdAt: "asc",
@@ -260,6 +260,62 @@ const deleteLesson = async (req, res) => {
   }
 };
 
+// add a content
+const addContent = async (req, res) => {
+  // console.log(req.file.path);
+  const { title, lessonId } = req.body;
+
+  // get the file path
+  const filePath = req.file.path;
+  // Find the index of the "uploads" substring
+  const startIndex = filePath.indexOf("uploads");
+  // Extract the part of the string starting from "uploads" to the end
+  const extractedString =
+    "localhost:4000/" + filePath.slice(startIndex).replace(/\\/g, "/");
+
+  console.log(title)
+  console.log(lessonId)
+  console.log(extractedString)
+  // // add data to db
+  // try {
+  //   if (!title || !lessonId) {
+  //     throw Error("All fields must me filled!");
+  //   }
+
+  //   const lesson = await prisma.lessons.findUnique({
+  //     where: {
+  //       id: lessonId,
+  //     },
+  //   });
+
+  //   if (!lesson) {
+  //     throw Error("No such lessons exists!");
+  //   }
+
+  //   const data = await prisma.contents.create({
+  //     data: {
+  //       title: title,
+  //       file: extractedString,
+  //       lessonsId: lessonId,
+  //     },
+  //   });
+
+  //   res.status(200).json({ messg: "File uploaded" });
+  // } catch (error) {
+  //   res.status(400).json({ error: error.message });
+  // }
+};
+
+// get all content
+const getAllContent = async (req, res) => {
+  try {
+    const data = await prisma.contents.findMany({});
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 // enroll a Course
 const enrollCourse = async (req, res) => {
   const { userId, courseId } = req.body;
@@ -280,7 +336,15 @@ const enrollCourse = async (req, res) => {
 //upload
 const uploadFile = async (req, res) => {
   // console.log(req.file.path);
-  res.status(200).json({ mssg: "File uploaded" });
+  const filePath = req.file.path;
+  // Find the index of the "uploads" substring
+  const startIndex = filePath.indexOf("uploads");
+  // Extract the part of the string starting from "uploads" to the end
+  const extractedString = "/" + filePath.slice(startIndex).replace(/\\/g, "/");
+
+  console.log(extractedString);
+
+  res.status(200).json({ messg: "File uploaded" });
 };
 
 module.exports = {
@@ -295,5 +359,7 @@ module.exports = {
   deleteLesson,
   enrollCourse,
   deleteAllCourse,
+  addContent,
+  getAllContent,
   uploadFile,
 };

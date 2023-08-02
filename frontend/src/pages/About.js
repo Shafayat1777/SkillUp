@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
+import axios from "axios";
 
 const About = () => {
   const [name, setName] = useState("");
@@ -8,6 +9,7 @@ const About = () => {
   const [updated, setUpdated] = useState(null);
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
   const { user } = useAuthContext();
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleClick = async (e) => {
     e.preventDefault();
@@ -15,26 +17,30 @@ const About = () => {
     const userData = new FormData();
     userData.append("id", user.id);
     userData.append("image", avatar);
-// "/api/users/upload"
-    const response = await fetch("/api/courses/upload", {
-      method: "POST",
-      body: userData,
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    });
-    const json = await response.json();
 
-    if (!response.ok) {
-      setError(json.error);
+    try {
+      const response = await axios.post("/api/courses/upload", userData, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          "Content-Type": "multipart/form-data", // Important to set the correct Content-Type
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress(percentCompleted);
+        },
+      });
+
+      setProfilePictureUrl(response.data.profilePictureUrl);
+      setError(null);
+      setUpdated(response.data.mssg);
+    } catch (error) {
+      console.error("Error uploading the file:", error);
+      setError("Error uploading the file");
       setUpdated(null);
     }
-    if (response.ok) {
-      setError(null);
-      setUpdated("Profile updated");
-    }
   };
-
   
 
   return (
@@ -56,6 +62,11 @@ const About = () => {
 
       <div className="border m-4">
         <img src={profilePictureUrl} />
+      </div>
+      <div>
+        {uploadProgress > 0 && uploadProgress < 100 && (
+          <div className="upload-progress">Upload Progress: {uploadProgress}%</div>
+        )}
       </div>
     </div>
   );

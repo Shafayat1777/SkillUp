@@ -17,6 +17,16 @@ const getallCourse = async (req, res) => {
             socials: true,
           },
         },
+        lessons: {
+          select:{
+            id:true,
+            title:true,
+            description:true,
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
       },
     });
 
@@ -48,7 +58,16 @@ const getoneCourse = async (req, res) => {
             socials: true,
           },
         },
-        lessons:true,
+        lessons: {
+          select:{
+            id:true,
+            title:true,
+            description:true,
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
       },
     });
     res.status(200).json(data);
@@ -90,17 +109,52 @@ const deleteCourse = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const data = await prisma.courses.delete({
+    // Find the course with the specified ID to get the related lessons
+    const course = await prisma.courses.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        lessons: true,
+      },
+    });
+
+    // If the course does not exist, return or throw an error
+    if (!course) {
+      console.log("Course not found");
+      return;
+    }
+
+    // Check if there are any related lessons
+    if (course.lessons.length > 0) {
+      // Delete all the related lessons
+      const lessonIds = course.lessons.map((lesson) => lesson.id);
+      await prisma.lessons.deleteMany({
+        where: {
+          id: {
+            in: lessonIds,
+          },
+        },
+      });
+    }
+
+    // Delete the course itself
+    const deletedCourse = await prisma.courses.delete({
       where: {
         id: id,
       },
     });
-    res.status(200).json(data);
+
+    res.status(200).json({ messg: "Course deleted successfully" });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
+// res.status(200).json({messg: 'Course deleted successfully'});
+//   } catch (error) {
+//     res.status(400).json({ error: error.message });
+//   }
 // delete all Course
 const deleteAllCourse = async (req, res) => {
   try {
@@ -132,11 +186,11 @@ const updateCourse = async (req, res) => {
 
 // add a lesson
 const createLesson = async (req, res) => {
-  const { title, description, courseId } = req.body;
+  const { lesson_title, lesson_description, courseId } = req.body;
 
   // add data to db
   try {
-    if (!title || !description) {
+    if (!lesson_title || !lesson_description) {
       throw Error("All fields must me filled!");
     }
 
@@ -152,8 +206,8 @@ const createLesson = async (req, res) => {
 
     const data = await prisma.lessons.create({
       data: {
-        title: title,
-        description: description,
+        title: lesson_title,
+        description: lesson_description,
         courseId: courseId,
       },
     });

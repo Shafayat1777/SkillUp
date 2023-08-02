@@ -22,7 +22,10 @@ const LessionDetails = ({ lesson, no, handleDelete }) => {
             <h1>{lesson.title}</h1>
           </div>
         </div>
-        <div onClick={()=> handleDelete(lesson.id)} className="hover:bg-red-200 cursor-pointer border-red-500 ml-3 border w-8 h-8 rounded-full flex items-center justify-center">
+        <div
+          onClick={() => handleDelete(lesson.id)}
+          className="hover:bg-red-200 cursor-pointer border-red-500 ml-3 border w-8 h-8 rounded-full flex items-center justify-center"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -46,28 +49,14 @@ const LessionDetails = ({ lesson, no, handleDelete }) => {
       {isVisible && (
         <div className="px-5 mt-8">
           <div className="px-5 flex items-center hover:bg-orange-200 cursor-pointer h-10">
-            <div className="rounded-full w-5 bg-black text-white text-center text-sm">
-              1
-            </div>
-            <div className="ml-3 text-gray-600 font-bold text-md">
-              <h3>Chapter Title</h3>
-            </div>
-          </div>
-          <div className="px-5 flex items-center hover:bg-orange-200 cursor-pointer h-10">
-            <div className="rounded-full w-5 bg-black text-white text-center text-sm">
-              2
-            </div>
-            <div className="ml-3 text-gray-600 font-bold text-md">
-              <h3>Chapter Title</h3>
-            </div>
-          </div>
-          <div className="px-5 flex items-center hover:bg-orange-200 cursor-pointer h-10">
-            <div className="rounded-full w-5 bg-black text-white text-center text-sm">
-              3
-            </div>
-            <div className="ml-3 text-gray-600 font-bold text-md">
-              <h3>Chapter Title</h3>
-            </div>
+            <form action="">
+              <div className="rounded-full w-5 bg-black text-white text-center text-sm">
+                1
+              </div>
+              <div className="ml-3 text-gray-600 font-bold text-md">
+                <h3>Chapter Title</h3>
+              </div>
+            </form>
           </div>
         </div>
       )}

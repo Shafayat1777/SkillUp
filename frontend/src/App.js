@@ -10,6 +10,7 @@ import Courses from "./pages/Courses";
 import Course from "./pages/Course";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
+import CoursesForm from './components/CoursesForm';
 
 function App() {
   return (

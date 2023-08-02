@@ -6,7 +6,7 @@ export const courseReducer = (state, action) => {
   switch (action.type) {
     case "SET_COURSES":
       return { courses: action.payload };
-    case "CREATE_COURSES":
+    case "ADD_COURSES":
       return { courses: [action.payload, ...state.courses] };
     case "DELETE_COURSES":
       return { courses: state.courses.filter((u) => u.id !== action.payload.id) };

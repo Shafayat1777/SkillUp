@@ -1,37 +1,42 @@
 import { useState } from "react";
+import { useAuthContext } from "./useAuthContext";
 
 export const useAddLesson = () => {
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
+  const { user } = useAuthContext();
+  const [errorLesson, setErrorLesson] = useState(null);
+  const [isLoadingLesson, setIsLoadingLesson] = useState(null);
+
+  var userToken = user.token;
 
   const addlesson = async (
-    title,
-    description,
+    lesson_title,
+    lesson_description,
     courseId,
-    userToken
+    handleDetailsReload
   ) => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoadingLesson(true);
+    setErrorLesson(null);
 
     const response = await fetch("/api/courses/lessons", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${userToken}`,
+        Authorization: `Bearer ${userToken}`,
       },
-      body: JSON.stringify({ title, description, courseId }),
+      body: JSON.stringify({ lesson_title, lesson_description, courseId }),
     });
 
     const json = await response.json();
 
     if (!response.ok) {
-      setIsLoading(false);
-      setError(json.error);
+      setIsLoadingLesson(false);
+      setErrorLesson(json.error);
     }
     if (response.ok) {
-      setIsLoading(false);
+      setIsLoadingLesson(false);
+      handleDetailsReload();
     }
   };
 
-  return { addlesson, isLoading, error };
+  return { addlesson, isLoadingLesson, errorLesson };
 };

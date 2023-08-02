@@ -55,6 +55,8 @@ model Lessons {
   description String
   courseId    String // Foreign key referencing the Courses table
   course      Courses @relation(fields: [courseId], references: [id])
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 }
 
 enum Role {

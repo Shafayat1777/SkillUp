@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import { useCoursesContext } from "../hooks/useCourseContext";
 
 const CourseDetails = ({ courseId, reload }) => {
-  const { dispatch } = useCoursesContext();
   const { user } = useAuthContext();
   const [course, setCourse] = useState(null);
   
@@ -26,7 +24,7 @@ const CourseDetails = ({ courseId, reload }) => {
     if (user) {
       fetchCourses();
     }
-  }, [courseId, reload]);
+  }, [courseId, reload, user]);
 
   
   return (

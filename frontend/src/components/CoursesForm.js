@@ -1,7 +1,7 @@
 import { useAddContent } from "../hooks/useAddContent";
 import { useAddCourse } from "../hooks/useAddCourse";
 import { useAddLesson } from "../hooks/useAddLesson";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const { addcourse, isLoading, error } = useAddCourse();

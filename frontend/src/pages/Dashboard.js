@@ -6,7 +6,6 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import MyCourses from "../components/myCourses";
 import CoursesForm from "../components/CoursesForm";
 import CourseDetails from "../components/CourseDetails";
-import { tr } from "date-fns/locale";
 
 const Dashboard = () => {
   const { courses, dispatch } = useCoursesContext();
@@ -33,7 +32,7 @@ const Dashboard = () => {
     if (user) {
       fetchCourses();
     }
-  }, [user, dispatch]);
+  }, [user, dispatch, reload]);
 
   const handleDetailsReload = () => {
     if (reload) {
@@ -63,7 +62,7 @@ const Dashboard = () => {
         <div>
           <button
             onClick={handleShowForm}
-            className="bg-green-200 rounded-md  text-green-600 hover:text-green-600 hover:bg-green-300 text-md p-1 flex justify-center items-center w-28 text-center"
+            className="bg-orange-200 rounded-md  text-orange-600 hover:text-orange-600 hover:bg-orange-300 text-md p-1 flex justify-center items-center w-28 text-center"
           >
             Create{" "}
             <svg

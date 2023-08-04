@@ -25,7 +25,7 @@ const ProfileCard = ({ user }) => {
                 <h1 className="text-xs uppercase text-gray-500">Role</h1>
                 <h1
                   className={
-                    user.role == "TEACHER"
+                    user.role === "TEACHER"
                       ? "text-xs  text-purple-500"
                       : "text-xs  text-blue-500"
                   }

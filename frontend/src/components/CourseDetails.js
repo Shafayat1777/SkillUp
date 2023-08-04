@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
+import CourseContent from "./courseContent";
 
 const CourseDetails = ({ courseId, reload }) => {
   const { user } = useAuthContext();
   const [course, setCourse] = useState(null);
-  
+ 
 
   var i = 1;
   useEffect(() => {
@@ -26,7 +27,6 @@ const CourseDetails = ({ courseId, reload }) => {
     }
   }, [courseId, reload, user]);
 
-  
   return (
     <div>
       {course && (
@@ -48,28 +48,7 @@ const CourseDetails = ({ courseId, reload }) => {
             <div className="mt-8 mb-8">
               {course.lessons &&
                 course.lessons.map((lesson) => (
-                  <div key={lesson.id} className="border rounded-md shadow p-5 mt-4">
-                    <div className="flex justify-between">
-                      <div className="flex">
-                        <h3 className="font-semibold rounded-full w-6 h-6 flex items-center justify-center bg-black text-white">
-                          {i++}
-                        </h3>
-                        <h2 className="text-gray-600 ml-4 font-bold">
-                          {lesson.title}
-                        </h2>
-                      </div>
-                      <div>
-                        <h3 className="text-gray-600 ml-4 font-semibold cursor-pointer hover:text-orange-400">
-                          Show Content
-                        </h3>
-                      </div>
-                    </div>
-                    <div>
-                      {/* {lesson.contents && lesson.contents.map((content)=>(
-                        <div>{content.title}</div>
-                      ))} */}
-                    </div>
-                  </div>
+                  <CourseContent lesson={lesson} i={i}/>
                 ))}
             </div>
           </div>

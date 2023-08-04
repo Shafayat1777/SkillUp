@@ -21,13 +21,12 @@ export const useAddCourse = () => {
     setIsLoading(true);
     setError(null);
     var userId = user.id;
-    var userToken = user.token;
 
     const response = await fetch("/api/courses/courses/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${userToken}`,
+        Authorization: `Bearer ${user.token}`,
       },
       body: JSON.stringify({
         title,

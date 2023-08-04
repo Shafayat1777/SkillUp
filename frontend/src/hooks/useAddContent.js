@@ -21,7 +21,6 @@ export const useAddContent = () => {
     contentData.append("title", content_title);
     contentData.append("lessonId", lessonId);
     contentData.append("file", file);
-    
 
     try {
       const response = await axios.post("/api/courses/contents", contentData, {
@@ -33,9 +32,9 @@ export const useAddContent = () => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
           );
-          setFile(prevState=>{
-            return {...prevState, progress: percentCompleted}
-          })
+          setFile((prevState) => {
+            return { ...prevState, progress: percentCompleted };
+          });
         },
       });
 
@@ -45,10 +44,10 @@ export const useAddContent = () => {
       }
       if (response.ok) {
         setIsLoadingContent(false);
-        handleDetailsReload()
+        handleDetailsReload();
       }
     } catch (error) {
-        setIsLoadingContent(false);
+      setIsLoadingContent(false);
       setErrorContent(error.message);
     }
   };

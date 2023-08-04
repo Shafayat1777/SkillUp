@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useUsersContext } from "../hooks/useUsersContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { Helmet } from "react-helmet";
 
 // components
 import UserDetails from "../components/userDetails";
@@ -30,7 +31,13 @@ const Home = () => {
 
   return (
     <div className="home">
-
+      <div className="head">
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>Home</title>
+          <link rel="canonical" href="http://mysite.com/example" />
+        </Helmet>
+      </div>
       <div className="users">{users && <UserDetails users={users} />}</div>
     </div>
   );

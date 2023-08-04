@@ -9,8 +9,6 @@ const Course = () => {
   const { id } = useParams();
   const { user } = useAuthContext();
   const [course, setCourse] = useState(null);
-  const [lessionTitle, setLessionTitle] = useState("");
-  const [lessionDescription, setLessionDescription] = useState("");
   let i = 1;
 
   useEffect(() => {

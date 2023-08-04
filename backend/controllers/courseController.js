@@ -18,13 +18,15 @@ const getallCourse = async (req, res) => {
           },
         },
         lessons: {
-          select: {
-            id: true,
-            title: true,
-            description: true,
-          },
           orderBy: {
             createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
           },
         },
       },
@@ -59,13 +61,15 @@ const getoneCourse = async (req, res) => {
           },
         },
         lessons: {
-          select: {
-            id: true,
-            title: true,
-            description: true,
-          },
           orderBy: {
             createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
           },
         },
       },
@@ -78,7 +82,7 @@ const getoneCourse = async (req, res) => {
 
 // create new Course
 const createCourse = async (req, res) => {
-  const { title, short_description, description, userId } = req.body;
+  const { title, short_description, description, category, userId } = req.body;
 
   // add data to db
   try {
@@ -94,6 +98,7 @@ const createCourse = async (req, res) => {
         title: title,
         short_description: short_description,
         description: description,
+        category: category,
         teacher: { connect: { id: userId } }, // Step 2: Associate the course with the teacher (user)
       },
     });
@@ -273,37 +278,38 @@ const addContent = async (req, res) => {
   const extractedString =
     "localhost:4000/" + filePath.slice(startIndex).replace(/\\/g, "/");
 
-  console.log(title)
-  console.log(lessonId)
-  console.log(extractedString)
-  // // add data to db
-  // try {
-  //   if (!title || !lessonId) {
-  //     throw Error("All fields must me filled!");
-  //   }
+  console.log(title);
+  console.log(lessonId);
+  console.log(extractedString);
 
-  //   const lesson = await prisma.lessons.findUnique({
-  //     where: {
-  //       id: lessonId,
-  //     },
-  //   });
+  // add data to db
+  try {
+    if (!title || !lessonId) {
+      throw Error("All fields must me filled!");
+    }
 
-  //   if (!lesson) {
-  //     throw Error("No such lessons exists!");
-  //   }
+    const lesson = await prisma.lessons.findUnique({
+      where: {
+        id: lessonId,
+      },
+    });
 
-  //   const data = await prisma.contents.create({
-  //     data: {
-  //       title: title,
-  //       file: extractedString,
-  //       lessonsId: lessonId,
-  //     },
-  //   });
+    if (!lesson) {
+      throw Error("No such lessons exists!");
+    }
 
-  //   res.status(200).json({ messg: "File uploaded" });
-  // } catch (error) {
-  //   res.status(400).json({ error: error.message });
-  // }
+    const data = await prisma.contents.create({
+      data: {
+        title: title,
+        file: extractedString,
+        lessonsId: lessonId,
+      },
+    });
+
+    res.status(200).json({ messg: "File uploaded" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 // get all content

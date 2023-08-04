@@ -11,8 +11,8 @@ export const useAddContent = () => {
     content_title,
     file,
     lessonId,
-    handleDetailsReload,
-    setFile
+    setFile,
+    handleDetailsReload
   ) => {
     setIsLoadingContent(true);
     setErrorContent(null);
@@ -38,13 +38,13 @@ export const useAddContent = () => {
         },
       });
 
-      if (!response.ok) {
-        setIsLoadingContent(false);
-        setErrorContent(response.data.error);
-      }
-      if (response.ok) {
+
+      if (response.status >= 200 && response.status < 300) {
         setIsLoadingContent(false);
         handleDetailsReload();
+      } else {
+        setIsLoadingContent(false);
+        setErrorContent(response.data.error);
       }
     } catch (error) {
       setIsLoadingContent(false);

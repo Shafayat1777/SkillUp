@@ -1,7 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import PdfView from "./pdfView";
 
 const CourseContent = ({ lesson, i }) => {
   const [showcontent, setShowContent] = useState(false);
+  const [showWindow, setShowWindow] = useState(false);
+
   const handleShowContent = () => {
     if (showcontent) {
       setShowContent(false);
@@ -9,6 +13,14 @@ const CourseContent = ({ lesson, i }) => {
       setShowContent(true);
     }
   };
+
+  const handleOpenWindow = () => {
+    setShowWindow(true);
+  };
+  const handleCloseWindow = () => {
+    setShowWindow(false);
+  };
+  console.log(showWindow);
   return (
     <div>
       <div key={lesson.id} className="border rounded-md shadow  mt-4">
@@ -64,22 +76,27 @@ const CourseContent = ({ lesson, i }) => {
             <div className="">
               {lesson.contents &&
                 lesson.contents.map((content) => (
-                  <div
-                    key={content.id}
-                    className="flex items-center px-16 py-1.5 hover:bg-orange-100 cursor-pointer font-bold"
-                  >
-                    <div className="border border-md border-orange-400 rounded-full w-8 h-8 flex items-center justify-center">
-                      {content.file.endsWith(".pdf") ? (
-                        <img
-                          className="w-5 h-5"
-                          src="./img/pdf.png"
-                          alt="pdf.img"
-                        />
-                      ) : (
-                        <h1>VIDEO</h1>
-                      )}
+                  <div onClick={handleOpenWindow}>
+                    <div className="flex items-center px-16 py-1.5 hover:bg-orange-100 cursor-pointer font-bold">
+                      <div className="border border-md border-orange-400 rounded-full w-8 h-8 flex items-center justify-center">
+                        {content.file.endsWith(".pdf") ? (
+                          <img
+                            className="w-5 h-5"
+                            src="./img/pdf.png"
+                            alt="pdf.img"
+                          />
+                        ) : (
+                          <h1>VIDEO</h1>
+                        )}
+                      </div>
+                      <div className="ml-3">{content.title}</div>
                     </div>
-                    <div className="ml-3">{content.title}</div>
+                    {showWindow && (
+                      <PdfView
+                        content={content}
+                        handleCloseWindow={handleCloseWindow}
+                      />
+                    )}
                   </div>
                 ))}
             </div>

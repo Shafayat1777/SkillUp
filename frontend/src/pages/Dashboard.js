@@ -41,6 +41,7 @@ const Dashboard = () => {
       setReload(true);
     }
   };
+  console.log(reload)
   const handleShowForm = () => {
     setShowForm(true);
   };
@@ -87,6 +88,7 @@ const Dashboard = () => {
               courses={courses}
               handleShowDetails={handleShowDetails}
               closeShowDetails={closeShowDetails}
+              handleDetailsReload={handleDetailsReload}
             />
           )}
         </div>

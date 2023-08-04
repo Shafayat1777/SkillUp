@@ -8,6 +8,13 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const { addlesson, isLoadingLesson, errorLesson } = useAddLesson();
   const { addcontent, isLoadingContent, errorContent } = useAddContent();
 
+  // useStates for rendering show items
+  // to show each type of form
+  const [showCourseForm, setShowCourseForm] = useState(true);
+  const [showLessonForm, setShowLessonForm] = useState(false);
+  const [showContentForm, setShowContentForm] = useState(false);
+
+
   // course add useState
   const [course_title, setTitle] = useState("");
   const [short_description, setShortDescription] = useState("");
@@ -25,27 +32,21 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [lessonId, setLessonId] = useState(null);
 
-  // to show each type of form
-  const [showCourseForm, setShowCourseForm] = useState(true);
-  const [showLessonForm, setShowLessonForm] = useState(false);
-  const [showContentForm, setShowContentForm] = useState(false);
-
   // to show selected form
   const selected =
     "mr-5 border-b-4 border-orange-400 py-4 hover:text-orange-400 cursor-pointer";
   const not_selected = "mr-5 py-4 hover:text-orange-400 cursor-pointer";
+  
   const [isDragOver, setIsDragOver] = useState(false);
-
+  // file drag & drop functions
   const handleDragOver = (event) => {
     event.preventDefault();
     setIsDragOver(true);
   };
-
   const handleDragLeave = (event) => {
     event.preventDefault();
     setIsDragOver(false);
   };
-
   const handleDrop = (event) => {
     event.preventDefault(); // Prevent files from opening in the browser
     setIsDragOver(false);
@@ -55,6 +56,8 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
 
     console.log(file);
   };
+
+  // submit functions
   const handleCourseSubmit = async (e) => {
     e.preventDefault();
     await addcourse(
@@ -75,9 +78,16 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   };
   const handleContentSubmit = async (e) => {
     e.preventDefault();
-    await addcontent(content_title, file.file, lessonId, handleDetailsReload, setFile);
+    await addcontent(
+      content_title,
+      file.file,
+      lessonId,
+      setFile,
+      handleDetailsReload
+    );
   };
 
+  // form show functions
   const handleShowCourseForm = () => {
     setShowCourseForm(true);
     setShowLessonForm(false);
@@ -373,21 +383,6 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
           {/*Content Add form */}
           {showContentForm && (
             <form onSubmit={handleContentSubmit}>
-              {/* {courses.length === 0 ? (
-                <p className="p-6 text-md text-orange-400">
-                  Please add at least a single Course to access this form
-                </p>
-              ) : (
-                <div>
-                  {courses.map((course) => {
-                    if (course.lessons && course.lessons.length === 0)
-                      <p className="p-6 text-md text-orange-400">
-                        Please add at least a single Course to access this form
-                      </p>;
-                  })}
-                </div>
-              )} */}
-
               {!courses.length > 0 && (
                 <p className="p-6 text-md text-orange-400">
                   Please add at least a single Course to access this form
@@ -528,34 +523,34 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                             </label>
 
                             <p className="text-xs text-gray-600 mt-4">
-                              Maximum upload file size: 512MB.
+                              Maximum upload file size: 500MB.
                             </p>
                           </div>
                         </td>
                       </tr>
                       <tr>
-                      <td colSpan={2}>
-                        {file && (
-                          <ul className="mb-5 bg-white rounded divide-y divide-gray-200 shadow border">
-                            <li className="p-3 flex items-center justify-between">
-                              <div className="text-sm text-gray-700">
-                                {file.file.name}
-                              </div>
-
-                              <div className="w-40 bg-gray-200 rounded-full h-5 shadow-inner overflow-hidden relative flex items-center justify-center">
-                                <div
-                                  className="inline-block h-full bg-orange-400 absolute top-0 left-0"
-                                  style={{ width: `${file.progress}%` }}
-                                ></div>
-                                <div className="relative z-10 text-xs font-semibold text-center text-white drop-shadow text-shadow">
-                                  {file.progress} %
+                        <td colSpan={2}>
+                          {file && (
+                            <ul className="mb-5 bg-white rounded divide-y divide-gray-200 shadow border">
+                              <li className="p-3 flex items-center justify-between">
+                                <div className="text-sm text-gray-700">
+                                  {file.file.name}
                                 </div>
-                              </div>
-                            </li>
-                          </ul>
-                        )}
-                      </td>
-                    </tr>
+
+                                <div className="w-40 bg-gray-200 rounded-full h-5 shadow-inner overflow-hidden relative flex items-center justify-center">
+                                  <div
+                                    className="inline-block h-full bg-orange-400 absolute top-0 left-0"
+                                    style={{ width: `${file.progress}%` }}
+                                  ></div>
+                                  <div className="relative z-10 text-xs font-semibold text-center text-white drop-shadow text-shadow">
+                                    {file.progress} %
+                                  </div>
+                                </div>
+                              </li>
+                            </ul>
+                          )}
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -594,6 +589,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
           {errorContent}
         </div>
       )}
+
     </div>
   );
 };

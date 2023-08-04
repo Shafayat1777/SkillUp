@@ -5,7 +5,6 @@ import CourseContent from "./courseContent";
 const CourseDetails = ({ courseId, reload }) => {
   const { user } = useAuthContext();
   const [course, setCourse] = useState(null);
- 
 
   var i = 1;
   useEffect(() => {
@@ -36,19 +35,33 @@ const CourseDetails = ({ courseId, reload }) => {
           </div>
           <div className="px-5">
             <div className="mt-6">
-              <h2 className="font-bold text-gray-600">{course.title}</h2>
+              <p className="inline  text-orange-400 font-semibold">
+                Course Title:{" "}
+                <h2 className="inline font-bold text-gray-600">
+                  {course.title}
+                </h2>
+              </p>
             </div>
             <div className="mt-3">
-              <p className="text-gray-600">{course.short_description}</p>
+              <p className="text-gray-600 text-md font-semibold">
+                {" "}
+                <p className="inline  text-orange-400">
+                  Short Description:
+                </p>{" "}
+                {course.short_description}
+              </p>
             </div>
             <div className="mt-3">
-              <p className="text-gray-600">{course.description}</p>
+              <p className="text-gray-600 text-md font-semibold">
+                <p className="inline text-orange-400">Main Description:</p>{" "}
+                {course.description}
+              </p>
             </div>
 
             <div className="mt-8 mb-8">
               {course.lessons &&
                 course.lessons.map((lesson) => (
-                  <CourseContent lesson={lesson} i={i}/>
+                  <CourseContent lesson={lesson} i={i} />
                 ))}
             </div>
           </div>

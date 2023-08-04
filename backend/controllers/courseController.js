@@ -1,4 +1,5 @@
 const prisma = require("../prisma/prisma");
+const fs = require('fs');
 
 // get all Course
 const getallCourse = async (req, res) => {
@@ -120,7 +121,11 @@ const deleteCourse = async (req, res) => {
         id: id,
       },
       include: {
-        lessons: true,
+        lessons: {
+          include: {
+            contents: true,
+          },
+        },
       },
     });
 
@@ -130,36 +135,63 @@ const deleteCourse = async (req, res) => {
       return;
     }
 
-    // Check if there are any related lessons
-    if (course.lessons.length > 0) {
-      // Delete all the related lessons
-      const lessonIds = course.lessons.map((lesson) => lesson.id);
-      await prisma.lessons.deleteMany({
+    // Delete the contents related to the lessons
+    for (const lesson of course.lessons) {
+      const contentIds = lesson.contents.map((content) => {
+        const filePath = content.file;
+        const startIndex = filePath.indexOf("uploads");
+        // Extract the part of the string starting from "uploads" to the end
+        const extractedString = "../backend/"+filePath.slice(startIndex);
+
+        fs.unlink(extractedString, (err) => {
+          if (err) {
+            console.log('Error deleting the file:', err);
+          } else {
+            console.log('File deleted successfully.');
+          }
+        });
+
+        return content.id;
+      });
+
+      await prisma.contents.deleteMany({
         where: {
           id: {
-            in: lessonIds,
+            in: contentIds,
           },
         },
       });
     }
 
+    // Delete the lessons related to the course
+    const lessonIds = course.lessons.map((lesson) => lesson.id);
+    await prisma.lessons.deleteMany({
+      where: {
+        id: {
+          in: lessonIds,
+        },
+      },
+    });
+
     // Delete the course itself
-    const deletedCourse = await prisma.courses.delete({
+    await prisma.courses.delete({
       where: {
         id: id,
       },
     });
 
-    res.status(200).json({ messg: "Course deleted successfully" });
+    // Return a success message or response as needed
+    res.json({
+      messg: "Course and related lessons/contents deleted successfully.",
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the course." });
   }
 };
 
-// res.status(200).json({messg: 'Course deleted successfully'});
-//   } catch (error) {
-//     res.status(400).json({ error: error.message });
-//   }
 // delete all Course
 const deleteAllCourse = async (req, res) => {
   try {
@@ -276,7 +308,7 @@ const addContent = async (req, res) => {
   const startIndex = filePath.indexOf("uploads");
   // Extract the part of the string starting from "uploads" to the end
   const extractedString =
-    "localhost:4000/" + filePath.slice(startIndex).replace(/\\/g, "/");
+    "http://localhost:4000/" + filePath.slice(startIndex).replace(/\\/g, "/");
 
   console.log(title);
   console.log(lessonId);

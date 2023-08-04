@@ -75,7 +75,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   };
   const handleContentSubmit = async (e) => {
     e.preventDefault();
-    await addcontent(content_title, file.file, lessonId, handleDetailsReload);
+    await addcontent(content_title, file.file, lessonId, handleDetailsReload, setFile);
   };
 
   const handleShowCourseForm = () => {
@@ -507,13 +507,13 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                                 strokeWidth="2"
                               />
                             </svg>
-                            <p class="text-xl text-gray-700">
+                            <p className="text-xl text-gray-700">
                               Drop files to upload
                             </p>
 
-                            <p class="mb-2 text-gray-700">or</p>
+                            <p className="mb-2 text-gray-700">or</p>
 
-                            <label class="cursor-pointer hover:border-orange-300 hover:text-orange-400 bg-white px-4 h-9 inline-flex items-center rounded border border-gray-300 shadow-sm text-sm font-medium text-gray-700 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-orange-500">
+                            <label className="cursor-pointer hover:border-orange-300 hover:text-orange-400 bg-white px-4 h-9 inline-flex items-center rounded border border-gray-300 shadow-sm text-sm font-medium text-gray-700 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-orange-500">
                               Select files
                               <input
                                 onChange={(e) => {
@@ -523,31 +523,31 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                                   });
                                 }}
                                 type="file"
-                                class="sr-only"
+                                className="sr-only"
                               />
                             </label>
 
-                            <p class="text-xs text-gray-600 mt-4">
+                            <p className="text-xs text-gray-600 mt-4">
                               Maximum upload file size: 512MB.
                             </p>
                           </div>
                         </td>
                       </tr>
-                      {/* <tr>
+                      <tr>
                       <td colSpan={2}>
                         {file && (
-                          <ul class="mb-5 bg-white rounded divide-y divide-gray-200 shadow border">
-                            <li class="p-3 flex items-center justify-between">
-                              <div class="text-sm text-gray-700">
+                          <ul className="mb-5 bg-white rounded divide-y divide-gray-200 shadow border">
+                            <li className="p-3 flex items-center justify-between">
+                              <div className="text-sm text-gray-700">
                                 {file.file.name}
                               </div>
 
-                              <div class="w-40 bg-gray-200 rounded-full h-5 shadow-inner overflow-hidden relative flex items-center justify-center">
+                              <div className="w-40 bg-gray-200 rounded-full h-5 shadow-inner overflow-hidden relative flex items-center justify-center">
                                 <div
-                                  class="inline-block h-full bg-orange-400 absolute top-0 left-0"
-                                  style={{ width: "40%" }}
+                                  className="inline-block h-full bg-orange-400 absolute top-0 left-0"
+                                  style={{ width: `${file.progress}%` }}
                                 ></div>
-                                <div class="relative z-10 text-xs font-semibold text-center text-white drop-shadow text-shadow">
+                                <div className="relative z-10 text-xs font-semibold text-center text-white drop-shadow text-shadow">
                                   {file.progress} %
                                 </div>
                               </div>
@@ -555,7 +555,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                           </ul>
                         )}
                       </td>
-                    </tr> */}
+                    </tr>
                     </tbody>
                   </table>
                 </div>

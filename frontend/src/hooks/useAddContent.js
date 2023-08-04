@@ -11,7 +11,8 @@ export const useAddContent = () => {
     content_title,
     file,
     lessonId,
-    handleDetailsReload
+    handleDetailsReload,
+    setFile
   ) => {
     setIsLoadingContent(true);
     setErrorContent(null);
@@ -32,7 +33,9 @@ export const useAddContent = () => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
           );
-          
+          setFile(prevState=>{
+            return {...prevState, progress: percentCompleted}
+          })
         },
       });
 
@@ -46,7 +49,7 @@ export const useAddContent = () => {
       }
     } catch (error) {
         setIsLoadingContent(false);
-      setErrorContent("error");
+      setErrorContent(error.message);
     }
   };
 

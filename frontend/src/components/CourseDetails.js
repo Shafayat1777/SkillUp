@@ -50,7 +50,7 @@ const CourseDetails = ({ courseId, reload }) => {
             <div className="mt-8 mb-8">
               {course.lessons &&
                 course.lessons.map((lesson) => (
-                  <div className="border rounded-md shadow p-5 mt-4">
+                  <div key={lesson.id} className="border rounded-md shadow p-5 mt-4">
                     <div className="flex justify-between">
                       <div className="flex">
                         <h3 className="font-semibold rounded-full w-6 h-6 flex items-center justify-center bg-black text-white">

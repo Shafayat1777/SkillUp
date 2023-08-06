@@ -2,6 +2,7 @@ import ProfileCard from "../components/profileCard";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useEditProfile } from "../hooks/useEditProfile";
+import { Helmet } from "react-helmet";
 
 const Profile = () => {
   const { user } = useAuthContext();
@@ -63,6 +64,14 @@ const Profile = () => {
   };
   return (
     <div>
+      <div className="head">
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>Profile</title>
+          <link rel="canonical" href="http://mysite.com/example" />
+        </Helmet>
+      </div>
+      
       {data && (
         <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
           <div className="mx-8 md:mx-auto">

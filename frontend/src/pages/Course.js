@@ -43,25 +43,54 @@ const Course = () => {
               <link rel="canonical" href="http://mysite.com/example" />
             </Helmet>
           </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-4 gap-5">
-            <div className="hidden 2xl:block"></div>
 
-            <div className="p-8 w-full col-span-2">
-              <div className="text-xl font-semibold text-gray-600">
-                <h1>Course Description</h1>
-              </div>
-              <div className="mt-4 text-gray-600">
-                <p>{course.description}</p>
-              </div>
-              {course.lessons &&
-                course.lessons.map((lesson) => (
-                  <LessionDetails key={lesson.id} lesson={lesson} no={i++} />
-                ))}
-            </div>
+          <div className="flex justify-center">
+            <div className="container m-10 w-[70rem]">
+              <div className="top-banner p-10 border rounded-sm w-full h-[18rem] bg-gray-800">
+                <h1 className=" mb-10 font-semibold text-white text-3xl">
+                  {course.title}
+                </h1>
 
-            <div className="p-8 w-full lg:w-96">
-              <ProfileCard user={course.teacher} />
+                <div className="mb-5">
+                  <button className="py-1 px-3 border rounded-sm font-semibold text-white hover:bg-gray-700">
+                    Bookmark
+                  </button>
+                  <button className="ml-5 py-1 px-3 border rounded-sm font-semibold text-white hover:bg-gray-700">
+                    Replay Course
+                  </button>
+                </div>
+
+                <div className="flex s:w-96 h-16 flex-wrap content-between">
+                  <h3 className="mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">Basic</h3>
+                  <h3 className="mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">Hours</h3>
+                  <h3 className="mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">Videos</h3>
+                  <h3 className="mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">Quiz</h3>
+                  <h3 className="mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">participants</h3>
+                </div>
+              </div>
+
+              <div className=" mt-10 grid grid-cols-1 md:grid-cols-4 gap-5">
+                <div className=" w-full md:col-span-3">
+                  <div className="text-xl font-semibold text-gray-600">
+                    <h1>Course Description</h1>
+                  </div>
+                  <div className="mt-4 text-gray-600">
+                    <p>{course.description}</p>
+                  </div>
+                  {course.lessons &&
+                    course.lessons.map((lesson) => (
+                      <LessionDetails
+                        key={lesson.id}
+                        lesson={lesson}
+                        no={i++}
+                      />
+                    ))}
+                </div>
+
+                <div className="w-full ">
+                  <ProfileCard user={course.teacher} />
+                </div>
+              </div>
             </div>
           </div>
         </div>

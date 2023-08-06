@@ -37,7 +37,7 @@ const Courses = () => {
       </div>
 
       <div className="flex justify-center ">
-        <div className="mid-container mt-10 mx-10 w-[70rem]">
+        <div className="mid-container m-10 w-[70rem]">
           <div className="top-banner pt-10 border rounded-sm w-full h-[25rem] bg-orange-400">
             <h1 className=" px-10 mb-6 font-bold text-gray-800 text-2xl">
               Courses

@@ -74,7 +74,7 @@ const Profile = () => {
       
       {data && (
         <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-          <div className="mx-8 md:mx-auto">
+          <div className="mx-8 md:mx-auto md:w-72">
             <ProfileCard user={data} />
           </div>
 

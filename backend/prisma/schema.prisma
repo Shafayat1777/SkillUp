@@ -37,7 +37,7 @@ model Courses {
   title             String
   short_description String
   description       String
-  category          Json?
+  category          String
   total_hours       Int?
   course_status     Course_Status @default(PROCESSING)
   participants      Int?          @default(0)

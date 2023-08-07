@@ -14,7 +14,6 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const [showLessonForm, setShowLessonForm] = useState(false);
   const [showContentForm, setShowContentForm] = useState(false);
 
-
   // course add useState
   const [course_title, setTitle] = useState("");
   const [short_description, setShortDescription] = useState("");
@@ -31,12 +30,16 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const [file, setFile] = useState("");
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const [lessonId, setLessonId] = useState(null);
+  const [link, setLink] = useState("");
+
+  const [contentType, setContentType] = useState("PDF");
+  const [videoType, setVideoType] = useState("File");
 
   // to show selected form
   const selected =
     "mr-5 border-b-4 border-orange-400 py-4 hover:text-orange-400 cursor-pointer";
   const not_selected = "mr-5 py-4 hover:text-orange-400 cursor-pointer";
-  
+
   const [isDragOver, setIsDragOver] = useState(false);
   // file drag & drop functions
   const handleDragOver = (event) => {
@@ -102,6 +105,18 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
     setShowCourseForm(false);
     setShowLessonForm(false);
     setShowContentForm(true);
+  };
+
+  const handleFileTypeVideo = () => {
+    if (contentType === "PDF") {
+      setContentType("Video");
+    }
+  };
+  const handleFileTypePDF = () => {
+    if (contentType === "Video") {
+      setContentType("PDF");
+      setVideoType("File")
+    }
   };
 
   return (
@@ -260,11 +275,42 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                           value={category}
                           className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
                         >
-                          <option value="" disabled selected>
+                          <option
+                            className="text-orange-500"
+                            value=""
+                            disabled
+                            selected
+                          >
                             Select a Category
                           </option>
-                          <option value="CSE">CSE</option>
-                          <option value="PHY">PHY</option>
+
+                          <hr />
+
+                          <option value="Data Manipulation">
+                            Data Manipulation
+                          </option>
+                          <option value="Data Visualization">
+                            Data Visualization
+                          </option>
+                          <option value="Data Engineering">
+                            Data Engineering
+                          </option>
+                          <option value="AI & Machine Learning">
+                            AI & Machine Learning
+                          </option>
+                          <option value="Probability & Satistics">
+                            Probability & Satistics
+                          </option>
+                          <option value="Importing & Cleaning Data">
+                            Importing & Cleaning Data
+                          </option>
+                          <option value="Applied Finance">
+                            Applied Finance
+                          </option>
+                          <option value="Programming">Programming</option>
+                          <option value="Management">Management</option>
+                          <option value="Case Study">Case Study</option>
+                          <option value="Others">Others</option>
                         </select>
                       </td>
                     </tr>
@@ -470,62 +516,118 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                           />
                         </td>
                       </tr>
+                      <tr>
+                        <td className="flex flex-col">
+                          <label className=" text-gray-600 font-semibold">
+                            Content Type
+                          </label>
+                          {contentType === "Video" && (
+                            <label className=" text-gray-600 font-semibold mt-7">
+                              Video File Type
+                            </label>
+                          )}
+                        </td>
+                        <td>
+                          <div className="flex">
+                            <h3
+                              onClick={handleFileTypePDF}
+                              className={`text-center border ${
+                                contentType === "PDF"
+                                  ? "text-orange-600"
+                                  : "text-gray-600"
+                              } rounded-sm p-1 mb-5 w-full hover:bg-orange-100 cursor-pointer`}
+                            >
+                              PDF
+                            </h3>{" "}
+                            <h3
+                              onClick={handleFileTypeVideo}
+                              className={`text-center border ${
+                                contentType === "Video"
+                                  ? "text-orange-600"
+                                  : "text-gray-600"
+                              } rounded-sm p-1 mb-5 w-full hover:bg-orange-100 cursor-pointer`}
+                            >
+                              Video
+                            </h3>
+                          </div>
+                          {contentType === "Video" && (
+                            <select
+                              onChange={(e) => setVideoType(e.target.value)}
+                              value={videoType}
+                              className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                            >
+                              <option value="File">File</option>
+                              <option value="Link">Link</option>
+                            </select>
+                          )}
+                        </td>
+                      </tr>
 
                       <tr>
                         <td className="flex">
                           <label className="mr-20 text-gray-600 font-semibold">
-                            Add File
+                            Add {contentType === "PDF" ? "PDF" : "Video"} File {videoType === "Link" && "Link"}
                           </label>
                         </td>
                         <td>
-                          <div
-                            onDrop={handleDrop}
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            className={`mb-5 flex px-6 py-12 items-center flex-col border-2 border-dashed ${
-                              isDragOver
-                                ? "border-orange-500 bg-orange-50"
-                                : "border-gray-400"
-                            } rounded-md`}
-                          >
-                            <svg
-                              className="w-12 h-12 text-gray-500"
-                              aria-hidden="true"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 48 48"
+                          {videoType === "Link" ? (
+                            <input
+                              onChange={(e) => setLink(e.target.value)}
+                              value={link}
+                              className="border rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                              type="text"
+                              placeholder="Link"
+                            />
+                          ) : (
+                            <div
+                              onDrop={handleDrop}
+                              onDragOver={handleDragOver}
+                              onDragLeave={handleDragLeave}
+                              className={`mb-5 flex px-6 py-12 items-center flex-col border-2 border-dashed ${
+                                isDragOver
+                                  ? "border-orange-500 bg-orange-50"
+                                  : "border-gray-400"
+                              } rounded-md`}
                             >
-                              <path
-                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                              />
-                            </svg>
-                            <p className="text-xl text-gray-700">
-                              Drop files to upload
-                            </p>
+                              <svg
+                                className="w-12 h-12 text-gray-500"
+                                aria-hidden="true"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 48 48"
+                              >
+                                <path
+                                  d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                />
+                              </svg>
+                              <p className="text-xl text-gray-700">
+                                Drop files to upload
+                              </p>
 
-                            <p className="mb-2 text-gray-700">or</p>
+                              <p className="mb-2 text-gray-700">or</p>
 
-                            <label className="cursor-pointer hover:border-orange-300 hover:text-orange-400 bg-white px-4 h-9 inline-flex items-center rounded border border-gray-300 shadow-sm text-sm font-medium text-gray-700 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-orange-500">
-                              Select files
-                              <input
-                                onChange={(e) => {
-                                  setFile({
-                                    file: e.target.files[0],
-                                    progress: 0,
-                                  });
-                                }}
-                                type="file"
-                                className="sr-only"
-                              />
-                            </label>
+                              <label className="cursor-pointer hover:border-orange-300 hover:text-orange-400 bg-white px-4 h-9 inline-flex items-center rounded border border-gray-300 shadow-sm text-sm font-medium text-gray-700 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-orange-500">
+                                Select files
+                                <input
+                                  onChange={(e) => {
+                                    setFile({
+                                      file: e.target.files[0],
+                                      progress: 0,
+                                    });
+                                  }}
+                                  type="file"
+                                  className="sr-only"
+                                />
+                              </label>
 
-                            <p className="text-xs text-gray-600 mt-4">
-                              Maximum upload file size: 500MB.
-                            </p>
-                          </div>
+                              <p className="text-xs text-gray-600 mt-4">
+                                Maximum upload file size: 500MB.
+                              </p>
+                            </div>
+                          )}
                         </td>
                       </tr>
                       <tr>
@@ -587,9 +689,9 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
       {errorContent && (
         <div className="mt-4 w-full border rounded border-red-400 text-center text-red-400 bg-red-100 tracking-wider">
           {errorContent}
+          {console.log(errorContent)}
         </div>
       )}
-
     </div>
   );
 };

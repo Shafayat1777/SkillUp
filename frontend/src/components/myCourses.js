@@ -96,7 +96,7 @@ const MyCourses = ({
                   </h3>
                 </td>
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                  {course.catagory}
+                  {course.category}
                 </td>
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
                   <span className="pus">{course.course_status}</span>

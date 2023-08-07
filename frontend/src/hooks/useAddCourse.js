@@ -16,7 +16,6 @@ export const useAddCourse = () => {
     description,
     category,
     userId,
-    userToken
   ) => {
     setIsLoading(true);
     setError(null);

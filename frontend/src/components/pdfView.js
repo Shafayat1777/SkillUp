@@ -6,7 +6,7 @@ const PdfView = ({content, handleCloseWindow}) => {
     
   return (
     <div className="z-10 fixed top-0 bottom-0 left-0 right-0 flex justify-center items-center h-screen bg-blue-950 bg-opacity-60">
-      <div className="bg-white rounded-md relative">
+      <div className="bg-white rounded-md relative w-[55rem] h-[35rem] m-5">
         <h1 className="p-4 font-bold text-xl text-gray-600">Slides - {content.title}</h1>
         <div onClick={handleCloseClick} className="absolute top-3 right-3 rounded hover:bg-gray-100 cursor-pointer">
           <svg
@@ -25,7 +25,7 @@ const PdfView = ({content, handleCloseWindow}) => {
           </svg>
         </div>
         <iframe
-          className="w-[55rem] h-[35rem] rounded-b-md"
+          className=" rounded-b-md w-full h-full"
           src={content.file}
           frameborder="0"
           title="Embedded content"

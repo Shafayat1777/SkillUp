@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useCoursesContext } from "../hooks/useCourseContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Helmet } from "react-helmet";
-
+import { useCheckAuth } from "../hooks/useCheckAuth";
 // components
 import MyCourses from "../components/myCourses";
 import CoursesForm from "../components/CoursesForm";
@@ -11,12 +11,18 @@ import CourseDetails from "../components/CourseDetails";
 const Dashboard = () => {
   const { courses, dispatch } = useCoursesContext();
   const { user } = useAuthContext();
+  const {checkAuth} = useCheckAuth()
   const [showForm, setShowForm] = useState(false);
   const [showDetails, setShowDetails] = useState(null);
+  const [error, setError] = useState(null);
 
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
+    if(!user){
+      
+    }
+
     const fetchCourses = async () => {
       const respons = await fetch("/api/courses/courses/", {
         headers: {
@@ -27,6 +33,11 @@ const Dashboard = () => {
 
       if (respons.ok) {
         dispatch({ type: "SET_COURSES", payload: json });
+      }
+      if (!respons.ok) {
+        setError();
+
+        checkAuth({data:json.error})
       }
     };
 
@@ -42,7 +53,7 @@ const Dashboard = () => {
       setReload(true);
     }
   };
-  console.log(reload);
+
   const handleShowForm = () => {
     setShowForm(true);
   };
@@ -65,7 +76,7 @@ const Dashboard = () => {
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
       </div>
-      
+
       <div className="m-8 flex">
         <div className=" col-span-2 w-full">
           <h1 className="mb-5 text-gray-600 font-semibold text-lg">
@@ -93,6 +104,7 @@ const Dashboard = () => {
               </svg>
             </button>
           </div>
+          <div>{error && (<h1>{error}</h1>)}</div>
           <div className="mt-4">
             {courses && (
               <MyCourses

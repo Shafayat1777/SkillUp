@@ -3,7 +3,7 @@ const ProfileCard = ({ user }) => {
     <div>
       {user && (
         <div className="flex items-center justify-center">
-          <div className="rounded-lg border shadow w-full">
+          <div className="rounded-sm border shadow w-full">
             <div className="flex items-center justify-center pt-10 flex-col">
               <img
                 className="rounded-full w-32"

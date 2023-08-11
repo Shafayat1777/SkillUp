@@ -3,8 +3,13 @@ import { useUsersContext } from "../hooks/useUsersContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Helmet } from "react-helmet";
 
+
 // components
 import UserDetails from "../components/userDetails";
+import Features from "../components/FeaturesSection";
+import Footer from "../components/Footer";
+import HeroSection from "../components/HeroSection";
+import PopularCourses from "../components/PopularCourse";
 
 const Home = () => {
   const { users, dispatch } = useUsersContext();
@@ -34,11 +39,26 @@ const Home = () => {
       <div className="head">
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Home</title>
+          <title>Home | SkillUP ~ Learn anything from anywhere</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
       </div>
       
+        <main>
+
+         {/* HeroSection */}
+         <HeroSection/>
+
+          {/* Features Section */}
+          <Features/>
+          
+          {/* Popular Courses */}
+          <PopularCourses/>
+         
+          <Footer/>
+
+      </main>
+
       <div className="users">{users && <UserDetails users={users} />}</div>
     </div>
   );

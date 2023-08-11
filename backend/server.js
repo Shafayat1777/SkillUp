@@ -17,15 +17,6 @@ app.use((req, res, next) => {
 });
 
 
-// Testing API
-
-app.use('/',(req,res) => {
-
-  console.log("hello")
-  res.json({"msg":"Hello"})
-
-});
-
 // Serve static files from "backend/uploads" folder
 app.use('/uploads', express.static(path.join('uploads')));
 

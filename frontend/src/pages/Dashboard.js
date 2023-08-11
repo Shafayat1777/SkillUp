@@ -48,7 +48,7 @@ const Dashboard = () => {
     if (user) {
       fetchCourses();
     }
-  }, [user, dispatch, reload]);
+  }, [user, dispatch, reload, navigate]);
 
   const handleDetailsReload = () => {
     if (reload) {
@@ -66,6 +66,13 @@ const Dashboard = () => {
   };
   const handleShowDetails = (courseId) => {
     setShowDetails(courseId);
+  };
+
+  const handleHideDetails = (courseId) => {
+    if(showDetails){
+      setShowDetails(null);
+    }
+    
   };
   const closeShowDetails = () => {
     setShowDetails(null);
@@ -119,21 +126,21 @@ const Dashboard = () => {
               />
             )}
           </div>
-          <div className="mt-4">
+          <div className="my-4">
             {showDetails && (
-              <CourseDetails courseId={showDetails} reload={reload} />
+              <CourseDetails courseId={showDetails} reload={reload} handleHideDetails={handleHideDetails} />
             )}
           </div>
         </div>
         {showForm && (
-          <div className="ml-5">
-            <h1 className="mb-5 text-gray-600 font-semibold text-lg">
+          <div className="2xl:ml-5">
+            <div className="mb-5 text-gray-600 font-semibold text-lg">
               <CoursesForm
                 handleHideForm={handleHideForm}
                 courses={courses}
                 handleDetailsReload={handleDetailsReload}
               />
-            </h1>
+            </div>
           </div>
         )}
       </div>

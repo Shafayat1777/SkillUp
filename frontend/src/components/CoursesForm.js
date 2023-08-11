@@ -121,10 +121,10 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
 
   return (
     <div>
-      <div className="border shadow rounded-md w-[35rem] pt-5 relative">
+      <div className="border shadow rounded-md 2xl:w-[35rem] pt-5 relative">
         <div
           onClick={handleHideForm}
-          className="absolute top-3 right-3 border rounded hover:border-red-500 hover:text-red-500 cursor-pointer"
+          className="absolute top-3 right-3  rounded  hover:bg-gray-200  cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

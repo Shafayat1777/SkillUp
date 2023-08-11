@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import PdfView from "./pdfView";
 
 const CourseContent = ({ lesson, i }) => {
@@ -86,7 +85,11 @@ const CourseContent = ({ lesson, i }) => {
                             alt="pdf.img"
                           />
                         ) : (
-                          <h1>VIDEO</h1>
+                          <img
+                            className="w-5 h-5"
+                            src="./img/video.png"
+                            alt="video.img"
+                          />
                         )}
                       </div>
                       <div className="ml-3">{content.title}</div>

@@ -12,18 +12,19 @@ export const useAddContent = () => {
     file,
     lessonId,
     setFile,
+    contentType,
     handleDetailsReload
   ) => {
     setIsLoadingContent(true);
     setErrorContent(null);
-
+    console.log(content_title, contentType)
     const contentData = new FormData();
     contentData.append("title", content_title);
     contentData.append("lessonId", lessonId);
     contentData.append("file", file);
 
     try {
-      const response = await axios.post("/api/courses/contents", contentData, {
+      const response = await axios.post(contentType==='PDF'? "/api/courses/contents/file/pdf":"/api/courses/contents/file/video", contentData, {
         headers: {
           Authorization: `Bearer ${user.token}`,
           "Content-Type": "multipart/form-data", // Important to set the correct Content-Type

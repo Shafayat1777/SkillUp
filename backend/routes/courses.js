@@ -1,6 +1,6 @@
 const express = require("express");
 const requireAuth = require("../middleware/requireAuth");
-const { uploadPDF, validatePDF } = require("../middleware/fileUpload");
+const { uploadPDF, validatePDF, uploadVideo } = require("../middleware/fileUpload");
 
 const {
   createCourse,
@@ -51,8 +51,11 @@ router.get("/lessons/:id", getoneLesson); // Adjust the route for getting a sing
 // DELETE a lesson
 router.delete("/lessons/:id", deleteLesson); // Adjust the route for deleting a lesson
 
-// Create a content
-router.post("/contents", uploadPDF.single("file"), validatePDF, addContent); // Use "/lessons" instead of "/lesson"
+// Create a PDF content file
+router.post("/contents/file/pdf", uploadPDF.single("file"), validatePDF, addContent); // Use "/lessons" instead of "/lesson"
+
+// Create a Video content file
+router.post("/contents/file/video", uploadVideo.single("file"), addContent); // Use "/lessons" instead of "/lesson"
 
 // GET all content
 router.get("/contents", getAllContent); // Use "/lessons" instead of "/lesson"

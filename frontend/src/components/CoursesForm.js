@@ -86,6 +86,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
       file.file,
       lessonId,
       setFile,
+      contentType,
       handleDetailsReload
     );
   };

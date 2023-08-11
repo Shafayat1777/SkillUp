@@ -16,6 +16,16 @@ app.use((req, res, next) => {
   next();
 });
 
+
+// Testing API
+
+app.use('/',(req,res) => {
+
+  console.log("hello")
+  res.json({"msg":"Hello"})
+
+});
+
 // Serve static files from "backend/uploads" folder
 app.use('/uploads', express.static(path.join('uploads')));
 
@@ -25,5 +35,5 @@ app.use("/api/courses", courseRoutes);
 
 // listen for requests
 app.listen(process.env.PORT, () => {
-  console.log("listening on port!", process.env.PORT);
+  console.log("listening on port! http://localhost:"+process.env.PORT);
 });

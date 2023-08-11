@@ -44,7 +44,7 @@ const Dashboard = () => {
     if (user) {
       fetchCourses();
     }
-  }, [user, dispatch, reload]);
+  }, [user, dispatch, reload, checkAuth]);
 
   const handleDetailsReload = () => {
     if (reload) {

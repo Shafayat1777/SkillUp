@@ -127,7 +127,7 @@ const signupUser = async (req, res) => {
       throw Error("Email is not valid!");
     }
     if (!validator.isStrongPassword(password)) {
-      throw Error("Password is not strong enough!");
+      throw Error("Password is not strong enough! Must Contain a degit, symbol, capital and small letter");
     }
 
     // check if the user already exists

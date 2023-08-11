@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useCoursesContext } from "../hooks/useCourseContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Helmet } from "react-helmet";
-import { useCheckAuth } from "../hooks/useCheckAuth";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+
 // components
 import MyCourses from "../components/myCourses";
 import CoursesForm from "../components/CoursesForm";
@@ -11,7 +13,7 @@ import CourseDetails from "../components/CourseDetails";
 const Dashboard = () => {
   const { courses, dispatch } = useCoursesContext();
   const { user } = useAuthContext();
-  const {checkAuth} = useCheckAuth()
+  const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [showDetails, setShowDetails] = useState(null);
   const [error, setError] = useState(null);
@@ -19,10 +21,6 @@ const Dashboard = () => {
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
-    if(!user){
-      
-    }
-
     const fetchCourses = async () => {
       const respons = await fetch("/api/courses/courses/", {
         headers: {
@@ -37,14 +35,20 @@ const Dashboard = () => {
       if (!respons.ok) {
         setError();
 
-        checkAuth({data:json.error})
+        if (json.error === "jwt expired" || json.error === "jwt malformed") {
+          // remove user from cookies
+          Cookies.remove("user");
+          //dispatch logout action
+          dispatch({ type: "LOGOUT" });
+          navigate("/session");
+        }
       }
     };
 
     if (user) {
       fetchCourses();
     }
-  }, [user, dispatch, reload, checkAuth]);
+  }, [user, dispatch, reload]);
 
   const handleDetailsReload = () => {
     if (reload) {
@@ -77,7 +81,7 @@ const Dashboard = () => {
         </Helmet>
       </div>
 
-      <div className="m-8 flex">
+      <div className="m-8 2xl:flex">
         <div className=" col-span-2 w-full">
           <h1 className="mb-5 text-gray-600 font-semibold text-lg">
             My course
@@ -104,7 +108,7 @@ const Dashboard = () => {
               </svg>
             </button>
           </div>
-          <div>{error && (<h1>{error}</h1>)}</div>
+          <div>{error && <h1>{error}</h1>}</div>
           <div className="mt-4">
             {courses && (
               <MyCourses

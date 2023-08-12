@@ -3,7 +3,6 @@ import PdfView from "./pdfView";
 
 const LessionDetails = ({ lesson, no }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [showWindow, setShowWindow] = useState(false);
 
   const handleOnClick = () => {
     if (isVisible) {
@@ -13,12 +12,6 @@ const LessionDetails = ({ lesson, no }) => {
     }
   };
 
-  const handleOpenWindow = () => {
-    setShowWindow(true);
-  };
-  const handleCloseWindow = () => {
-    setShowWindow(false);
-  };
 
   return (
     <div className="mt-10 border rounded-sm bg-orange-50">
@@ -87,30 +80,11 @@ const LessionDetails = ({ lesson, no }) => {
           </button>
         </div>
         {isVisible && (
-          <div className="">
+          <div className="mb-5">
             {lesson.contents &&
               lesson.contents.map((content) => (
-                <div onClick={handleOpenWindow}>
-                  <div className="flex items-center px-16 py-1.5 hover:bg-orange-200 cursor-pointer font-bold mb-5">
-                    <div className="border border-md border-orange-400 rounded-full w-8 h-8 flex items-center justify-center">
-                      {content.file.endsWith(".pdf") ? (
-                        <img
-                          className="w-5 h-5"
-                          src="/img/pdf.png"
-                          alt="pdf.img"
-                        />
-                      ) : (
-                        <h1>VIDEO</h1>
-                      )}
-                    </div>
-                    <div className="ml-3">{content.title}</div>
-                  </div>
-                  {showWindow && (
-                    <PdfView
-                      content={content}
-                      handleCloseWindow={handleCloseWindow}
-                    />
-                  )}
+                <div key={content.id}>
+                  <PdfView content={content} />
                 </div>
               ))}
           </div>

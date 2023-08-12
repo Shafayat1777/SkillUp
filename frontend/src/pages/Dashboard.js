@@ -49,7 +49,6 @@ const Dashboard = () => {
       fetchCourses();
     }
   }, [user, dispatch, reload, navigate]);
-
   const handleDetailsReload = () => {
     if (reload) {
       setReload(false);
@@ -83,7 +82,7 @@ const Dashboard = () => {
       <div className="head">
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Dashboard</title>
+          <title>Dashboard | SkillUP</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
       </div>

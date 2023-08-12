@@ -87,6 +87,8 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
       lessonId,
       setFile,
       contentType,
+      videoType,
+      link,
       handleDetailsReload
     );
   };
@@ -111,12 +113,16 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const handleFileTypeVideo = () => {
     if (contentType === "PDF") {
       setContentType("Video");
+      setLink("")
+      setFile("")
     }
   };
   const handleFileTypePDF = () => {
     if (contentType === "Video") {
       setContentType("PDF");
       setVideoType("File")
+      setLink("")
+      setFile("")
     }
   };
 

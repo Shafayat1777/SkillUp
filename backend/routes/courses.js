@@ -57,6 +57,9 @@ router.post("/contents/file/pdf", uploadPDF.single("file"), validatePDF, addCont
 // Create a Video content file
 router.post("/contents/file/video", uploadVideo.single("file"), addContent); // Use "/lessons" instead of "/lesson"
 
+// Create a Video content file
+router.post("/contents/link/video", addContent); // Use "/lessons" instead of "/lesson"
+
 // GET all content
 router.get("/contents", getAllContent); // Use "/lessons" instead of "/lesson"
 

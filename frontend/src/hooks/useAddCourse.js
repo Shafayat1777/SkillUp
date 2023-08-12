@@ -21,7 +21,7 @@ export const useAddCourse = () => {
     setError(null);
     var userId = user.id;
 
-    const response = await fetch("/api/courses/courses/", {
+    const response = await fetch("http://localhost:4000/api/courses/courses/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

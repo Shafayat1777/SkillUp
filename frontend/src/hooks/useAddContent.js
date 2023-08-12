@@ -26,14 +26,14 @@ export const useAddContent = () => {
     console.log(content_title, lessonId, link)
     var url = "";
     if (contentType === "PDF") {
-      url = "/api/courses/contents/file/pdf";
+      url = "http://localhost:4000/api/courses/contents/file/pdf";
       contentData.append("file", file);
     } else {
       if (videoType === "File") {
-        url = "/api/courses/contents/file/video";
+        url = "http://localhost:4000/api/courses/contents/file/video";
         contentData.append("file", file);
       } else {
-        url = "/api/courses/contents/link/video";
+        url = "http://localhost:4000/api/courses/contents/link/video";
         contentData.append("link", link);
       }
     }

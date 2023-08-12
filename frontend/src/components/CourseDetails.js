@@ -9,7 +9,7 @@ const CourseDetails = ({ courseId, reload, handleHideDetails }) => {
   var i = 1;
   useEffect(() => {
     const fetchCourses = async () => {
-      const respons = await fetch("/api/courses/courses/" + courseId, {
+      const respons = await fetch("http://localhost:4000/api/courses/courses/" + courseId, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

@@ -49,12 +49,23 @@ const PdfView = ({ content }) => {
                 />
               </svg>
             </div>
-            <iframe
-              className=" rounded-b-md w-full h-full"
-              src={content.file}
-              frameborder="0"
-              title="Embedded content"
-            ></iframe>
+            {content.file.endsWith(".pdf") ? (
+              <iframe
+                className=" rounded-b-md w-full h-full"
+                src={content.file}
+                frameborder="0"
+                title="Embedded PDF content"
+              ></iframe>
+            ) : (
+              <iframe
+                className=" rounded-b-md w-full h-full"
+                src={content.file}
+                title="Embedded video player"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            )}
           </div>
         </div>
       )}

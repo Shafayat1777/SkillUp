@@ -21,7 +21,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const respons = await fetch(`/api/users/${user.id}`, {
+      const respons = await fetch(`http://localhost:4000/api/users/${user.id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

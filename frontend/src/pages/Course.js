@@ -13,7 +13,7 @@ const Course = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const respons = await fetch(`/api/courses/courses/${id}`, {
+      const respons = await fetch(`http://localhost:4000/api/courses/courses/${id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

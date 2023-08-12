@@ -1,5 +1,5 @@
 const prisma = require("../prisma/prisma");
-const fs = require('fs');
+const fs = require("fs");
 
 // get all Course
 const getallCourse = async (req, res) => {
@@ -141,13 +141,13 @@ const deleteCourse = async (req, res) => {
         const filePath = content.file;
         const startIndex = filePath.indexOf("uploads");
         // Extract the part of the string starting from "uploads" to the end
-        const extractedString = "../backend/"+filePath.slice(startIndex);
+        const extractedString = "../backend/" + filePath.slice(startIndex);
 
         fs.unlink(extractedString, (err) => {
           if (err) {
-            console.log('Error deleting the file:', err);
+            console.log("Error deleting the file:", err);
           } else {
-            console.log('File deleted successfully.');
+            console.log("File deleted successfully.");
           }
         });
 
@@ -299,20 +299,31 @@ const deleteLesson = async (req, res) => {
 
 // add a content
 const addContent = async (req, res) => {
-  // console.log(req.file.path);
   const { content_title, lessonId, link } = req.body;
-  var videoLink = ''
+  var videoLink = "";
   // get the file path
-  if(req.file){
-  const filePath = req.file.path;
-  // Find the index of the "uploads" substring
-  const startIndex = filePath.indexOf("uploads");
-  // Extract the part of the string starting from "uploads" to the end
-  videoLink =
-    "http://localhost:4000/" + filePath.slice(startIndex).replace(/\\/g, "/");
-  }else{
-    if(link)
-    videoLink = link
+  if (req.file) {
+    const filePath = req.file.path;
+    // Find the index of the "uploads" substring
+    const startIndex = filePath.indexOf("uploads");
+    // Extract the part of the string starting from "uploads" to the end
+    videoLink =
+      "http://localhost:4000/" + filePath.slice(startIndex).replace(/\\/g, "/");
+  } else {
+    if (link) {
+      // Check if the link is a YouTube link
+      const youtubeMatch = link.match(
+        /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/
+      );
+      if (youtubeMatch) {
+        const youtubeVideoId = youtubeMatch[1];
+        videoLink = `https://www.youtube.com/embed/${youtubeVideoId}`;
+      } else {
+        // Handle other types of links or invalid YouTube links
+        // You might want to provide an error message or default behavior here
+        videoLink = link
+      }
+    }
   }
   console.log(content_title);
   console.log(lessonId);

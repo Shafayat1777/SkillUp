@@ -39,7 +39,7 @@ const Course = () => {
           <div className="head">
             <Helmet>
               <meta charSet="utf-8" />
-              <title>Course - {course.title}</title>
+              <title>Course - {course.title} || SkillUp</title>
               <link rel="canonical" href="http://mysite.com/example" />
             </Helmet>
           </div>
@@ -74,11 +74,11 @@ const Course = () => {
                   </button>
                 </div>
 
-                <div className="flex  h-16 flex-wrap content-between">
-                  <h3 className="mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
+                <div className="flex flex-wrap content-between">
+                  <h3 className="mb-2 mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     Basic
                   </h3>
-                  <h3 className="flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
+                  <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -95,7 +95,7 @@ const Course = () => {
                     </svg>
                     Hours
                   </h3>
-                  <h3 className="flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
+                  <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -112,7 +112,7 @@ const Course = () => {
                     </svg>
                     PDFs
                   </h3>
-                  <h3 className="flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
+                  <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -129,7 +129,7 @@ const Course = () => {
                     </svg>
                     Videos
                   </h3>
-                  <h3 className="flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
+                  <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -146,7 +146,7 @@ const Course = () => {
                     </svg>
                     Quiz
                   </h3>
-                  <h3 className="flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
+                  <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"

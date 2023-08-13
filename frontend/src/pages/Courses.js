@@ -71,8 +71,8 @@ const Courses = () => {
             {/* grid 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-5 */}
             {courses &&
               courses.map((course) => (
-                <div className="">
-                  <CourseCard key={course.id} course={course} />
+                <div className="transition-transform transform hover:translate-y-[-10px]">
+                  <CourseCard className="" key={course.id} course={course} />
                 </div>
               ))}
           </div>

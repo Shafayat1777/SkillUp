@@ -13,6 +13,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const [showCourseForm, setShowCourseForm] = useState(true);
   const [showLessonForm, setShowLessonForm] = useState(false);
   const [showContentForm, setShowContentForm] = useState(false);
+  const [showQuizForm, setShowQuizForm] = useState(false);
 
   // course add useState
   const [course_title, setTitle] = useState("");
@@ -92,37 +93,49 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
       handleDetailsReload
     );
   };
+  const handleQuizSubmit = async (e) => {
+    e.preventDefault();
+  };
 
   // form show functions
   const handleShowCourseForm = () => {
     setShowCourseForm(true);
     setShowLessonForm(false);
     setShowContentForm(false);
+    setShowQuizForm(false);
   };
   const handleShowLessonForm = () => {
     setShowCourseForm(false);
     setShowLessonForm(true);
     setShowContentForm(false);
+    setShowQuizForm(false);
   };
   const handleShowContentForm = () => {
     setShowCourseForm(false);
     setShowLessonForm(false);
     setShowContentForm(true);
+    setShowQuizForm(false);
+  };
+  const handleShowQuizForm = () => {
+    setShowCourseForm(false);
+    setShowLessonForm(false);
+    setShowContentForm(false);
+    setShowQuizForm(true);
   };
 
   const handleFileTypeVideo = () => {
     if (contentType === "PDF") {
       setContentType("Video");
-      setLink("")
-      setFile("")
+      setLink("");
+      setFile("");
     }
   };
   const handleFileTypePDF = () => {
     if (contentType === "Video") {
       setContentType("PDF");
-      setVideoType("File")
-      setLink("")
-      setFile("")
+      setVideoType("File");
+      setLink("");
+      setFile("");
     }
   };
 
@@ -157,6 +170,9 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
           )}
           {showContentForm && (
             <h1 className="font-bold text-gray-600">Add Lesson Contents</h1>
+          )}
+          {showQuizForm && (
+            <h1 className="font-bold text-gray-600">Add Quiz</h1>
           )}
           <div className="flex border-b text-gray-400">
             <h3
@@ -208,6 +224,28 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
               className={showContentForm ? selected : not_selected}
             >
               Content
+            </h3>
+            <h3 className="mr-5 py-4 flex items-center text-orange-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            </h3>
+            <h3
+              onClick={handleShowQuizForm}
+              className={showQuizForm ? selected : not_selected}
+            >
+              Quiz
             </h3>
           </div>
         </div>
@@ -573,7 +611,8 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                       <tr>
                         <td className="flex">
                           <label className="mr-20 text-gray-600 font-semibold">
-                            Add {contentType === "PDF" ? "PDF" : "Video"} File {videoType === "Link" && "Link"}
+                            Add {contentType === "PDF" ? "PDF" : "Video"} File{" "}
+                            {videoType === "Link" && "Link"}
                           </label>
                         </td>
                         <td>
@@ -658,6 +697,134 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                               </li>
                             </ul>
                           )}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
+
+              <div className=" p-5 bg-gray-200 h-16 flex items-center justify-end">
+                <input
+                  disabled={isLoadingContent}
+                  className="cursor-pointer border-green-400 rounded-sm w-32 h-8 text-sm bg-white text-orange-400 hover:border-orange-400 hover:border"
+                  type="reset"
+                  value="RESET"
+                />
+                <input
+                  disabled={isLoadingContent}
+                  className="cursor-pointer ml-5 rounded-sm w-32 h-8 text-sm bg-orange-400 text-white hover:bg-orange-500"
+                  type="submit"
+                  value="ADD"
+                />
+              </div>
+            </form>
+          )}
+
+          {/*Course Quiz form */}
+          {showQuizForm && (
+            <form onSubmit={handleQuizSubmit}>
+              {!courses.length > 0 && (
+                <p className="p-6 text-md text-orange-400">
+                  Please add at least a single Course to access this form
+                </p>
+              )}
+              {courses.length > 0 && (
+                <div className="px-6">
+                  <table className="table-fixed w-full">
+                    <tbody>
+                      <tr>
+                        <td className="flex">
+                          <label className=" text-gray-600 font-semibold">
+                            Select a course
+                          </label>
+                        </td>
+                        <td>
+                          <select
+                            onChange={(e) =>
+                              setSelectedCourseId(e.target.value)
+                            }
+                            value={selectedCourseId}
+                            className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                          >
+                            <option value="" disabled selected>
+                              Select a course
+                            </option>
+                            {courses &&
+                              courses.map((course) => (
+                                <option key={course.id} value={course.id}>
+                                  {course.title}
+                                </option>
+                              ))}
+                          </select>
+                        </td>
+                      </tr>
+
+                      {selectedCourseId && (
+                        <tr>
+                          <td className="flex">
+                            <label className=" text-gray-600 font-semibold">
+                              Select a Lesson
+                            </label>
+                          </td>
+                          <td>
+                            <select
+                              onChange={(e) => setLessonId(e.target.value)}
+                              value={lessonId}
+                              className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                            >
+                              <option value="" disabled selected>
+                                Select a Lesson
+                              </option>
+                              {courses.map((course) => {
+                                if (
+                                  course.id === selectedCourseId &&
+                                  course.lessons &&
+                                  course.lessons.length > 0
+                                ) {
+                                  return course.lessons.map((lesson) => (
+                                    <option key={lesson.id} value={lesson.id}>
+                                      {lesson.title}
+                                    </option>
+                                  ));
+                                }
+                                return null;
+                              })}
+                            </select>
+                          </td>
+                        </tr>
+                      )}
+
+                      <tr>
+                        <td className="flex">
+                          <label className=" text-gray-600 font-semibold">
+                            Quiz Title
+                          </label>
+                        </td>
+                        <td>
+                          <input
+                            onChange={(e) => setContentTitle(e.target.value)}
+                            value={content_title}
+                            className="border rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                            type="text"
+                            placeholder="Title"
+                          />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td className="flex">
+                          <label className=" text-gray-600 font-semibold">
+                            Questions
+                          </label>
+                        </td>
+                        <td>
+                          <input
+                            onChange={(e) => setContentTitle(e.target.value)}
+                            value={content_title}
+                            className="border rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                            type="text"
+                            placeholder="Title"
+                          />
                         </td>
                       </tr>
                     </tbody>

@@ -33,6 +33,19 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const [lessonId, setLessonId] = useState(null);
   const [link, setLink] = useState("");
 
+  // Quiz add useState
+  const [quiz, setQuiz] = useState([]);
+  const [quizTitle, setQuizTitle] = useState("");
+  const [question, setQuestion] = useState("");
+  const [option1, setOption1] = useState("");
+  const [option2, setOption2] = useState("");
+  const [option3, setOption3] = useState("");
+  const [option4, setOption4] = useState("");
+  const [answer, setAnswer] = useState("");
+  const [addingQuiz, setAddingQuiz] = useState(false);
+  const [quizCourseId, setQuizCourseId] = useState("");
+  const [quizLessoneId, setQuizLessoneId] = useState("");
+
   const [contentType, setContentType] = useState("PDF");
   const [videoType, setVideoType] = useState("File");
 
@@ -95,6 +108,8 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   };
   const handleQuizSubmit = async (e) => {
     e.preventDefault();
+
+    const qv = [...quiz, []];
   };
 
   // form show functions
@@ -741,10 +756,8 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                         </td>
                         <td>
                           <select
-                            onChange={(e) =>
-                              setSelectedCourseId(e.target.value)
-                            }
-                            value={selectedCourseId}
+                            onChange={(e) => setQuizCourseId(e.target.value)}
+                            value={quizCourseId}
                             className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
                           >
                             <option value="" disabled selected>
@@ -769,8 +782,8 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                           </td>
                           <td>
                             <select
-                              onChange={(e) => setLessonId(e.target.value)}
-                              value={lessonId}
+                              onChange={(e) => setQuizLessoneId(e.target.value)}
+                              value={quizLessoneId}
                               className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
                             >
                               <option value="" disabled selected>
@@ -803,24 +816,8 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                         </td>
                         <td>
                           <input
-                            onChange={(e) => setContentTitle(e.target.value)}
-                            value={content_title}
-                            className="border rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
-                            type="text"
-                            placeholder="Title"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="flex">
-                          <label className=" text-gray-600 font-semibold">
-                            Questions
-                          </label>
-                        </td>
-                        <td>
-                          <input
-                            onChange={(e) => setContentTitle(e.target.value)}
-                            value={content_title}
+                            onChange={(e) => setQuizTitle(e.target.value)}
+                            value={quizTitle}
                             className="border rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
                             type="text"
                             placeholder="Title"
@@ -829,6 +826,135 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                       </tr>
                     </tbody>
                   </table>
+                  <div className="border rounded">
+                    <div className="bg-slate-100 border-b flex items-center pl-4 py-2">
+                      <h3 className="">Question</h3>
+                      <h3 className="ml-2 text-sm border rounded-full bg-slate-600 text-white w-5 h-5 flex justify-center items-center">
+                        1
+                      </h3>
+                    </div>
+
+                    <div className="px-3 pt-2 flex">
+                      <table className="table w-full">
+                        <tbody>
+                          <tr>
+                            <td className="flex">
+                              <label className=" text-gray-600 font-semibold">
+                                Question
+                              </label>
+                            </td>
+                            <td>
+                              <textarea
+                                onChange={(e) =>
+                                  setQuestion(e.target.value)
+                                }
+                                value={question}
+                                className="border rounded-sm p-1 block mb-2 w-full focus:outline-orange-100"
+                                rows="3"
+                                placeholder="Add a question"
+                              ></textarea>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="flex">
+                              <label className=" text-gray-600 font-semibold">
+                                Option 1
+                              </label>
+                            </td>
+                            <td>
+                              <textarea
+                                onChange={(e) =>
+                                  setOption1(e.target.value)
+                                }
+                                value={option1}
+                                className="border rounded-sm p-1 block mb-2 w-full focus:outline-orange-100"
+                                rows="2"
+                                placeholder="Add 1st option"
+                              ></textarea>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="flex">
+                              <label className=" text-gray-600 font-semibold">
+                                Option 2
+                              </label>
+                            </td>
+                            <td>
+                              <textarea
+                                onChange={(e) =>
+                                  setOption2(e.target.value)
+                                }
+                                value={option2}
+                                className="border rounded-sm p-1 block mb-2 w-full focus:outline-orange-100"
+                                rows="2"
+                                placeholder="Add 2nd option"
+                              ></textarea>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="flex">
+                              <label className=" text-gray-600 font-semibold">
+                                Option 3
+                              </label>
+                            </td>
+                            <td>
+                              <textarea
+                                onChange={(e) =>
+                                  setOption3(e.target.value)
+                                }
+                                value={option3}
+                                className="border rounded-sm p-1 block mb-2 w-full focus:outline-orange-100"
+                                rows="2"
+                                placeholder="Add 3rd option"
+                              ></textarea>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="flex">
+                              <label className=" text-gray-600 font-semibold">
+                                Option 4
+                              </label>
+                            </td>
+                            <td>
+                              <textarea
+                                onChange={(e) =>
+                                  setOption4(e.target.value)
+                                }
+                                value={option4}
+                                className="border rounded-sm p-1 block mb-2 w-full focus:outline-orange-100"
+                                rows="2"
+                                placeholder="Add 4th option"
+                              ></textarea>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td className="flex">
+                              <label className=" text-gray-600 font-semibold">
+                                Correct Answer
+                              </label>
+                            </td>
+                            <td>
+                              <select
+                                onChange={(e) =>
+                                  setAnswer(e.target.value)
+                                }
+                                value={answer}
+                                className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                              >
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                              </select>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <h3 className="my-3 border rounded w-36 h-10 flex justify-center items-center text-orange-500 cursor-pointer hover:bg-orange-100">
+                    Add Question
+                  </h3>
                 </div>
               )}
 

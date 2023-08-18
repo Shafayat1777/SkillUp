@@ -148,7 +148,8 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
     await addquiz(
       quizTitle,
       quizLessoneId,
-      quiz
+      quiz,
+      handleDetailsReload
     )
   };
 

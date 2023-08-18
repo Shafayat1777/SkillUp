@@ -5,10 +5,15 @@ export const useAddQuiz = () => {
   const { user } = useAuthContext();
   const [errorQuiz, setErrorQuiz] = useState(null);
   const [isLoadingQuiz, setIsLoadingQuiz] = useState(null);
-  const addquiz = async (quizTitle, quizLessoneId, quiz) => {
+  const addquiz = async (
+    quizTitle,
+    quizLessoneId,
+    quiz,
+    handleDetailsReload
+  ) => {
     setIsLoadingQuiz(true);
     setErrorQuiz(null);
-    var userId = user.id
+    var userId = user.id;
 
     const response = await fetch("http://localhost:4000/api/courses/quiz/", {
       method: "POST",
@@ -20,7 +25,7 @@ export const useAddQuiz = () => {
         quizTitle,
         quizLessoneId,
         quiz,
-        userId
+        userId,
       }),
     });
 
@@ -35,6 +40,7 @@ export const useAddQuiz = () => {
     }
     if (response.ok) {
       setIsLoadingQuiz(false);
+      handleDetailsReload();
     }
   };
 

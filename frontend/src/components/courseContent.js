@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PdfView from "./pdfView";
+import Quiz from "./Quiz";
 
 const CourseContent = ({ lesson, i }) => {
   const [showcontent, setShowContent] = useState(false);
@@ -63,13 +64,33 @@ const CourseContent = ({ lesson, i }) => {
           </div>
         </div>
         {showcontent && (
-          <div className="mb-5">
-            {lesson.contents &&
-              lesson.contents.map((content) => (
-                <div key={content.id}>
-                  <PdfView content={content} />
-                </div>
-              ))}
+          <div>
+            <div className="px-10 mb-5">
+              <p className="text-gray-600 ">{lesson.description}</p>
+            </div>
+            <div className="mb-5">
+              <h3 className="text-xl font-bold text-gray-500 px-5 text-center">
+                Contents
+              </h3>
+              {lesson.contents &&
+                lesson.contents.map((content) => (
+                  <div key={content.id}>
+                    <PdfView content={content} />
+                  </div>
+                ))}
+            </div>
+            
+            <div className="mb-5">
+              <h3 className="text-xl font-bold text-gray-500 px-5 text-center underline">
+                Quizs
+              </h3>
+              {lesson.quiz &&
+                lesson.quiz.map((quiz) => (
+                  <div key={quiz.id}>
+                    <Quiz quiz={quiz} />
+                  </div>
+                ))}
+            </div>
           </div>
         )}
       </div>

@@ -129,6 +129,7 @@ const deleteCourse = async (req, res) => {
         lessons: {
           include: {
             contents: true,
+            quiz: true,
           },
         },
       },
@@ -168,6 +169,18 @@ const deleteCourse = async (req, res) => {
       });
     }
 
+    // Delete the quizzes related to the lessons
+    for (const lesson of course.lessons) {
+      const quizIds = lesson.quiz.map((quiz) => quiz.id);
+      await prisma.quiz.deleteMany({
+        where: {
+          id: {
+            in: quizIds,
+          },
+        },
+      });
+    }
+
     // Delete the lessons related to the course
     const lessonIds = course.lessons.map((lesson) => lesson.id);
     await prisma.lessons.deleteMany({
@@ -187,7 +200,7 @@ const deleteCourse = async (req, res) => {
 
     // Return a success message or response as needed
     res.json({
-      messg: "Course and related lessons/contents deleted successfully.",
+      messg: "Course and related lessons/contents/quizes deleted successfully.",
     });
   } catch (error) {
     console.error(error);
@@ -396,26 +409,26 @@ const addQuiz = async (req, res) => {
     console.log(data);
   });
 
-  // try {
-  //   if (!quizTitle || !quiz) {
-  //     throw Error("All fields must me filled!");
-  //   }
-  //   if (!userId) {
-  //     throw Error("Must be signin to add course!");
-  //   }
+  try {
+    if (!quizTitle || !quiz) {
+      throw Error("All fields must me filled!");
+    }
+    if (!userId) {
+      throw Error("Must be signin to add course!");
+    }
 
-  //   const data = await prisma.quiz.create({
-  //     data: {
-  //       title: quizTitle,
-  //       questions: JSON.stringify(quiz),
-  //       lessonsId: quizLessoneId, // Replace with the actual lessonsId
-  //     },
-  //   });
-  //   console.log(data);
-  //   res.status(200).json("A Quiz has been added");
-  // } catch (error) {
-  //   res.status(400).json({ error: error.message });
-  // }
+    const data = await prisma.quiz.create({
+      data: {
+        title: quizTitle,
+        questions: JSON.stringify(quiz),
+        lessonsId: quizLessoneId, // Replace with the actual lessonsId
+      },
+    });
+    console.log(data);
+    res.status(200).json("A Quiz has been added");
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 module.exports = {

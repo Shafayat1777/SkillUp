@@ -56,6 +56,7 @@ model Lessons {
   courseId    String // Foreign key referencing the Courses table
   course      Courses    @relation(fields: [courseId], references: [id])
   contents    Contents[]
+  quiz        Quiz[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -67,6 +68,16 @@ model Contents {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Lessons   Lessons? @relation(fields: [lessonsId], references: [id])
+  lessonsId String?
+}
+
+model Quiz {
+  id        String   @id @default(uuid())
+  title     String
+  questions Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lessons   Lessons? @relation(fields: [lessonsId], references: [id])
   lessonsId String?
 }
 

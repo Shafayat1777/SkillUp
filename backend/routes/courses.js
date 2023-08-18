@@ -16,7 +16,7 @@ const {
   deleteAllCourse,
   addContent,
   getAllContent,
-  uploadFile,
+  addQuiz,
 } = require("../controllers/courseController");
 
 const router = express.Router();
@@ -63,13 +63,14 @@ router.post("/contents/link/video", addContent); // Use "/lessons" instead of "/
 // GET all content
 router.get("/contents", getAllContent); // Use "/lessons" instead of "/lesson"
 
+// Create a quiz
+router.post("/quiz", addQuiz); // Use "/lessons" instead of "/lesson"
+
 // Enroll a course
-router.patch("/enrolls/enrol", enrollCourse); // Adjust the route for enrolling a course
+// router.patch("/enrolls/enrol", enrollCourse); // Adjust the route for enrolling a course
 
 // DELETE all courses
-router.delete("/courses/deleteAll", deleteAllCourse); // If you want to keep the delete all courses route, use a unique identifier like "/courses/deleteAll"
+// router.delete("/courses/deleteAll", deleteAllCourse); // If you want to keep the delete all courses route, use a unique identifier like "/courses/deleteAll"
 
-//upload
-router.post("/upload", uploadPDF.single("image"), validatePDF, uploadFile);
 
 module.exports = router;

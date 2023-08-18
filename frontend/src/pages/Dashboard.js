@@ -95,7 +95,7 @@ const Dashboard = () => {
           <div>
             <button
               onClick={handleShowForm}
-              className=" rounded-md  bg-orange-400 text-white hover:bg-orange-500  text-md p-1 flex justify-center items-center w-28 text-center"
+              className=" border rounded-md  text-lg text-orange-500 hover:bg-orange-100  text-md p-1 flex justify-center items-center w-28 text-center"
             >
               Create{" "}
               <svg

@@ -71,6 +71,11 @@ const getoneCourse = async (req, res) => {
                 createdAt: "asc",
               },
             },
+            quiz: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
           },
         },
       },
@@ -321,13 +326,10 @@ const addContent = async (req, res) => {
       } else {
         // Handle other types of links or invalid YouTube links
         // You might want to provide an error message or default behavior here
-        videoLink = link
+        videoLink = link;
       }
     }
   }
-  console.log(content_title);
-  console.log(lessonId);
-  console.log(videoLink);
 
   // add data to db
   try {
@@ -386,18 +388,34 @@ const enrollCourse = async (req, res) => {
   }
 };
 
-//upload
-const uploadFile = async (req, res) => {
-  // console.log(req.file.path);
-  const filePath = req.file.path;
-  // Find the index of the "uploads" substring
-  const startIndex = filePath.indexOf("uploads");
-  // Extract the part of the string starting from "uploads" to the end
-  const extractedString = "/" + filePath.slice(startIndex).replace(/\\/g, "/");
+// add quiz
+const addQuiz = async (req, res) => {
+  const { quizTitle, quizLessoneId, quiz, userId } = req.body;
 
-  console.log(extractedString);
+  quiz.map((data) => {
+    console.log(data);
+  });
 
-  res.status(200).json({ messg: "File uploaded" });
+  // try {
+  //   if (!quizTitle || !quiz) {
+  //     throw Error("All fields must me filled!");
+  //   }
+  //   if (!userId) {
+  //     throw Error("Must be signin to add course!");
+  //   }
+
+  //   const data = await prisma.quiz.create({
+  //     data: {
+  //       title: quizTitle,
+  //       questions: JSON.stringify(quiz),
+  //       lessonsId: quizLessoneId, // Replace with the actual lessonsId
+  //     },
+  //   });
+  //   console.log(data);
+  //   res.status(200).json("A Quiz has been added");
+  // } catch (error) {
+  //   res.status(400).json({ error: error.message });
+  // }
 };
 
 module.exports = {
@@ -414,5 +432,5 @@ module.exports = {
   deleteAllCourse,
   addContent,
   getAllContent,
-  uploadFile,
+  addQuiz,
 };

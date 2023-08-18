@@ -1,12 +1,14 @@
 import { useAddContent } from "../hooks/useAddContent";
 import { useAddCourse } from "../hooks/useAddCourse";
 import { useAddLesson } from "../hooks/useAddLesson";
+import { useAddQuiz } from "../hooks/useAddQuiz";
 import { useState } from "react";
 
 const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const { addcourse, isLoading, error } = useAddCourse();
   const { addlesson, isLoadingLesson, errorLesson } = useAddLesson();
   const { addcontent, isLoadingContent, errorContent } = useAddContent();
+  const { addquiz, isLoadingQuiz, errorQuiz } = useAddQuiz();
 
   // useStates for rendering show items
   // to show each type of form
@@ -42,7 +44,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const [contentType, setContentType] = useState("PDF");
   const [videoType, setVideoType] = useState("File");
 
-  // to show selected form
+  // to show selected form css
   const selected =
     "mr-5 border-b-4 border-orange-400 py-4 hover:text-orange-400 cursor-pointer";
   const not_selected = "mr-5 py-4 hover:text-orange-400 cursor-pointer";
@@ -65,46 +67,49 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
     setFile({ file: event.dataTransfer.files[0], progress: 0 });
   };
 
-  // quiz handle
+  // quiz handles
   const handleAddQuestion = (e) => {
-    const qv = [...quiz, {question:'', o1:'',o2:'',o3:'',o4:'', answer:''}];
+    const qv = [
+      ...quiz,
+      { question: "", o1: "", o2: "", o3: "", o4: "", answer: "" },
+    ];
     setQuiz(qv);
   };
   const handleDeleteQuiz = (i) => {
-    const deleteQuiz = [...quiz]
-    deleteQuiz.splice(i,1)
-    setQuiz(deleteQuiz)
-  }
+    const deleteQuiz = [...quiz];
+    deleteQuiz.splice(i, 1);
+    setQuiz(deleteQuiz);
+  };
   const handleChangeQuestion = (e, i) => {
-    const quizdata = [...quiz]
-    quizdata[i].question = e.target.value 
-    setQuiz(quizdata)
-  }
+    const quizdata = [...quiz];
+    quizdata[i].question = e.target.value;
+    setQuiz(quizdata);
+  };
   const handleChangeO1 = (e, i) => {
-    const quizdata = [...quiz]
-    quizdata[i].o1 = e.target.value 
-    setQuiz(quizdata)
-  }
+    const quizdata = [...quiz];
+    quizdata[i].o1 = e.target.value;
+    setQuiz(quizdata);
+  };
   const handleChangeO2 = (e, i) => {
-    const quizdata = [...quiz]
-    quizdata[i].o2 = e.target.value 
-    setQuiz(quizdata)
-  }
+    const quizdata = [...quiz];
+    quizdata[i].o2 = e.target.value;
+    setQuiz(quizdata);
+  };
   const handleChangeO3 = (e, i) => {
-    const quizdata = [...quiz]
-    quizdata[i].o3 = e.target.value 
-    setQuiz(quizdata)
-  }
+    const quizdata = [...quiz];
+    quizdata[i].o3 = e.target.value;
+    setQuiz(quizdata);
+  };
   const handleChangeO4 = (e, i) => {
-    const quizdata = [...quiz]
-    quizdata[i].o4 = e.target.value 
-    setQuiz(quizdata)
-  }
+    const quizdata = [...quiz];
+    quizdata[i].o4 = e.target.value;
+    setQuiz(quizdata);
+  };
   const handleChangeAnswer = (e, i) => {
-    const quizdata = [...quiz]
-    quizdata[i].answer = e.target.value 
-    setQuiz(quizdata)
-  }
+    const quizdata = [...quiz];
+    quizdata[i].answer = e.target.value;
+    setQuiz(quizdata);
+  };
 
   // submit functions
   const handleCourseSubmit = async (e) => {
@@ -140,7 +145,11 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   };
   const handleQuizSubmit = async (e) => {
     e.preventDefault();
-    console.log(quiz);
+    await addquiz(
+      quizTitle,
+      quizLessoneId,
+      quiz
+    )
   };
 
   // form show functions
@@ -804,7 +813,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                         </td>
                       </tr>
 
-                      {selectedCourseId && (
+                      {quizCourseId && (
                         <tr>
                           <td className="flex">
                             <label className=" text-gray-600 font-semibold">
@@ -822,7 +831,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                               </option>
                               {courses.map((course) => {
                                 if (
-                                  course.id === selectedCourseId &&
+                                  course.id === quizCourseId &&
                                   course.lessons &&
                                   course.lessons.length > 0
                                 ) {
@@ -860,13 +869,13 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
 
                   {quiz.map((data, i) => (
                     <div className=" relative mb-4 border rounded">
-                      <div className="bg-slate-100 border-b flex items-center pl-4 py-2">
+                      <div className="bg-slate-100 border-b flex items-center pl-5 py-2">
                         <h3 className="">Question</h3>
                         <h3 className="ml-2 text-sm border rounded-full bg-slate-600 text-white w-5 h-5 flex justify-center items-center">
                           {i + 1}
                         </h3>
                         <div
-                          onClick={()=>handleDeleteQuiz(i)}
+                          onClick={() => handleDeleteQuiz(i)}
                           className="absolute top-3 right-3  rounded  hover:bg-gray-200  cursor-pointer"
                         >
                           <svg
@@ -886,7 +895,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                         </div>
                       </div>
 
-                      <div className="px-3 pt-2 flex">
+                      <div className="px-5 pt-2 flex">
                         <table className="table w-full">
                           <tbody>
                             <tr>
@@ -981,6 +990,9 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                                   value={data.answer}
                                   className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
                                 >
+                                  <option value="" disabled selected>
+                                    Select an Answer
+                                  </option>
                                   <option value="o1">1</option>
                                   <option value="o2">2</option>
                                   <option value="o3">3</option>

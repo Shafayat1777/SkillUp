@@ -145,12 +145,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   };
   const handleQuizSubmit = async (e) => {
     e.preventDefault();
-    await addquiz(
-      quizTitle,
-      quizLessoneId,
-      quiz,
-      handleDetailsReload
-    )
+    await addquiz(quizTitle, quizLessoneId, quiz, handleDetailsReload);
   };
 
   // form show functions
@@ -994,10 +989,10 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                                   <option value="" disabled selected>
                                     Select an Answer
                                   </option>
-                                  <option value="o1">1</option>
-                                  <option value="o2">2</option>
-                                  <option value="o3">3</option>
-                                  <option value="o4">4</option>
+                                  <option value={data.o1}>Option 1</option>
+                                  <option value={data.o2}>Option 2</option>
+                                  <option value={data.o3}>Option 3</option>
+                                  <option value={data.o4}>Option 4</option>
                                 </select>
                               </td>
                             </tr>
@@ -1018,11 +1013,13 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
 
               <div className=" p-5 bg-gray-200 h-16 flex items-center justify-end">
                 <input
+                  disabled={isLoadingQuiz}
                   className="cursor-pointer border-green-400 rounded-sm w-32 h-8 text-sm bg-white text-orange-400 hover:border-orange-400 hover:border"
                   type="reset"
                   value="RESET"
                 />
                 <input
+                  disabled={isLoadingQuiz}
                   className="cursor-pointer ml-5 rounded-sm w-32 h-8 text-sm bg-orange-400 text-white hover:bg-orange-500"
                   type="submit"
                   value="ADD"
@@ -1046,6 +1043,12 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
         <div className="mt-4 w-full border rounded border-red-400 text-center text-red-400 bg-red-100 tracking-wider">
           {errorContent}
           {console.log(errorContent)}
+        </div>
+      )}
+      {errorQuiz && (
+        <div className="mt-4 w-full border rounded border-red-400 text-center text-red-400 bg-red-100 tracking-wider">
+          {errorQuiz}
+          {console.log(errorQuiz)}
         </div>
       )}
     </div>

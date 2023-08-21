@@ -5,6 +5,7 @@ const { uploadPDF, validatePDF, uploadVideo } = require("../middleware/fileUploa
 const {
   createCourse,
   getallCourse,
+  getmyCourse,
   getoneCourse,
   deleteCourse,
   updateCourse,
@@ -26,6 +27,9 @@ router.use(requireAuth);
 
 // GET all courses
 router.get("/courses", getallCourse); // Use a unique identifier, e.g., "/courses" instead of "/"
+
+// GET all courses
+router.get("/mycourses", getmyCourse); // Use a unique identifier, e.g., "/courses" instead of "/"
 
 // GET single course
 router.get("/courses/:id", getoneCourse); // Adjust the route for getting a single course as well

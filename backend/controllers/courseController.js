@@ -39,6 +39,48 @@ const getallCourse = async (req, res) => {
   }
 };
 
+// get my course
+const getmyCourse = async (req, res) => {
+  const user_id = req.user.id;
+  try {
+    const data = await prisma.courses.findMany({
+      where: {
+        teacherId: user_id,
+      },
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        lessons: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 // get a single Course
 const getoneCourse = async (req, res) => {
   const { id } = req.params;
@@ -451,6 +493,7 @@ const addQuiz = async (req, res) => {
 module.exports = {
   createCourse,
   getallCourse,
+  getmyCourse,
   getoneCourse,
   deleteCourse,
   updateCourse,

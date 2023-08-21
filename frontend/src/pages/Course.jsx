@@ -110,8 +110,14 @@ const Course = () => {
                 </div>
 
                 <div className="flex flex-wrap content-between text-white">
-                  <h3 className={`mb-2 mr-2  ${course.level==='Beginner' && 'text-green-400'} ${course.level==='Intermediate' && 'text-yellow-400'} ${course.level==='Advanced' && 'text-red-500'} font-semibold rounded-md bg-gray-700 py-0.5 px-2`}>
-                  {course.level}
+                  <h3
+                    className={`mb-2 mr-2  ${
+                      course.level === "Beginner" && "text-green-400"
+                    } ${course.level === "Intermediate" && "text-yellow-400"} ${
+                      course.level === "Advanced" && "text-red-400"
+                    } font-semibold rounded-md bg-gray-700 py-0.5 px-2`}
+                  >
+                    {course.level}
                   </h3>
                   <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg

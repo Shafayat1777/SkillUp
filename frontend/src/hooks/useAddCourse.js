@@ -15,7 +15,9 @@ export const useAddCourse = () => {
     short_description,
     description,
     category,
-    userId,
+    level,
+    total_hours,
+    userId
   ) => {
     setIsLoading(true);
     setError(null);
@@ -32,6 +34,8 @@ export const useAddCourse = () => {
         short_description,
         description,
         category,
+        level,
+        total_hours,
         userId,
       }),
     });

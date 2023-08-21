@@ -25,7 +25,7 @@ export const useLogin = () => {
     }
     if (response.ok) {
       // save the user to cookies
-      Cookies.set("user", JSON.stringify(json));
+      Cookies.set("user", JSON.stringify(json), { expires: 3 });
       console.log(Cookies.get("user"))
       
       // update the auth context

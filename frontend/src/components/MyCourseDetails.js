@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import CourseContent from "./courseContent";
+import MyCourseContent from "./MyCourseContent";
 
-const CourseDetails = ({ courseId, reload, handleHideDetails }) => {
+const MyCourseDetails = ({ courseId, reload, handleHideDetails }) => {
   const { user } = useAuthContext();
   const [course, setCourse] = useState(null);
 
@@ -80,7 +80,7 @@ const CourseDetails = ({ courseId, reload, handleHideDetails }) => {
             <div className="mt-8 mb-8">
               {course.lessons &&
                 course.lessons.map((lesson) => (
-                  <CourseContent lesson={lesson} i={i} />
+                  <MyCourseContent lesson={lesson} i={i} />
                 ))}
             </div>
           </div>
@@ -90,4 +90,4 @@ const CourseDetails = ({ courseId, reload, handleHideDetails }) => {
   );
 };
 
-export default CourseDetails;
+export default MyCourseDetails;

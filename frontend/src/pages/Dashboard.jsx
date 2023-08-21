@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 // components
 import MyCourses from "../components/myCourses";
 import CoursesForm from "../components/CoursesForm";
-import CourseDetails from "../components/CourseDetails";
+import MyCourseDetails from "../components/MyCourseDetails";
 
 const Dashboard = () => {
   const { courses, dispatch } = useCoursesContext();
@@ -127,7 +127,7 @@ const Dashboard = () => {
           </div>
           <div className="my-4">
             {showDetails && (
-              <CourseDetails courseId={showDetails} reload={reload} handleHideDetails={handleHideDetails} />
+              <MyCourseDetails courseId={showDetails} reload={reload} handleHideDetails={handleHideDetails} />
             )}
           </div>
         </div>

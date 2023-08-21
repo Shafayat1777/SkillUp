@@ -1,8 +1,8 @@
 import { useState } from "react";
-import PdfView from "./pdfView";
+import ContentView from "./ContentView";
 import Quiz from "./Quiz";
 
-const CourseContent = ({ lesson, i }) => {
+const MyCourseContent = ({ lesson, i }) => {
   const [showcontent, setShowContent] = useState(false);
 
   const handleShowContent = () => {
@@ -75,7 +75,7 @@ const CourseContent = ({ lesson, i }) => {
               {lesson.contents &&
                 lesson.contents.map((content) => (
                   <div key={content.id}>
-                    <PdfView content={content} />
+                    <ContentView content={content} />
                   </div>
                 ))}
             </div>
@@ -98,4 +98,4 @@ const CourseContent = ({ lesson, i }) => {
   );
 };
 
-export default CourseContent;
+export default MyCourseContent;

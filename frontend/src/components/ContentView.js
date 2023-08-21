@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const PdfView = ({ content }) => {
+const ContentView = ({ content }) => {
   const [showWindow, setShowWindow] = useState(false);
 
   const handleOpenWindow = () => {
@@ -9,6 +9,7 @@ const PdfView = ({ content }) => {
   const handleCloseWindow = () => {
     setShowWindow(false);
   };
+  
 
   return (
     <div>
@@ -73,4 +74,4 @@ const PdfView = ({ content }) => {
   );
 };
 
-export default PdfView;
+export default ContentView;

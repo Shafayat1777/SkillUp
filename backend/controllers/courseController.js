@@ -88,11 +88,26 @@ const getoneCourse = async (req, res) => {
 
 // create new Course
 const createCourse = async (req, res) => {
-  const { title, short_description, description, category, userId } = req.body;
+  const {
+    title,
+    short_description,
+    description,
+    category,
+    level,
+    total_hours,
+    userId,
+  } = req.body;
 
   // add data to db
   try {
-    if (!title || !short_description || !description) {
+    if (
+      !title ||
+      !short_description ||
+      !description ||
+      !category ||
+      !level ||
+      !total_hours
+    ) {
       throw Error("All fields must me filled!");
     }
     if (!userId) {
@@ -104,6 +119,8 @@ const createCourse = async (req, res) => {
         title: title,
         short_description: short_description,
         description: description,
+        level: level,
+        total_hours: total_hours,
         category: category,
         teacher: { connect: { id: userId } }, // Step 2: Associate the course with the teacher (user)
       },

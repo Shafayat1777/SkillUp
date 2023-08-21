@@ -9,15 +9,21 @@ const Course = () => {
   const { id } = useParams();
   const { user } = useAuthContext();
   const [course, setCourse] = useState(null);
+  const [pdfcount, setPdfCount] = useState(0);
+  const [videocount, setVideoCount] = useState(0);
+  const [quizcount, setQuizCount] = useState(0);
   let i = 1;
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const respons = await fetch(`http://localhost:4000/api/courses/courses/${id}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const respons = await fetch(
+        `http://localhost:4000/api/courses/courses/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
       const json = await respons.json();
 
       if (respons.ok) {
@@ -29,6 +35,35 @@ const Course = () => {
       fetchCourse();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (course && course.lessons) {
+      const totalCount = course.lessons.reduce(
+        (acc, lesson) => {
+          if (lesson.contents) {
+            lesson.contents.forEach((content) => {
+              content.file.endsWith(".pdf") ? acc.pdfCnt++ : acc.VideoCnt++;
+            });
+          }
+          return acc;
+        },
+        { pdfCnt: 0, VideoCnt: 0 }
+      );
+
+      const totalQuizCount = course.lessons.reduce((acc, lesson) => {
+        if (lesson.quiz) {
+          lesson.quiz.forEach((quiz) => {
+            acc += 1;
+          });
+        }
+        return acc;
+      }, 0);
+
+      setPdfCount(totalCount.pdfCnt);
+      setVideoCount(totalCount.VideoCnt);
+      setQuizCount(totalQuizCount);
+    }
+  }, [course]);
 
   return (
     // Chapters
@@ -74,9 +109,9 @@ const Course = () => {
                   </button>
                 </div>
 
-                <div className="flex flex-wrap content-between">
-                  <h3 className="mb-2 mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
-                    Basic
+                <div className="flex flex-wrap content-between text-white">
+                  <h3 className={`mb-2 mr-2  ${course.level==='Beginner' && 'text-green-400'} ${course.level==='Intermediate' && 'text-yellow-400'} ${course.level==='Advanced' && 'text-red-500'} font-semibold rounded-md bg-gray-700 py-0.5 px-2`}>
+                  {course.level}
                   </h3>
                   <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg
@@ -93,7 +128,7 @@ const Course = () => {
                         d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    Hours
+                    {course.total_hours} Hours
                   </h3>
                   <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg
@@ -110,7 +145,7 @@ const Course = () => {
                         d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
                       />
                     </svg>
-                    PDFs
+                    {pdfcount} PDFs
                   </h3>
                   <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg
@@ -127,7 +162,7 @@ const Course = () => {
                         d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
                       />
                     </svg>
-                    Videos
+                    {videocount} Videos
                   </h3>
                   <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg
@@ -144,7 +179,7 @@ const Course = () => {
                         d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z"
                       />
                     </svg>
-                    Quiz
+                    {quizcount} Quizs
                   </h3>
                   <h3 className="mb-2 flex items-center mr-2 text-white font-semibold rounded-md bg-gray-700 py-0.5 px-2">
                     <svg

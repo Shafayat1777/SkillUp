@@ -1,5 +1,6 @@
 import { useState } from "react";
-import PdfView from "./pdfView";
+import ContentView from "./ContentView";
+import Quiz from "./Quiz";
 
 const LessionDetails = ({ lesson, no }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -11,7 +12,6 @@ const LessionDetails = ({ lesson, no }) => {
       setIsVisible(true);
     }
   };
-
 
   return (
     <div className="mt-10 border rounded-sm bg-orange-50">
@@ -80,14 +80,34 @@ const LessionDetails = ({ lesson, no }) => {
           </button>
         </div>
         {isVisible && (
-          <div className="mb-5">
-            {lesson.contents &&
-              lesson.contents.map((content) => (
-                <div key={content.id}>
-                  <PdfView content={content} />
-                </div>
-              ))}
-          </div>
+          <>
+            <div className="mb-5">
+              <h1 className="text-center bg-gray-700 text-white text-lg font-bold w-44 rounded-r-md ">
+                Content
+              </h1>
+            </div>
+            <div className="mb-5">
+              {lesson.contents &&
+                lesson.contents.map((content) => (
+                  <div key={content.id}>
+                    <ContentView content={content} />
+                  </div>
+                ))}
+            </div>
+            <div className="mb-5">
+              <h1 className="text-center bg-gray-700 text-white text-lg font-bold w-44 rounded-r-md ">
+                Quiz
+              </h1>
+            </div>
+            <div className="mb-5">
+            {lesson.quiz &&
+                lesson.quiz.map((quiz) => (
+                  <div key={quiz.id}>
+                    <Quiz quiz={quiz} />
+                  </div>
+                ))}
+            </div>
+          </>
         )}
       </div>
     </div>

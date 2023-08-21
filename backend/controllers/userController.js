@@ -81,7 +81,7 @@ const updateUser = async (req, res) => {
 
 // login user
 const loginUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { email, password } = req.body;
 
   try {
     // validation

@@ -14,7 +14,6 @@ const MyCourses = ({
   const { dispatch } = useCoursesContext();
   const [deleteError, setDeleteError] = useState(null);
   const [success, setSuccess] = useState(null);
-  let i = 1;
 
   const handleClick = async (id) => {
     const response = await fetch("http://localhost:4000/api/courses/courses/" + id, {
@@ -72,7 +71,7 @@ const MyCourses = ({
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {courses.map((course) => (
+            {courses.map((course, i) => (
               <tr
                 key={course.id}
                 className={i % 2 !== 0 ? "bg-white" : "bg-gray-50"}
@@ -82,7 +81,7 @@ const MyCourses = ({
                     to={`/course/${course.id}`}
                     className="font-bold text-blue-500 hover:underline hover:border-blue-500 border rounded-full px-4 py-2 hover:bg-blue-200"
                   >
-                    {i++}
+                    {i+1}
                   </Link>
                 </td>
                 <td className="p-3 text-sm text-gray-700 whitespace-nowrap">

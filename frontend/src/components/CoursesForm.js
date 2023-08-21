@@ -22,6 +22,8 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const [short_description, setShortDescription] = useState("");
   const [main_description, setMainDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [level, setLevel] = useState("");
+  const [total_hours, setTotalHours] = useState("");
 
   // lesson add useState
   const [courseId, setCourseId] = useState("");
@@ -118,7 +120,9 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
       course_title,
       short_description,
       main_description,
-      category
+      category,
+      level,
+      total_hours
     );
   };
   const handleLessonSubmit = async (e) => {
@@ -336,7 +340,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                           onChange={(e) => setShortDescription(e.target.value)}
                           value={short_description}
                           className="border rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
-                          rows="5"
+                          rows="4"
                           placeholder="Short description"
                         ></textarea>
                       </td>
@@ -353,12 +357,76 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                           onChange={(e) => setMainDescription(e.target.value)}
                           value={main_description}
                           className="border rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
-                          rows="9"
+                          rows="7"
                           placeholder="Main description"
                         ></textarea>
                       </td>
                     </tr>
 
+                    <tr>
+                      <td className="flex">
+                        <label className=" text-gray-600 font-semibold">
+                          Level
+                        </label>
+                      </td>
+                      <td>
+                        <select
+                          onChange={(e) => setLevel(e.target.value)}
+                          value={level}
+                          className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                        >
+                          <option
+                            className="text-orange-500"
+                            value=""
+                            disabled
+                            selected
+                          >
+                            Select a Level
+                          </option>
+
+                          <hr />
+
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Advanced">Advanced</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="flex">
+                        <label className=" text-gray-600 font-semibold">
+                          Course Duration
+                        </label>
+                      </td>
+                      <td>
+                        <select
+                          onChange={(e) => setTotalHours(e.target.value)}
+                          value={total_hours}
+                          className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                        >
+                          <option
+                            className="text-orange-500"
+                            value=""
+                            disabled
+                            selected
+                          >
+                            Select total hours
+                          </option>
+
+                          <hr />
+
+                          <option value="1-2">1-2</option>
+                          <option value="2-3">2-3</option>
+                          <option value="3-4">3-4</option>
+                          <option value="4-5">4-5</option>
+                          <option value="5-6">5-6</option>
+                          <option value="5-6">6-7</option>
+                          <option value="7-8">7-8</option>
+                          <option value="8-9">8-9</option>
+                          <option value="9-10">9-10</option>
+                        </select>
+                      </td>
+                    </tr>
                     <tr>
                       <td className="flex">
                         <label className=" text-gray-600 font-semibold">

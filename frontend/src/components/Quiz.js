@@ -65,6 +65,7 @@ const Quiz = ({ quiz }) => {
   const handleQuizAnswer = (e) => {
     const selectedAnswer = e.target.textContent;
     const id = e.target.getAttribute("id");
+    console.log(selectedAnswer + "=" + currentQuestion.answer);
     if (selectedAnswer === currentQuestion.answer) {
       if (id === "o1") {
         setO1Correct("bg-green-50 border-green-400 hover:bg-green-100");
@@ -95,7 +96,6 @@ const Quiz = ({ quiz }) => {
       }
     }
   };
-
 
   return (
     <div>
@@ -152,7 +152,7 @@ const Quiz = ({ quiz }) => {
                 onClick={(e) => handleQuizAnswer(e)}
                 className={`relative my-2 flex items-center border rounded pl-3 text-lg ${o1correct} text-gray-600 font-semibold cursor-pointer`}
               >
-                {currentQuestion.o1}{" "}
+                {currentQuestion.o1}
                 {o1 === "correct" && (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

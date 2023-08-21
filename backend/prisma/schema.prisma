@@ -35,10 +35,11 @@ model User {
 model Courses {
   id                String        @id @default(uuid())
   title             String
-  short_description String
-  description       String
+  short_description String        @db.VarChar(250)
+  description       String        @db.VarChar(500)
   category          String
-  total_hours       Int?
+  total_hours       String
+  level             String
   course_status     Course_Status @default(PROCESSING)
   participants      Int?          @default(0)
   createdAt         DateTime      @default(now())

@@ -25,7 +25,7 @@ const requireAuth = async (req, res, next) => {
     next();
   } catch (error) {
     res.status(401).json({ error: error.message });
-    console.log(error.message)
+    console.log("Error:" + error.message)
   }
 };
 

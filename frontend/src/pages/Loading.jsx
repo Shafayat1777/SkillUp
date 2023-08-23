@@ -1,7 +1,6 @@
-import { Helmet } from "react-helmet";
 import { useState, useEffect } from "react";
 
-const About = () => {
+const Loading = () => {
   const [dots, setDots] = useState("");
   
   useEffect(() => {
@@ -14,14 +13,6 @@ const About = () => {
 
   return (
     <div>
-      <div className="head">
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>About</title>
-          <link rel="canonical" href="http://mysite.com/example" />
-        </Helmet>
-      </div>
-
       <div className="flex justify-center items-center h-screen">
         <h1 className="flex items-center text-2xl">
           <svg
@@ -47,4 +38,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default Loading;

@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuthContext } from "./hooks/useAuthContext";
+import { useEffect, useState } from "react";
 
 // pages & components
 import Home from "./pages/Home";
@@ -13,9 +14,16 @@ import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import Session from "./pages/Session";
+import Loading from "./pages/Loading";
 
 function App() {
   const { user } = useAuthContext();
+  const [loading, setLoading] = useState(true);
+
+  // This useEffect is used to fix the reload problem: When reloading any page then it goes to the home page
+  useEffect(() => {
+    setLoading(false);
+  }, [user]);
 
   return (
     <div className="App">
@@ -25,35 +33,87 @@ function App() {
           <Routes>
             <Route
               path="/signup"
-              element={!user ? <SignUp /> : <Navigate to="/" />}
+              element={
+                loading ? <Loading /> : !user ? <SignUp /> : <Navigate to="/" />
+              }
             />
             <Route
               path="/login"
-              element={!user ? <Login /> : <Navigate to="/" />}
+              element={
+                loading ? <Loading /> : !user ? <Login /> : <Navigate to="/" />
+              }
             />
             <Route
               path="/"
-              element={user ? <Home /> : <Navigate to="/login" />}
+              element={
+                loading ? (
+                  <Loading />
+                ) : user ? (
+                  <Home />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
             />
             <Route
               path="/profile"
-              element={user ? <Profile /> : <Navigate to="/login" />}
+              element={
+                loading ? (
+                  <Loading />
+                ) : user ? (
+                  <Profile />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
             />
             <Route
               path="/courses"
-              element={user ? <Courses /> : <Navigate to="/login" />}
+              element={
+                loading ? (
+                  <Loading />
+                ) : user ? (
+                  <Courses />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
             />
             <Route
               path="/course/:id"
-              element={user ? <Course /> : <Navigate to="/login" />}
+              element={
+                loading ? (
+                  <Loading />
+                ) : user ? (
+                  <Course />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
             />
             <Route
               path="/dashboard"
-              element={user ? <Dashboard /> : <Navigate to="/login" />}
+              element={
+                loading ? (
+                  <Loading />
+                ) : user ? (
+                  <Dashboard />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
             />
             <Route
               path="/about"
-              element={user ? <About /> : <Navigate to="/login" />}
+              element={
+                loading ? (
+                  <Loading />
+                ) : user ? (
+                  <About />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
             />
             <Route path="/session" element={<Session />} />
             <Route path="*" element={<NotFound />} />

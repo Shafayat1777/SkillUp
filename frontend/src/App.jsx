@@ -21,6 +21,8 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   // This useEffect is used to fix the reload problem: When reloading any page then it goes to the home page
+  // by using a loading useState and useEffect to check if the user has been loaded we can prevent the problem
+  // while the user is loading we are showing a Loading page.
   useEffect(() => {
     setLoading(false);
   }, [user]);

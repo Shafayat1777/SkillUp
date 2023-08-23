@@ -60,6 +60,18 @@ const getmyCourse = async (req, res) => {
             socials: true,
           },
         },
+        students: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
         lessons: {
           orderBy: {
             createdAt: "asc",
@@ -93,6 +105,19 @@ const getoneCourse = async (req, res) => {
       include: {
         teacher: {
           select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        students: {
+          select: {
+            id: true,
             first_name: true,
             last_name: true,
             about: true,
@@ -445,19 +470,56 @@ const getAllContent = async (req, res) => {
 
 // enroll a Course
 const enrollCourse = async (req, res) => {
-  const { userId, courseId } = req.body;
+  const userId = req.user.id;
+  const { courseId } = req.body;
+  // console.log(userId, courseId);
 
-  // update data to db
   try {
-    const data = await prisma.courses.update({
+    // Find the student and the course using their IDs
+    const student = await prisma.user.findUnique({
       where: { id: userId },
-      data: { courses: { connect: { id: courseId } } },
     });
 
-    res.status(200).json(data);
+    const course = await prisma.courses.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!student || !course) {
+      console.log("Student or course not found");
+      throw new Error("Student or course not found");
+    }
+
+
+    // Add the student to the course's students relationship
+    const updatedCourse = await prisma.courses.update({
+      where: { id: courseId },
+      data: {
+        students: {
+          connect: { id: userId },
+        },
+      },
+    });
+
+    res.status(200).json(`You have Enrolled in ${updatedCourse.title} course!`);
+    console.log(
+      `Student ${student.first_name} added to course ${updatedCourse.title}`
+    );
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json("Error adding student to course:", error);
+    console.error("Error adding student to course:", error);
   }
+
+  // update data to db
+  // try {
+  //   const data = await prisma.courses.update({
+  //     where: { id: userId },
+  //     data: { courses: { connect: { id: courseId } } },
+  //   });
+
+  //   res.status(200).json(data);
+  // } catch (error) {
+  //   res.status(400).json({ error: error.message });
+  // }
 };
 
 // add quiz

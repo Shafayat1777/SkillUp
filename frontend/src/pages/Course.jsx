@@ -4,14 +4,18 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Helmet } from "react-helmet";
+import { useEnrollCourse } from "../hooks/useEnroll";
 
 const Course = () => {
   const { id } = useParams();
   const { user } = useAuthContext();
+  const { enrollcourse, responseEnroll, errorEnroll } = useEnrollCourse();
   const [course, setCourse] = useState(null);
   const [pdfcount, setPdfCount] = useState(0);
   const [videocount, setVideoCount] = useState(0);
   const [quizcount, setQuizCount] = useState(0);
+  const [studentcount, setStudentCount] = useState(0);
+  const [isEnrolled, setIsEnrolled] = useState(false);
   let i = 1;
 
   useEffect(() => {
@@ -59,15 +63,28 @@ const Course = () => {
         return acc;
       }, 0);
 
+      const totalStudentCount = course.students.length;
+
+      if (course.students) {
+        course.students.map((student) => {
+          if (student.id === user.id) {
+            console.log(student.id);
+            setIsEnrolled(true);
+          }
+        });
+      }
+
       setPdfCount(totalCount.pdfCnt);
       setVideoCount(totalCount.VideoCnt);
       setQuizCount(totalQuizCount);
+      setStudentCount(totalStudentCount);
     }
   }, [course]);
-
+  console.log(isEnrolled);
+  const handleEnroll = (courseId) => {
+    enrollcourse(courseId);
+  };
   return (
-    // Chapters
-
     <div>
       {course && (
         <div>
@@ -81,6 +98,17 @@ const Course = () => {
 
           <div className="flex justify-center">
             <div className="container m-10 w-[70rem]">
+              {errorEnroll ? (
+                <div className=" my-5 border border-red-500  bg-red-50 rounded text-center text-red-500">
+                  {errorEnroll}
+                </div>
+              ) : (
+                responseEnroll && (
+                  <div className=" my-5 border border-green-500  bg-green-50 rounded text-center text-green-500">
+                    {responseEnroll}
+                  </div>
+                )
+              )}
               <div className="top-banner p-10 border rounded-sm w-full h-[18rem] bg-gray-800">
                 <h1 className=" mb-10 font-semibold text-white text-3xl">
                   {course.title}
@@ -104,8 +132,32 @@ const Course = () => {
                     </svg>
                     Bookmark
                   </button>
-                  <button className="ml-5 py-1 px-3 border rounded-sm font-semibold text-white hover:bg-gray-700">
-                    Replay Course
+                  <button
+                    disabled={isEnrolled}
+                    onClick={() => handleEnroll(course.id)}
+                    className={`ml-5 py-1 px-3 border rounded-sm font-semibold text-white ${isEnrolled? "": "hover:bg-gray-700 "}`}
+                  >
+                    {isEnrolled ? (
+                      <div className="flex items-center">
+                        Enrolled
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          className= {`w-5 h-5 ml-2 ${isEnrolled? "text-yellow-400": ""}`}
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                    ) : (
+                      "Enroll"
+                    )}
                   </button>
                 </div>
 
@@ -202,7 +254,7 @@ const Course = () => {
                         d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
                       />
                     </svg>
-                    participants
+                    {studentcount} participants
                   </h3>
                 </div>
               </div>

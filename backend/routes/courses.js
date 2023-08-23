@@ -70,8 +70,8 @@ router.get("/contents", getAllContent); // Use "/lessons" instead of "/lesson"
 // Create a quiz
 router.post("/quiz", addQuiz); // Use "/lessons" instead of "/lesson"
 
-// Enroll a course
-// router.patch("/enrolls/enrol", enrollCourse); // Adjust the route for enrolling a course
+//Enroll a course
+router.patch("/enroll", enrollCourse); // Adjust the route for enrolling a course
 
 // DELETE all courses
 // router.delete("/courses/deleteAll", deleteAllCourse); // If you want to keep the delete all courses route, use a unique identifier like "/courses/deleteAll"

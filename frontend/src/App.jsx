@@ -16,6 +16,7 @@ import NotFound from "./pages/NotFound";
 import Session from "./pages/Session";
 import Loading from "./pages/Loading";
 import Enrolled from "./pages/Enrolled";
+import Unauthorized from "./pages/Unauthorized";
 
 function App() {
   const { user } = useAuthContext();
@@ -100,7 +101,11 @@ function App() {
                 loading ? (
                   <Loading />
                 ) : user ? (
-                  <Enrolled />
+                  user.role !== "TEACHER" ? (
+                    <Enrolled />
+                  ) : (
+                    <Unauthorized/>
+                  )
                 ) : (
                   <Navigate to="/login" />
                 )
@@ -112,7 +117,11 @@ function App() {
                 loading ? (
                   <Loading />
                 ) : user ? (
-                  <Dashboard />
+                  user.role !== "STUDENT" ? (
+                    <Dashboard />
+                  ) : (
+                    <Unauthorized/>
+                  )
                 ) : (
                   <Navigate to="/login" />
                 )

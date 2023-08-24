@@ -4,9 +4,6 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { useState } from "react";
 
 const Navbar = () => {
-  const path = window.location.pathname; //returns the current url minus the domain name
-  const x = "navLink ml-6 border-b-4 border-orange-500";
-  const y = "navLink ml-6";
   const { logout } = useLogout();
   const { user } = useAuthContext();
   const [ham, setHam] = useState(false);
@@ -31,6 +28,7 @@ const Navbar = () => {
   return (
     <nav className="p-4 shadow-md">
       <div className=" mx-5 md:mx-20 lg:md:mx-40 flex justify-between items-center">
+        
         <div className="md:block">
           <Link to="/">
             <h1 className=" text-2xl text-gray-500 hover:text-orange-500 cursor-pointer">
@@ -38,6 +36,7 @@ const Navbar = () => {
             </h1>
           </Link>
         </div>
+
         <div className="text-gray-500 hidden lg:flex">
           <Link
             onClick={() => handleLinkClick("/")}
@@ -72,18 +71,20 @@ const Navbar = () => {
           >
             <h1>Courses</h1>
           </Link>
-          <Link
-            onClick={() => handleLinkClick("/enrolled")}
-            className={`${
-              activeLink === "/enrolled"
-                ? "navLink ml-6 border-b-4 border-orange-500"
-                : "navLink ml-6"
-            }`}
-            to="/enrolled"
-          >
-            <h1>Enrolled</h1>
-          </Link>
-          {user.role && user.role != "STUDENT" && (
+          {user.role && user.role !== "TEACHER" && (
+            <Link
+              onClick={() => handleLinkClick("/enrolled")}
+              className={`${
+                activeLink === "/enrolled"
+                  ? "navLink ml-6 border-b-4 border-orange-500"
+                  : "navLink ml-6"
+              }`}
+              to="/enrolled"
+            >
+              <h1>Enrolled</h1>
+            </Link>
+          )}
+          {user.role && user.role !== "STUDENT" && (
             <Link
               onClick={() => handleLinkClick("/dashboard")}
               className={`${
@@ -109,6 +110,7 @@ const Navbar = () => {
             <h1>Profile</h1>
           </Link>
         </div>
+        
         <div className="flex items-center">
           {!user && (
             <div className="flex">
@@ -127,7 +129,16 @@ const Navbar = () => {
             </div>
           )}
           {user && (
-            <div>
+            <div className="flex items-center">
+              <h3
+                className={`rounded-full border px-2  text-center text-sm ${
+                  user.role === "TEACHER" && "text-purple-800 bg-purple-200 "
+                } ${user.role === "STUDENT" && "text-blue-800 bg-blue-200 "} ${
+                  user.role === "ADMIN" && "text-yellow-800 bg-yellow-200 "
+                }`}
+              >
+                {user.role}
+              </h3>
               <button
                 className="ml-4 w-20 h-8 border border-orange-500 hover:bg-orange-200 text-orange-500 text-center rounded"
                 onClick={handleClick}
@@ -234,33 +245,35 @@ const Navbar = () => {
                     <h1 className="ml-3">Course</h1>
                   </div>
                 </Link>
-                <Link
-                  onClick={() => handleLinkClick("/enrolled")}
-                  className={`${
-                    activeLink === "/enrolled" ? " text-orange-500" : ""
-                  }`}
-                  to="/enrolled"
-                >
-                  <div className="hover:bg-orange-200 p-3 flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-6 h-6"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
-                      />
-                    </svg>
+                {user.role && user.role !== "TEACHER" && (
+                  <Link
+                    onClick={() => handleLinkClick("/enrolled")}
+                    className={`${
+                      activeLink === "/enrolled" ? " text-orange-500" : ""
+                    }`}
+                    to="/enrolled"
+                  >
+                    <div className="hover:bg-orange-200 p-3 flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-6 h-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+                        />
+                      </svg>
 
-                    <h1 className="ml-3">Enrolled</h1>
-                  </div>
-                </Link>
-                {user.role && user.role != "STUDENT" && (
+                      <h1 className="ml-3">Enrolled</h1>
+                    </div>
+                  </Link>
+                )}
+                {user.role && user.role !== "STUDENT" && (
                   <Link
                     onClick={() => handleLinkClick("/dashboard")}
                     className={`${

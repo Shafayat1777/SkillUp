@@ -69,7 +69,7 @@ const MyCourseContent = ({ lesson, i }) => {
               <p className="text-gray-600 ">{lesson.description}</p>
             </div>
             <div className="mb-5">
-              <h3 className="text-xl font-bold text-gray-500 px-5 text-center">
+              <h3 className="px-5 text-xl font-bold text-gray-500 border rounded-r-full w-32 mb-5">
                 Contents
               </h3>
               {lesson.contents &&
@@ -81,7 +81,7 @@ const MyCourseContent = ({ lesson, i }) => {
             </div>
             
             <div className="mb-5">
-              <h3 className="text-xl font-bold text-gray-500 px-5 text-center underline">
+              <h3 className="px-5 text-xl font-bold text-gray-500 border rounded-r-full w-24 mb-5 ">
                 Quizs
               </h3>
               {lesson.quiz &&

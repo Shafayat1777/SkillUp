@@ -84,6 +84,30 @@ const Course = () => {
   const handleEnroll = (courseId) => {
     enrollcourse(courseId);
     setIsEnrolled(true);
+
+    var progress = [
+      {
+        courseId: "id",
+        lesson: [
+          {
+            lessonId: "id",
+            contents: [
+              {
+                content: "id",
+                clicked: "",
+              },
+            ],
+            quiz: [
+              {
+                quizId: "id",
+                quizScore: "",
+                clicked: "",
+              },
+            ],
+          },
+        ],
+      },
+    ];
   };
   return (
     <div>
@@ -136,7 +160,11 @@ const Course = () => {
                   <button
                     disabled={isEnrolled}
                     onClick={() => handleEnroll(course.id)}
-                    className={`ml-5 py-1 px-3 border rounded-sm font-semibold text-white ${isEnrolled? "": "hover:bg-gray-700 "}`}
+                    className={`ml-5 py-1 px-3 border rounded-sm font-semibold text-white ${
+                      isEnrolled
+                        ? "border-yellow-400"
+                        : "hover:bg-gray-700 hover:border-yellow-400"
+                    }`}
                   >
                     {isEnrolled ? (
                       <div className="flex items-center">
@@ -147,7 +175,9 @@ const Course = () => {
                           viewBox="0 0 24 24"
                           stroke-width="1.5"
                           stroke="currentColor"
-                          className= {`w-5 h-5 ml-2 ${isEnrolled? "text-yellow-400": ""}`}
+                          className={`w-5 h-5 ml-2 ${
+                            isEnrolled ? "text-yellow-400" : ""
+                          }`}
                         >
                           <path
                             stroke-linecap="round"
@@ -157,7 +187,21 @@ const Course = () => {
                         </svg>
                       </div>
                     ) : (
-                      "Enroll"
+                      <div className="flex items-center">
+                        Enroll
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="w-5 h-5 ml-2 text-yellow-400"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </div>
                     )}
                   </button>
                 </div>

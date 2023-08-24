@@ -31,7 +31,7 @@ const Enrolled = () => {
       <div className="head">
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Courses</title>
+          <title>Enrolled || SkillUP</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
       </div>

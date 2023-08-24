@@ -489,7 +489,6 @@ const enrollCourse = async (req, res) => {
       throw new Error("Student or course not found");
     }
 
-
     // Add the student to the course's students relationship
     const updatedCourse = await prisma.courses.update({
       where: { id: courseId },
@@ -521,6 +520,53 @@ const enrollCourse = async (req, res) => {
   //   res.status(400).json({ error: error.message });
   // }
 };
+
+// get enrolled courses
+const enrolledCourses = async (req, res) => {
+  const userId = req.user.id; 
+  try {
+    const data = await prisma.courses.findMany({
+      where: {
+        students: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        lessons: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 
 // add quiz
 const addQuiz = async (req, res) => {
@@ -564,6 +610,7 @@ module.exports = {
   getoneLesson,
   deleteLesson,
   enrollCourse,
+  enrolledCourses,
   deleteAllCourse,
   addContent,
   getAllContent,

@@ -42,7 +42,9 @@ const Navbar = () => {
           <Link
             onClick={() => handleLinkClick("/")}
             className={`${
-              activeLink === "/" ? "navLink ml-6 border-b-4 border-orange-500" : "navLink ml-6"
+              activeLink === "/"
+                ? "navLink ml-6 border-b-4 border-orange-500"
+                : "navLink ml-6"
             }`}
             to="/"
           >
@@ -70,7 +72,17 @@ const Navbar = () => {
           >
             <h1>Courses</h1>
           </Link>
-
+          <Link
+            onClick={() => handleLinkClick("/enrolled")}
+            className={`${
+              activeLink === "/enrolled"
+                ? "navLink ml-6 border-b-4 border-orange-500"
+                : "navLink ml-6"
+            }`}
+            to="/enrolled"
+          >
+            <h1>Enrolled</h1>
+          </Link>
           {user.role && user.role != "STUDENT" && (
             <Link
               onClick={() => handleLinkClick("/dashboard")}
@@ -146,7 +158,11 @@ const Navbar = () => {
 
             {ham && (
               <div className="w-60 border bg-white  absolute top-9 right-[-410%] md:right-[-740%]">
-                <Link to="/">
+                <Link
+                  onClick={() => handleLinkClick("/")}
+                  className={`${activeLink === "/" ? " text-orange-500" : ""}`}
+                  to="/"
+                >
                   <div className="hover:bg-orange-200 p-3 flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -166,7 +182,13 @@ const Navbar = () => {
                     <h1 className="ml-3">Home</h1>
                   </div>
                 </Link>
-                <Link to="/about">
+                <Link
+                  onClick={() => handleLinkClick("/about")}
+                  className={`${
+                    activeLink === "/about" ? " text-orange-500" : ""
+                  }`}
+                  to="/about"
+                >
                   <div className="hover:bg-orange-200 p-3 flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -186,7 +208,13 @@ const Navbar = () => {
                     <h1 className="ml-3">About</h1>
                   </div>
                 </Link>
-                <Link to="/courses">
+                <Link
+                  onClick={() => handleLinkClick("/courses")}
+                  className={`${
+                    activeLink === "/courses" ? " text-orange-500" : ""
+                  }`}
+                  to="/courses"
+                >
                   <div className="hover:bg-orange-200 p-3 flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -206,27 +234,67 @@ const Navbar = () => {
                     <h1 className="ml-3">Course</h1>
                   </div>
                 </Link>
-                <Link to="/dashboard">
+                <Link
+                  onClick={() => handleLinkClick("/enrolled")}
+                  className={`${
+                    activeLink === "/enrolled" ? " text-orange-500" : ""
+                  }`}
+                  to="/enrolled"
+                >
                   <div className="hover:bg-orange-200 p-3 flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
-                      strokeWidth="1.5"
+                      stroke-width="1.5"
                       stroke="currentColor"
-                      className="w-6 h-6"
+                      class="w-6 h-6"
                     >
                       <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16.712 4.33a9.027 9.027 0 011.652 1.306c.51.51.944 1.064 1.306 1.652M16.712 4.33l-3.448 4.138m3.448-4.138a9.014 9.014 0 00-9.424 0M19.67 7.288l-4.138 3.448m4.138-3.448a9.014 9.014 0 010 9.424m-4.138-5.976a3.736 3.736 0 00-.88-1.388 3.737 3.737 0 00-1.388-.88m2.268 2.268a3.765 3.765 0 010 2.528m-2.268-4.796a3.765 3.765 0 00-2.528 0m4.796 4.796c-.181.506-.475.982-.88 1.388a3.736 3.736 0 01-1.388.88m2.268-2.268l4.138 3.448m0 0a9.027 9.027 0 01-1.306 1.652c-.51.51-1.064.944-1.652 1.306m0 0l-3.448-4.138m3.448 4.138a9.014 9.014 0 01-9.424 0m5.976-4.138a3.765 3.765 0 01-2.528 0m0 0a3.736 3.736 0 01-1.388-.88 3.737 3.737 0 01-.88-1.388m2.268 2.268L7.288 19.67m0 0a9.024 9.024 0 01-1.652-1.306 9.027 9.027 0 01-1.306-1.652m0 0l4.138-3.448M4.33 16.712a9.014 9.014 0 010-9.424m4.138 5.976a3.765 3.765 0 010-2.528m0 0c.181-.506.475-.982.88-1.388a3.736 3.736 0 011.388-.88m-2.268 2.268L4.33 7.288m6.406 1.18L7.288 4.33m0 0a9.024 9.024 0 00-1.652 1.306A9.025 9.025 0 004.33 7.288"
                       />
                     </svg>
 
-                    <h1 className="ml-3">Dashboard</h1>
+                    <h1 className="ml-3">Enrolled</h1>
                   </div>
                 </Link>
-                <Link to="/profile">
+                {user.role && user.role != "STUDENT" && (
+                  <Link
+                    onClick={() => handleLinkClick("/dashboard")}
+                    className={`${
+                      activeLink === "/dashboard" ? " text-orange-500" : ""
+                    }`}
+                    to="/dashboard"
+                  >
+                    <div className="hover:bg-orange-200 p-3 flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"
+                        />
+                      </svg>
+
+                      <h1 className="ml-3">Dashboard</h1>
+                    </div>
+                  </Link>
+                )}
+                <Link
+                  onClick={() => handleLinkClick("/profile")}
+                  className={`${
+                    activeLink === "/profile" ? " text-orange-500" : ""
+                  }`}
+                  to="/profile"
+                >
                   <div className="hover:bg-orange-200 p-3 flex items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

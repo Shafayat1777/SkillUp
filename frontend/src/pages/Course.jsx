@@ -83,6 +83,7 @@ const Course = () => {
   console.log(isEnrolled);
   const handleEnroll = (courseId) => {
     enrollcourse(courseId);
+    setIsEnrolled(true);
   };
   return (
     <div>

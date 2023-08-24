@@ -15,6 +15,7 @@ import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import Session from "./pages/Session";
 import Loading from "./pages/Loading";
+import Enrolled from "./pages/Enrolled";
 
 function App() {
   const { user } = useAuthContext();
@@ -88,6 +89,18 @@ function App() {
                   <Loading />
                 ) : user ? (
                   <Course />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/enrolled"
+              element={
+                loading ? (
+                  <Loading />
+                ) : user ? (
+                  <Enrolled />
                 ) : (
                   <Navigate to="/login" />
                 )

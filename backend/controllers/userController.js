@@ -79,6 +79,41 @@ const updateUser = async (req, res) => {
   }
 };
 
+// set user progress
+const setProgressUser = async (req, res) => {
+  const userId = req.user.id;
+  const { progress } = req.body;
+
+  if (!progress) {
+    console.log("Must add progress");
+    res.status(400).json({ error: "Must add progress" });
+  }
+
+  // update data to db
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { progress: true }, // Select only the progress field
+    });
+
+    // Check if the user has existing progress data
+    let updatedProgress = user.progress || [];
+    console.log(updatedProgress);
+    // // Push the new progress object to the progress array
+    // updatedProgress.push(progress);
+
+    // // Update the user's progress
+    // const updatedUser = await prisma.user.update({
+    //   where: { id: userId },
+    //   data: { progress: updatedProgress },
+    // });
+
+    res.status(200).json("Progress has been set");
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 // login user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -109,7 +144,7 @@ const loginUser = async (req, res) => {
     // create a token
     const token = createToken(user.id);
 
-    res.status(200).json({ id: user.id, role: user.role, token,  });
+    res.status(200).json({ id: user.id, role: user.role, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -127,7 +162,9 @@ const signupUser = async (req, res) => {
       throw Error("Email is not valid!");
     }
     if (!validator.isStrongPassword(password)) {
-      throw Error("Password is not strong enough! Must Contain a degit, symbol, capital and small letter");
+      throw Error(
+        "Password is not strong enough! Must Contain a degit, symbol, capital and small letter"
+      );
     }
 
     // check if the user already exists
@@ -157,9 +194,7 @@ const signupUser = async (req, res) => {
     // create a token
     const token = createToken(data.id);
 
-    res
-      .status(200)
-      .json({ id: data.id, role: data.role, token });
+    res.status(200).json({ id: data.id, role: data.role, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -171,7 +206,6 @@ const uploadFile = async (req, res) => {
   res.status(200).json({ mssg: "File uploaded" });
 };
 
-
 module.exports = {
   getallUser,
   getoneUser,
@@ -180,5 +214,6 @@ module.exports = {
   deleteAllUser,
   loginUser,
   signupUser,
+  setProgressUser,
   uploadFile,
 };

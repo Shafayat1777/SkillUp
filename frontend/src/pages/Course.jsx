@@ -5,18 +5,19 @@ import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Helmet } from "react-helmet";
 import { useEnrollCourse } from "../hooks/useEnroll";
+import { useSetProgress } from "../hooks/useSetProgress";
 
 const Course = () => {
   const { id } = useParams();
   const { user } = useAuthContext();
   const { enrollcourse, responseEnroll, errorEnroll } = useEnrollCourse();
+  const { setProgress } = useSetProgress();
   const [course, setCourse] = useState(null);
   const [pdfcount, setPdfCount] = useState(0);
   const [videocount, setVideoCount] = useState(0);
   const [quizcount, setQuizCount] = useState(0);
   const [studentcount, setStudentCount] = useState(0);
   const [isEnrolled, setIsEnrolled] = useState(false);
-  let i = 1;
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -68,7 +69,6 @@ const Course = () => {
       if (course.students) {
         course.students.map((student) => {
           if (student.id === user.id) {
-            console.log(student.id);
             setIsEnrolled(true);
           }
         });
@@ -80,34 +80,67 @@ const Course = () => {
       setStudentCount(totalStudentCount);
     }
   }, [course]);
-  console.log(isEnrolled);
-  const handleEnroll = (courseId) => {
-    enrollcourse(courseId);
-    setIsEnrolled(true);
 
-    var progress = [
-      {
-        courseId: "id",
-        lesson: [
-          {
-            lessonId: "id",
-            contents: [
-              {
-                content: "id",
-                clicked: "",
-              },
-            ],
-            quiz: [
-              {
-                quizId: "id",
-                quizScore: "",
-                clicked: "",
-              },
-            ],
-          },
-        ],
-      },
-    ];
+  const handleEnroll = (courseId) => {
+    if (course) {
+      var progress = { courseId: course.id };
+
+      var less = [];
+      course.lessons.map((lesson) => {
+        var les = { lessonId: lesson.id };
+
+        var cnts = [];
+        lesson.contents.map((content) => {
+          var cnt = { contentId: content.id, clicked: false };
+          cnts.push(cnt);
+        });
+
+        var quzs = [];
+        lesson.quiz.map((quiz) => {
+          var quz = { quizId: quiz.id, quizScore: "", clicked: false };
+          quzs.push(quz);
+        });
+
+        les.contents = cnts;
+        les.quiz = quzs;
+        less.push(les);
+      });
+
+      progress.lessons = less;
+
+      enrollcourse(courseId, progress);
+      if (!errorEnroll) setIsEnrolled(true);
+    }
+  };
+  const handleProgress = () => {
+    if (course) {
+      var progress = { courseId: course.id };
+
+      var less = [];
+      course.lessons.map((lesson) => {
+        var les = { lessonId: lesson.id };
+
+        var cnts = [];
+        lesson.contents.map((content) => {
+          var cnt = { contentId: content.id, clicked: false };
+          cnts.push(cnt);
+        });
+
+        var quzs = [];
+        lesson.quiz.map((quiz) => {
+          var quz = { quizId: quiz.id, quizScore: "", clicked: false };
+          quzs.push(quz);
+        });
+
+        les.contents = cnts;
+        les.quiz = quzs;
+        less.push(les);
+      });
+
+      progress.lessons = less;
+
+      setProgress(progress);
+    }
   };
   return (
     <div>
@@ -140,7 +173,11 @@ const Course = () => {
                 </h1>
 
                 <div className="mb-5">
-                  <button className=" py-1 px-3 border rounded-sm font-semibold text-white hover:bg-gray-700">
+                  <button
+                    
+                    onClick={handleProgress}
+                    className=" py-1 px-3 border rounded-sm font-semibold text-white hover:bg-gray-700"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -313,11 +350,11 @@ const Course = () => {
                     <p>{course.description}</p>
                   </div>
                   {course.lessons &&
-                    course.lessons.map((lesson) => (
+                    course.lessons.map((lesson, i) => (
                       <LessionDetails
                         key={lesson.id}
                         lesson={lesson}
-                        no={i++}
+                        no={i + 1}
                       />
                     ))}
                 </div>

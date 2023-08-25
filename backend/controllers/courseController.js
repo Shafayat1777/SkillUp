@@ -471,8 +471,12 @@ const getAllContent = async (req, res) => {
 // enroll a Course
 const enrollCourse = async (req, res) => {
   const userId = req.user.id;
-  const { courseId } = req.body;
-  // console.log(userId, courseId);
+  const { courseId, progress } = req.body;
+
+  if (!progress) {
+    console.log("Must add progress");
+    res.status(400).json({ error: "Must add progress" });
+  }
 
   try {
     // Find the student and the course using their IDs
@@ -499,6 +503,26 @@ const enrollCourse = async (req, res) => {
       },
     });
 
+    // adding the initial progress
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { progress: true }, // Select only the progress field
+    });
+
+    // Check if the user has existing progress data
+    let updatedProgress = user.progress || [];
+  
+    // Push the new progress object to the progress array
+    updatedProgress.push(progress);
+
+    // Update the user's progress
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { progress: updatedProgress },
+    });
+
+    console.log(updatedUser)
+
     res.status(200).json(`You have Enrolled in ${updatedCourse.title} course!`);
     console.log(
       `Student ${student.first_name} added to course ${updatedCourse.title}`
@@ -523,7 +547,7 @@ const enrollCourse = async (req, res) => {
 
 // get enrolled courses
 const enrolledCourses = async (req, res) => {
-  const userId = req.user.id; 
+  const userId = req.user.id;
   try {
     const data = await prisma.courses.findMany({
       where: {
@@ -566,7 +590,6 @@ const enrolledCourses = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
 
 // add quiz
 const addQuiz = async (req, res) => {

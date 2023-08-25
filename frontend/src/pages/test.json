@@ -1,0 +1,46 @@
+{
+    "courseId": "29d8b4f7-65dd-4bf7-8819-6a53b7ceddb8",
+    "lessons": [
+        {
+            "lessonId": "9fb82a7a-5016-4abc-9692-a4e2e4321811",
+            "contents": [
+                {
+                    "contentId": "8eb151b7-2321-4eca-9d8f-fb2dd5024d4a",
+                    "clicked": false
+                },
+                {
+                    "contentId": "5d30ee8d-2c05-48f4-b365-c458a098301c",
+                    "clicked": false
+                }
+            ],
+            "quiz": [
+                {
+                    "quizId": "25eafff5-281e-4bac-be14-cbba0010e70f",
+                    "quizScore": "",
+                    "clicked": false
+                },
+                {
+                    "quizId": "f5f3fc4f-5c05-4ff0-ad4b-32313a0ee2cd",
+                    "quizScore": "",
+                    "clicked": false
+                }
+            ]
+        },
+        {
+            "lessonId": "9f36067a-36c8-4ef3-86bd-ecd203818838",
+            "contents": [
+                {
+                    "contentId": "d2ddd97e-a927-4655-8c7d-d652908bd036",
+                    "clicked": false
+                }
+            ],
+            "quiz": [
+                {
+                    "quizId": "f56fd3fc-7296-458d-8556-28c4d680dffa",
+                    "quizScore": "",
+                    "clicked": false
+                }
+            ]
+        }
+    ]
+}

@@ -6,7 +6,7 @@ export const useEnrollCourse = () => {
   const [errorEnroll, setErrorEnroll] = useState(null);
   const [responseEnroll, setIsResponseEnroll] = useState(null);
 
-  const enrollcourse = async (courseId) => {
+  const enrollcourse = async (courseId, progress) => {
     setIsResponseEnroll(null)
     setErrorEnroll(null);
     console.log(courseId)
@@ -18,6 +18,7 @@ export const useEnrollCourse = () => {
       },
       body: JSON.stringify({
         courseId,
+        progress,
       }),
     });
 

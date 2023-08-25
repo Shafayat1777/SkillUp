@@ -16,8 +16,8 @@ const LessionDetails = ({ lesson, no }) => {
   return (
     <div className="mt-10 border rounded-sm bg-orange-50">
       <div className="p-5 flex">
-        <div className="flex items-center">
-          <div className="rounded-full w-6 bg-black text-white text-center">
+        <div className="flex items-center justify-center">
+          <div className="rounded-full w-6 bg-gray-700 text-white text-center">
             {no}
           </div>
           <div className="ml-3 text-gray-600 font-bold text-xl">

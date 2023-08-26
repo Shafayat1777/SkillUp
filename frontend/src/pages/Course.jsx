@@ -13,6 +13,7 @@ const Course = () => {
   const { enrollcourse, responseEnroll, errorEnroll } = useEnrollCourse();
   const { setProgress } = useSetProgress();
   const [course, setCourse] = useState(null);
+  const [userProgress, setUserProgress] = useState(null);
   const [pdfcount, setPdfCount] = useState(0);
   const [videocount, setVideoCount] = useState(0);
   const [quizcount, setQuizCount] = useState(0);
@@ -36,8 +37,25 @@ const Course = () => {
       }
     };
 
+    const fetchProgress = async () => {
+      const respons = await fetch(
+        `http://localhost:4000/api/users/user/userProgress/`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      const json = await respons.json();
+
+      if (respons.ok) {
+        setUserProgress(json);
+      }
+    };
+
     if (user) {
       fetchCourse();
+      fetchProgress();
     }
   }, [user]);
 
@@ -81,6 +99,8 @@ const Course = () => {
     }
   }, [course]);
 
+  console.log(userProgress);
+
   const handleEnroll = (courseId) => {
     if (course) {
       var progress = { courseId: course.id };
@@ -113,38 +133,11 @@ const Course = () => {
     }
   };
   const handleProgress = () => {
-    if (course) {
-      var progress = { courseId: course.id };
-
-      var less = [];
-      course.lessons.map((lesson) => {
-        var les = { lessonId: lesson.id };
-
-        var cnts = [];
-        lesson.contents.map((content) => {
-          var cnt = { contentId: content.id, clicked: false };
-          cnts.push(cnt);
-        });
-
-        var quzs = [];
-        lesson.quiz.map((quiz) => {
-          var quz = { quizId: quiz.id, quizScore: "", clicked: false };
-          quzs.push(quz);
-        });
-
-        les.contents = cnts;
-        les.quiz = quzs;
-        less.push(les);
-      });
-
-      progress.lessons = less;
-
-      setProgress(progress);
-    }
+    setProgress();
   };
   return (
     <div>
-      {course && (
+      {course && userProgress && (
         <div>
           <div className="head">
             <Helmet>
@@ -174,7 +167,6 @@ const Course = () => {
 
                 <div className="mb-5">
                   <button
-                    
                     onClick={handleProgress}
                     className=" py-1 px-3 border rounded-sm font-semibold text-white hover:bg-gray-700"
                   >

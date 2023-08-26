@@ -79,6 +79,47 @@ const updateUser = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
+=======
+// get progress
+const getProgress = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const userProgress = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { progress: true }, // Select only the progress field
+    });
+
+    console.log(userProgress);
+    res.status(200).json(userProgress);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// set user progress
+const setProgressUser = async (req, res) => {
+  const userId = req.user.id;
+
+  // update data to db
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { progress: true }, // Select only the progress field
+    });
+
+    // Check if the user has existing progress data
+    let updatedProgress = user.progress || [];
+    // console.log(updatedProgress);
+
+    res.status(200).json("Progress has been set");
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+>>>>>>> 2d8216b901e8d513ef245e529d9287e7d2198151
 // login user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -183,5 +224,10 @@ module.exports = {
   deleteAllUser,
   loginUser,
   signupUser,
+<<<<<<< HEAD
+=======
+  getProgress,
+  setProgressUser,
+>>>>>>> 2d8216b901e8d513ef245e529d9287e7d2198151
   uploadFile,
 };

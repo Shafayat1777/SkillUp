@@ -81,8 +81,8 @@ const updateUser = async (req, res) => {
 
 // login user
 const loginUser = async (req, res) => {
-  const { name, email, password } = req.body;
-
+  const { email, password } = req.body;
+  // console.log(email, password)
   try {
     // validation
     if (!email || !password) {
@@ -94,6 +94,9 @@ const loginUser = async (req, res) => {
         email: email,
       },
     });
+
+
+    // console.log(user)
 
     if (!user) {
       throw Error("Incorrect email!");
@@ -111,7 +114,7 @@ const loginUser = async (req, res) => {
 
     res.status(200).json({ id: user.id, email: user.email, token });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message});
   }
 };
 

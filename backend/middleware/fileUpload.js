@@ -77,9 +77,25 @@ const validatePDF = async (req, res, next) => {
   next();
 };
 
+// setting the Video file storage destination
+const videoStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "../backend/uploads/videos");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "_" + req.body.lessonId + ".mp4");
+  },
+});
+
+// Middleware to upload PDF
+const uploadVideo = multer({
+  storage: videoStorage
+});
+
 module.exports = {
   uploadImage,
   validateImage,
   uploadPDF,
   validatePDF,
+  uploadVideo,
 };

@@ -2,16 +2,18 @@ import { useEffect, useState } from "react";
 import { useCoursesContext } from "../hooks/useCourseContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Helmet } from "react-helmet";
-import { useCheckAuth } from "../hooks/useCheckAuth";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+
 // components
 import MyCourses from "../components/myCourses";
 import CoursesForm from "../components/CoursesForm";
-import CourseDetails from "../components/CourseDetails";
+import MyCourseDetails from "../components/MyCourseDetails";
 
 const Dashboard = () => {
   const { courses, dispatch } = useCoursesContext();
   const { user } = useAuthContext();
-  const {checkAuth} = useCheckAuth()
+  const navigate = useNavigate();
   const [showForm, setShowForm] = useState(false);
   const [showDetails, setShowDetails] = useState(null);
   const [error, setError] = useState(null);
@@ -19,12 +21,8 @@ const Dashboard = () => {
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
-    if(!user){
-      
-    }
-
     const fetchCourses = async () => {
-      const respons = await fetch("/api/courses/courses/", {
+      const respons = await fetch("http://localhost:4000/api/courses/mycourses/", {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -37,15 +35,20 @@ const Dashboard = () => {
       if (!respons.ok) {
         setError();
 
-        checkAuth({data:json.error})
+        if (json.error === "jwt expired" || json.error === "jwt malformed") {
+          // remove user from cookies
+          Cookies.remove("user");
+          //dispatch logout action
+          dispatch({ type: "LOGOUT" });
+          navigate("/session");
+        }
       }
     };
 
     if (user) {
       fetchCourses();
     }
-  }, [user, dispatch, reload, checkAuth]);
-
+  }, [user, dispatch, reload, navigate]);
   const handleDetailsReload = () => {
     if (reload) {
       setReload(false);
@@ -63,6 +66,13 @@ const Dashboard = () => {
   const handleShowDetails = (courseId) => {
     setShowDetails(courseId);
   };
+
+  const handleHideDetails = (courseId) => {
+    if(showDetails){
+      setShowDetails(null);
+    }
+    
+  };
   const closeShowDetails = () => {
     setShowDetails(null);
   };
@@ -72,12 +82,12 @@ const Dashboard = () => {
       <div className="head">
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Dashboard</title>
+          <title>Dashboard | SkillUP</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
       </div>
 
-      <div className="m-8 flex">
+      <div className="m-8 2xl:flex">
         <div className=" col-span-2 w-full">
           <h1 className="mb-5 text-gray-600 font-semibold text-lg">
             My course
@@ -85,7 +95,7 @@ const Dashboard = () => {
           <div>
             <button
               onClick={handleShowForm}
-              className=" rounded-md  bg-orange-400 text-white hover:bg-orange-500  text-md p-1 flex justify-center items-center w-28 text-center"
+              className=" border rounded-md  text-lg text-orange-500 hover:bg-orange-100  text-md p-1 flex justify-center items-center w-28 text-center"
             >
               Create{" "}
               <svg
@@ -104,7 +114,7 @@ const Dashboard = () => {
               </svg>
             </button>
           </div>
-          <div>{error && (<h1>{error}</h1>)}</div>
+          <div>{error && <h1>{error}</h1>}</div>
           <div className="mt-4">
             {courses && (
               <MyCourses
@@ -115,21 +125,21 @@ const Dashboard = () => {
               />
             )}
           </div>
-          <div className="mt-4">
+          <div className="my-4">
             {showDetails && (
-              <CourseDetails courseId={showDetails} reload={reload} />
+              <MyCourseDetails courseId={showDetails} reload={reload} handleHideDetails={handleHideDetails} />
             )}
           </div>
         </div>
         {showForm && (
-          <div className="ml-5">
-            <h1 className="mb-5 text-gray-600 font-semibold text-lg">
+          <div className="2xl:ml-5">
+            <div className="mb-5 text-gray-600 font-semibold text-lg">
               <CoursesForm
                 handleHideForm={handleHideForm}
                 courses={courses}
                 handleDetailsReload={handleDetailsReload}
               />
-            </h1>
+            </div>
           </div>
         )}
       </div>

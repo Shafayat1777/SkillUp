@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import PdfView from "./pdfView";
+import ContentView from "./ContentView";
+import Quiz from "./Quiz";
 
-const CourseContent = ({ lesson, i }) => {
+const MyCourseContent = ({ lesson, i }) => {
   const [showcontent, setShowContent] = useState(false);
-  const [showWindow, setShowWindow] = useState(false);
 
   const handleShowContent = () => {
     if (showcontent) {
@@ -14,13 +13,6 @@ const CourseContent = ({ lesson, i }) => {
     }
   };
 
-  const handleOpenWindow = () => {
-    setShowWindow(true);
-  };
-  const handleCloseWindow = () => {
-    setShowWindow(false);
-  };
-  console.log(showWindow);
   return (
     <div>
       <div key={lesson.id} className="border rounded-md shadow  mt-4">
@@ -72,31 +64,30 @@ const CourseContent = ({ lesson, i }) => {
           </div>
         </div>
         {showcontent && (
-          <div className="mb-5">
-            <div className="">
+          <div>
+            <div className="px-10 mb-5">
+              <p className="text-gray-600 ">{lesson.description}</p>
+            </div>
+            <div className="mb-5">
+              <h3 className="px-5 text-xl font-bold text-gray-500 border rounded-r-full w-32 mb-5">
+                Contents
+              </h3>
               {lesson.contents &&
                 lesson.contents.map((content) => (
-                  <div onClick={handleOpenWindow}>
-                    <div className="flex items-center px-16 py-1.5 hover:bg-orange-100 cursor-pointer font-bold">
-                      <div className="border border-md border-orange-400 rounded-full w-8 h-8 flex items-center justify-center">
-                        {content.file.endsWith(".pdf") ? (
-                          <img
-                            className="w-5 h-5"
-                            src="./img/pdf.png"
-                            alt="pdf.img"
-                          />
-                        ) : (
-                          <h1>VIDEO</h1>
-                        )}
-                      </div>
-                      <div className="ml-3">{content.title}</div>
-                    </div>
-                    {showWindow && (
-                      <PdfView
-                        content={content}
-                        handleCloseWindow={handleCloseWindow}
-                      />
-                    )}
+                  <div key={content.id}>
+                    <ContentView content={content} />
+                  </div>
+                ))}
+            </div>
+            
+            <div className="mb-5">
+              <h3 className="px-5 text-xl font-bold text-gray-500 border rounded-r-full w-24 mb-5 ">
+                Quizs
+              </h3>
+              {lesson.quiz &&
+                lesson.quiz.map((quiz) => (
+                  <div key={quiz.id}>
+                    <Quiz quiz={quiz} />
                   </div>
                 ))}
             </div>
@@ -107,4 +98,4 @@ const CourseContent = ({ lesson, i }) => {
   );
 };
 
-export default CourseContent;
+export default MyCourseContent;

@@ -1,24 +1,29 @@
 import { useAddContent } from "../hooks/useAddContent";
 import { useAddCourse } from "../hooks/useAddCourse";
 import { useAddLesson } from "../hooks/useAddLesson";
+import { useAddQuiz } from "../hooks/useAddQuiz";
 import { useState } from "react";
 
 const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const { addcourse, isLoading, error } = useAddCourse();
   const { addlesson, isLoadingLesson, errorLesson } = useAddLesson();
   const { addcontent, isLoadingContent, errorContent } = useAddContent();
+  const { addquiz, isLoadingQuiz, errorQuiz } = useAddQuiz();
 
   // useStates for rendering show items
   // to show each type of form
   const [showCourseForm, setShowCourseForm] = useState(true);
   const [showLessonForm, setShowLessonForm] = useState(false);
   const [showContentForm, setShowContentForm] = useState(false);
+  const [showQuizForm, setShowQuizForm] = useState(false);
 
   // course add useState
   const [course_title, setTitle] = useState("");
   const [short_description, setShortDescription] = useState("");
   const [main_description, setMainDescription] = useState("");
   const [category, setCategory] = useState("");
+  const [level, setLevel] = useState("");
+  const [total_hours, setTotalHours] = useState("");
 
   // lesson add useState
   const [courseId, setCourseId] = useState("");
@@ -32,10 +37,16 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
   const [lessonId, setLessonId] = useState(null);
   const [link, setLink] = useState("");
 
+  // Quiz add useState
+  const [quiz, setQuiz] = useState([]);
+  const [quizTitle, setQuizTitle] = useState("");
+  const [quizCourseId, setQuizCourseId] = useState("");
+  const [quizLessoneId, setQuizLessoneId] = useState("");
+
   const [contentType, setContentType] = useState("PDF");
   const [videoType, setVideoType] = useState("File");
 
-  // to show selected form
+  // to show selected form css
   const selected =
     "mr-5 border-b-4 border-orange-400 py-4 hover:text-orange-400 cursor-pointer";
   const not_selected = "mr-5 py-4 hover:text-orange-400 cursor-pointer";
@@ -56,8 +67,50 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
 
     // Handle the dropped files here, if needed
     setFile({ file: event.dataTransfer.files[0], progress: 0 });
+  };
 
-    console.log(file);
+  // quiz handles
+  const handleAddQuestion = (e) => {
+    const qv = [
+      ...quiz,
+      { question: "", o1: "", o2: "", o3: "", o4: "", answer: "" },
+    ];
+    setQuiz(qv);
+  };
+  const handleDeleteQuiz = (i) => {
+    const deleteQuiz = [...quiz];
+    deleteQuiz.splice(i, 1);
+    setQuiz(deleteQuiz);
+  };
+  const handleChangeQuestion = (e, i) => {
+    const quizdata = [...quiz];
+    quizdata[i].question = e.target.value;
+    setQuiz(quizdata);
+  };
+  const handleChangeO1 = (e, i) => {
+    const quizdata = [...quiz];
+    quizdata[i].o1 = e.target.value;
+    setQuiz(quizdata);
+  };
+  const handleChangeO2 = (e, i) => {
+    const quizdata = [...quiz];
+    quizdata[i].o2 = e.target.value;
+    setQuiz(quizdata);
+  };
+  const handleChangeO3 = (e, i) => {
+    const quizdata = [...quiz];
+    quizdata[i].o3 = e.target.value;
+    setQuiz(quizdata);
+  };
+  const handleChangeO4 = (e, i) => {
+    const quizdata = [...quiz];
+    quizdata[i].o4 = e.target.value;
+    setQuiz(quizdata);
+  };
+  const handleChangeAnswer = (e, i) => {
+    const quizdata = [...quiz];
+    quizdata[i].answer = e.target.value;
+    setQuiz(quizdata);
   };
 
   // submit functions
@@ -67,7 +120,9 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
       course_title,
       short_description,
       main_description,
-      category
+      category,
+      level,
+      total_hours
     );
   };
   const handleLessonSubmit = async (e) => {
@@ -86,8 +141,15 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
       file.file,
       lessonId,
       setFile,
+      contentType,
+      videoType,
+      link,
       handleDetailsReload
     );
+  };
+  const handleQuizSubmit = async (e) => {
+    e.preventDefault();
+    await addquiz(quizTitle, quizLessoneId, quiz, handleDetailsReload);
   };
 
   // form show functions
@@ -95,36 +157,49 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
     setShowCourseForm(true);
     setShowLessonForm(false);
     setShowContentForm(false);
+    setShowQuizForm(false);
   };
   const handleShowLessonForm = () => {
     setShowCourseForm(false);
     setShowLessonForm(true);
     setShowContentForm(false);
+    setShowQuizForm(false);
   };
   const handleShowContentForm = () => {
     setShowCourseForm(false);
     setShowLessonForm(false);
     setShowContentForm(true);
+    setShowQuizForm(false);
+  };
+  const handleShowQuizForm = () => {
+    setShowCourseForm(false);
+    setShowLessonForm(false);
+    setShowContentForm(false);
+    setShowQuizForm(true);
   };
 
   const handleFileTypeVideo = () => {
     if (contentType === "PDF") {
       setContentType("Video");
+      setLink("");
+      setFile("");
     }
   };
   const handleFileTypePDF = () => {
     if (contentType === "Video") {
       setContentType("PDF");
-      setVideoType("File")
+      setVideoType("File");
+      setLink("");
+      setFile("");
     }
   };
 
   return (
     <div>
-      <div className="border shadow rounded-md w-[35rem] pt-5 relative">
+      <div className="border shadow rounded-md 2xl:w-[35rem] pt-5 relative">
         <div
           onClick={handleHideForm}
-          className="absolute top-3 right-3 border rounded hover:border-red-500 hover:text-red-500 cursor-pointer"
+          className="absolute top-3 right-3  rounded  hover:bg-gray-200  cursor-pointer"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -150,6 +225,9 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
           )}
           {showContentForm && (
             <h1 className="font-bold text-gray-600">Add Lesson Contents</h1>
+          )}
+          {showQuizForm && (
+            <h1 className="font-bold text-gray-600">Add Quiz</h1>
           )}
           <div className="flex border-b text-gray-400">
             <h3
@@ -202,6 +280,28 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
             >
               Content
             </h3>
+            <h3 className="mr-5 py-4 flex items-center text-orange-400">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5"
+                />
+              </svg>
+            </h3>
+            <h3
+              onClick={handleShowQuizForm}
+              className={showQuizForm ? selected : not_selected}
+            >
+              Quiz
+            </h3>
           </div>
         </div>
 
@@ -240,7 +340,7 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                           onChange={(e) => setShortDescription(e.target.value)}
                           value={short_description}
                           className="border rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
-                          rows="5"
+                          rows="4"
                           placeholder="Short description"
                         ></textarea>
                       </td>
@@ -257,12 +357,76 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                           onChange={(e) => setMainDescription(e.target.value)}
                           value={main_description}
                           className="border rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
-                          rows="9"
+                          rows="7"
                           placeholder="Main description"
                         ></textarea>
                       </td>
                     </tr>
 
+                    <tr>
+                      <td className="flex">
+                        <label className=" text-gray-600 font-semibold">
+                          Level
+                        </label>
+                      </td>
+                      <td>
+                        <select
+                          onChange={(e) => setLevel(e.target.value)}
+                          value={level}
+                          className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                        >
+                          <option
+                            className="text-orange-500"
+                            value=""
+                            disabled
+                            selected
+                          >
+                            Select a Level
+                          </option>
+
+                          <hr />
+
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Advanced">Advanced</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="flex">
+                        <label className=" text-gray-600 font-semibold">
+                          Course Duration
+                        </label>
+                      </td>
+                      <td>
+                        <select
+                          onChange={(e) => setTotalHours(e.target.value)}
+                          value={total_hours}
+                          className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                        >
+                          <option
+                            className="text-orange-500"
+                            value=""
+                            disabled
+                            selected
+                          >
+                            Select total hours
+                          </option>
+
+                          <hr />
+
+                          <option value="1-2">1-2</option>
+                          <option value="2-3">2-3</option>
+                          <option value="3-4">3-4</option>
+                          <option value="4-5">4-5</option>
+                          <option value="5-6">5-6</option>
+                          <option value="5-6">6-7</option>
+                          <option value="7-8">7-8</option>
+                          <option value="8-9">8-9</option>
+                          <option value="9-10">9-10</option>
+                        </select>
+                      </td>
+                    </tr>
                     <tr>
                       <td className="flex">
                         <label className=" text-gray-600 font-semibold">
@@ -566,7 +730,8 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                       <tr>
                         <td className="flex">
                           <label className="mr-20 text-gray-600 font-semibold">
-                            Add {contentType === "PDF" ? "PDF" : "Video"} File {videoType === "Link" && "Link"}
+                            Add {contentType === "PDF" ? "PDF" : "Video"} File{" "}
+                            {videoType === "Link" && "Link"}
                           </label>
                         </td>
                         <td>
@@ -674,6 +839,262 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
               </div>
             </form>
           )}
+
+          {/*Course Quiz form */}
+          {showQuizForm && (
+            <form onSubmit={handleQuizSubmit}>
+              {!courses.length > 0 && (
+                <p className="p-6 text-md text-orange-400">
+                  Please add at least a single Course to access this form
+                </p>
+              )}
+              {courses.length > 0 && (
+                <div className="px-6">
+                  <table className="table-fixed w-full">
+                    <tbody>
+                      <tr>
+                        <td className="flex">
+                          <label className=" text-gray-600 font-semibold">
+                            Select a course
+                          </label>
+                        </td>
+                        <td>
+                          <select
+                            onChange={(e) => setQuizCourseId(e.target.value)}
+                            value={quizCourseId}
+                            className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                          >
+                            <option value="" disabled selected>
+                              Select a course
+                            </option>
+                            {courses &&
+                              courses.map((course) => (
+                                <option key={course.id} value={course.id}>
+                                  {course.title}
+                                </option>
+                              ))}
+                          </select>
+                        </td>
+                      </tr>
+
+                      {quizCourseId && (
+                        <tr>
+                          <td className="flex">
+                            <label className=" text-gray-600 font-semibold">
+                              Select a Lesson
+                            </label>
+                          </td>
+                          <td>
+                            <select
+                              onChange={(e) => setQuizLessoneId(e.target.value)}
+                              value={quizLessoneId}
+                              className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                            >
+                              <option value="" disabled selected>
+                                Select a Lesson
+                              </option>
+                              {courses.map((course) => {
+                                if (
+                                  course.id === quizCourseId &&
+                                  course.lessons &&
+                                  course.lessons.length > 0
+                                ) {
+                                  return course.lessons.map((lesson) => (
+                                    <option key={lesson.id} value={lesson.id}>
+                                      {lesson.title}
+                                    </option>
+                                  ));
+                                }
+                                return null;
+                              })}
+                            </select>
+                          </td>
+                        </tr>
+                      )}
+
+                      <tr>
+                        <td className="flex">
+                          <label className=" text-gray-600 font-semibold">
+                            Quiz Title
+                          </label>
+                        </td>
+                        <td>
+                          <input
+                            onChange={(e) => setQuizTitle(e.target.value)}
+                            value={quizTitle}
+                            className="border rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                            type="text"
+                            placeholder="Title"
+                          />
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  {quiz.map((data, i) => (
+                    <div className=" relative mb-4 border rounded">
+                      <div className="bg-slate-100 border-b flex items-center pl-5 py-2">
+                        <h3 className="">Question</h3>
+                        <h3 className="ml-2 text-sm border rounded-full bg-slate-600 text-white w-5 h-5 flex justify-center items-center">
+                          {i + 1}
+                        </h3>
+                        <div
+                          onClick={() => handleDeleteQuiz(i)}
+                          className="absolute top-3 right-3  rounded  hover:bg-gray-200  cursor-pointer"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1.5"
+                            stroke="currentColor"
+                            className="w-6 h-6"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6 18L18 6M6 6l12 12"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+
+                      <div className="px-5 pt-2 flex">
+                        <table className="table w-full">
+                          <tbody>
+                            <tr>
+                              <td className="flex">
+                                <label className=" text-gray-600 font-semibold">
+                                  Question
+                                </label>
+                              </td>
+                              <td>
+                                <textarea
+                                  onChange={(e) => handleChangeQuestion(e, i)}
+                                  value={data.question}
+                                  className="border rounded-sm p-1 block mb-2 w-full focus:outline-orange-100"
+                                  rows="3"
+                                  placeholder="Add a question"
+                                ></textarea>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="flex">
+                                <label className=" text-gray-600 font-semibold">
+                                  Option 1
+                                </label>
+                              </td>
+                              <td>
+                                <textarea
+                                  onChange={(e) => handleChangeO1(e, i)}
+                                  value={data.o1}
+                                  className="border rounded-sm p-1 block mb-2 w-full focus:outline-orange-100"
+                                  rows="2"
+                                  placeholder="Add 1st option"
+                                ></textarea>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="flex">
+                                <label className=" text-gray-600 font-semibold">
+                                  Option 2
+                                </label>
+                              </td>
+                              <td>
+                                <textarea
+                                  onChange={(e) => handleChangeO2(e, i)}
+                                  value={data.o2}
+                                  className="border rounded-sm p-1 block mb-2 w-full focus:outline-orange-100"
+                                  rows="2"
+                                  placeholder="Add 2nd option"
+                                ></textarea>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="flex">
+                                <label className=" text-gray-600 font-semibold">
+                                  Option 3
+                                </label>
+                              </td>
+                              <td>
+                                <textarea
+                                  onChange={(e) => handleChangeO3(e, i)}
+                                  value={data.o3}
+                                  className="border rounded-sm p-1 block mb-2 w-full focus:outline-orange-100"
+                                  rows="2"
+                                  placeholder="Add 3rd option"
+                                ></textarea>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="flex">
+                                <label className=" text-gray-600 font-semibold">
+                                  Option 4
+                                </label>
+                              </td>
+                              <td>
+                                <textarea
+                                  onChange={(e) => handleChangeO4(e, i)}
+                                  value={data.o4}
+                                  className="border rounded-sm p-1 block mb-2 w-full focus:outline-orange-100"
+                                  rows="2"
+                                  placeholder="Add 4th option"
+                                ></textarea>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="flex">
+                                <label className=" text-gray-600 font-semibold">
+                                  Correct Answer
+                                </label>
+                              </td>
+                              <td>
+                                <select
+                                  onChange={(e) => handleChangeAnswer(e, i)}
+                                  value={data.answer}
+                                  className="border text-gray-600 rounded-sm p-1 block mb-5 w-full focus:outline-orange-100"
+                                >
+                                  <option value="" disabled selected>
+                                    Select an Answer
+                                  </option>
+                                  <option value={data.o1}>Option 1</option>
+                                  <option value={data.o2}>Option 2</option>
+                                  <option value={data.o3}>Option 3</option>
+                                  <option value={data.o4}>Option 4</option>
+                                </select>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ))}
+
+                  <h3
+                    onClick={handleAddQuestion}
+                    className="mb-3 border rounded w-36 h-10 flex justify-center items-center text-orange-500 cursor-pointer hover:bg-orange-100"
+                  >
+                    Add a Question
+                  </h3>
+                </div>
+              )}
+
+              <div className=" p-5 bg-gray-200 h-16 flex items-center justify-end">
+                <input
+                  disabled={isLoadingQuiz}
+                  className="cursor-pointer border-green-400 rounded-sm w-32 h-8 text-sm bg-white text-orange-400 hover:border-orange-400 hover:border"
+                  type="reset"
+                  value="RESET"
+                />
+                <input
+                  disabled={isLoadingQuiz}
+                  className="cursor-pointer ml-5 rounded-sm w-32 h-8 text-sm bg-orange-400 text-white hover:bg-orange-500"
+                  type="submit"
+                  value="ADD"
+                />
+              </div>
+            </form>
+          )}
         </div>
       </div>
       {error && (
@@ -690,6 +1111,12 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
         <div className="mt-4 w-full border rounded border-red-400 text-center text-red-400 bg-red-100 tracking-wider">
           {errorContent}
           {console.log(errorContent)}
+        </div>
+      )}
+      {errorQuiz && (
+        <div className="mt-4 w-full border rounded border-red-400 text-center text-red-400 bg-red-100 tracking-wider">
+          {errorQuiz}
+          {console.log(errorQuiz)}
         </div>
       )}
     </div>

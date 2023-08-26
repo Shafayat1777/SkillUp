@@ -15,13 +15,15 @@ export const useAddCourse = () => {
     short_description,
     description,
     category,
-    userId,
+    level,
+    total_hours,
+    userId
   ) => {
     setIsLoading(true);
     setError(null);
     var userId = user.id;
 
-    const response = await fetch("/api/courses/courses/", {
+    const response = await fetch("http://localhost:4000/api/courses/courses/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -32,6 +34,8 @@ export const useAddCourse = () => {
         short_description,
         description,
         category,
+        level,
+        total_hours,
         userId,
       }),
     });

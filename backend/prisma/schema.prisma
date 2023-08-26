@@ -23,6 +23,7 @@ model User {
   country        String?
   city           String?
   socials        Json?
+  progress       Json?
   gender         Gender?   @default(DONT_DISCLOSE)
   profile_pic    String?   @default("")
   isBlocked      Boolean   @default(false)
@@ -35,10 +36,11 @@ model User {
 model Courses {
   id                String        @id @default(uuid())
   title             String
-  short_description String
-  description       String
+  short_description String        @db.VarChar(250)
+  description       String        @db.VarChar(500)
   category          String
-  total_hours       Int?
+  total_hours       String
+  level             String
   course_status     Course_Status @default(PROCESSING)
   participants      Int?          @default(0)
   createdAt         DateTime      @default(now())
@@ -56,6 +58,7 @@ model Lessons {
   courseId    String // Foreign key referencing the Courses table
   course      Courses    @relation(fields: [courseId], references: [id])
   contents    Contents[]
+  quiz        Quiz[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -67,6 +70,16 @@ model Contents {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Lessons   Lessons? @relation(fields: [lessonsId], references: [id])
+  lessonsId String?
+}
+
+model Quiz {
+  id        String   @id @default(uuid())
+  title     String
+  questions Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lessons   Lessons? @relation(fields: [lessonsId], references: [id])
   lessonsId String?
 }
 

@@ -1,5 +1,5 @@
 const prisma = require("../prisma/prisma");
-const fs = require('fs');
+const fs = require("fs");
 
 // get all Course
 const getallCourse = async (req, res) => {
@@ -7,6 +7,60 @@ const getallCourse = async (req, res) => {
     const data = await prisma.courses.findMany({
       include: {
         teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        lessons: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// get my course
+const getmyCourse = async (req, res) => {
+  const user_id = req.user.id;
+  try {
+    const data = await prisma.courses.findMany({
+      where: {
+        teacherId: user_id,
+      },
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        students: {
           select: {
             first_name: true,
             last_name: true,
@@ -61,12 +115,30 @@ const getoneCourse = async (req, res) => {
             socials: true,
           },
         },
+        students: {
+          select: {
+            id: true,
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
         lessons: {
           orderBy: {
             createdAt: "asc",
           },
           include: {
             contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+            quiz: {
               orderBy: {
                 createdAt: "asc",
               },
@@ -83,11 +155,26 @@ const getoneCourse = async (req, res) => {
 
 // create new Course
 const createCourse = async (req, res) => {
-  const { title, short_description, description, category, userId } = req.body;
+  const {
+    title,
+    short_description,
+    description,
+    category,
+    level,
+    total_hours,
+    userId,
+  } = req.body;
 
   // add data to db
   try {
-    if (!title || !short_description || !description) {
+    if (
+      !title ||
+      !short_description ||
+      !description ||
+      !category ||
+      !level ||
+      !total_hours
+    ) {
       throw Error("All fields must me filled!");
     }
     if (!userId) {
@@ -99,6 +186,8 @@ const createCourse = async (req, res) => {
         title: title,
         short_description: short_description,
         description: description,
+        level: level,
+        total_hours: total_hours,
         category: category,
         teacher: { connect: { id: userId } }, // Step 2: Associate the course with the teacher (user)
       },
@@ -124,6 +213,7 @@ const deleteCourse = async (req, res) => {
         lessons: {
           include: {
             contents: true,
+            quiz: true,
           },
         },
       },
@@ -141,13 +231,13 @@ const deleteCourse = async (req, res) => {
         const filePath = content.file;
         const startIndex = filePath.indexOf("uploads");
         // Extract the part of the string starting from "uploads" to the end
-        const extractedString = "../backend/"+filePath.slice(startIndex);
+        const extractedString = "../backend/" + filePath.slice(startIndex);
 
         fs.unlink(extractedString, (err) => {
           if (err) {
-            console.log('Error deleting the file:', err);
+            console.log("Error deleting the file:", err);
           } else {
-            console.log('File deleted successfully.');
+            console.log("File deleted successfully.");
           }
         });
 
@@ -158,6 +248,18 @@ const deleteCourse = async (req, res) => {
         where: {
           id: {
             in: contentIds,
+          },
+        },
+      });
+    }
+
+    // Delete the quizzes related to the lessons
+    for (const lesson of course.lessons) {
+      const quizIds = lesson.quiz.map((quiz) => quiz.id);
+      await prisma.quiz.deleteMany({
+        where: {
+          id: {
+            in: quizIds,
           },
         },
       });
@@ -182,7 +284,7 @@ const deleteCourse = async (req, res) => {
 
     // Return a success message or response as needed
     res.json({
-      messg: "Course and related lessons/contents deleted successfully.",
+      messg: "Course and related lessons/contents/quizes deleted successfully.",
     });
   } catch (error) {
     console.error(error);
@@ -299,24 +401,36 @@ const deleteLesson = async (req, res) => {
 
 // add a content
 const addContent = async (req, res) => {
-  // console.log(req.file.path);
-  const { title, lessonId } = req.body;
-
+  const { content_title, lessonId, link } = req.body;
+  var videoLink = "";
   // get the file path
-  const filePath = req.file.path;
-  // Find the index of the "uploads" substring
-  const startIndex = filePath.indexOf("uploads");
-  // Extract the part of the string starting from "uploads" to the end
-  const extractedString =
-    "http://localhost:4000/" + filePath.slice(startIndex).replace(/\\/g, "/");
-
-  console.log(title);
-  console.log(lessonId);
-  console.log(extractedString);
+  if (req.file) {
+    const filePath = req.file.path;
+    // Find the index of the "uploads" substring
+    const startIndex = filePath.indexOf("uploads");
+    // Extract the part of the string starting from "uploads" to the end
+    videoLink =
+      "http://localhost:4000/" + filePath.slice(startIndex).replace(/\\/g, "/");
+  } else {
+    if (link) {
+      // Check if the link is a YouTube link
+      const youtubeMatch = link.match(
+        /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/
+      );
+      if (youtubeMatch) {
+        const youtubeVideoId = youtubeMatch[1];
+        videoLink = `https://www.youtube.com/embed/${youtubeVideoId}`;
+      } else {
+        // Handle other types of links or invalid YouTube links
+        // You might want to provide an error message or default behavior here
+        videoLink = link;
+      }
+    }
+  }
 
   // add data to db
   try {
-    if (!title || !lessonId) {
+    if (!content_title || !lessonId || !videoLink) {
       throw Error("All fields must me filled!");
     }
 
@@ -332,8 +446,8 @@ const addContent = async (req, res) => {
 
     const data = await prisma.contents.create({
       data: {
-        title: title,
-        file: extractedString,
+        title: content_title,
+        file: videoLink,
         lessonsId: lessonId,
       },
     });
@@ -356,13 +470,119 @@ const getAllContent = async (req, res) => {
 
 // enroll a Course
 const enrollCourse = async (req, res) => {
-  const { userId, courseId } = req.body;
+  const userId = req.user.id;
+  const { courseId, progress } = req.body;
+
+  if (!progress) {
+    console.log("Must add progress");
+    res.status(400).json({ error: "Must add progress" });
+  }
+
+  try {
+    // Find the student and the course using their IDs
+    const student = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    const course = await prisma.courses.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!student || !course) {
+      console.log("Student or course not found");
+      throw new Error("Student or course not found");
+    }
+
+    // Add the student to the course's students relationship
+    const updatedCourse = await prisma.courses.update({
+      where: { id: courseId },
+      data: {
+        students: {
+          connect: { id: userId },
+        },
+      },
+    });
+
+    // adding the initial progress
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { progress: true }, // Select only the progress field
+    });
+
+    // Check if the user has existing progress data
+    let updatedProgress = user.progress || [];
+  
+    // Push the new progress object to the progress array
+    updatedProgress.push(progress);
+
+    // Update the user's progress
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { progress: updatedProgress },
+    });
+
+    console.log(updatedUser)
+
+    res.status(200).json(`You have Enrolled in ${updatedCourse.title} course!`);
+    console.log(
+      `Student ${student.first_name} added to course ${updatedCourse.title}`
+    );
+  } catch (error) {
+    res.status(400).json("Error adding student to course:", error);
+    console.error("Error adding student to course:", error);
+  }
 
   // update data to db
+  // try {
+  //   const data = await prisma.courses.update({
+  //     where: { id: userId },
+  //     data: { courses: { connect: { id: courseId } } },
+  //   });
+
+  //   res.status(200).json(data);
+  // } catch (error) {
+  //   res.status(400).json({ error: error.message });
+  // }
+};
+
+// get enrolled courses
+const enrolledCourses = async (req, res) => {
+  const userId = req.user.id;
   try {
-    const data = await prisma.courses.update({
-      where: { id: userId },
-      data: { courses: { connect: { id: courseId } } },
+    const data = await prisma.courses.findMany({
+      where: {
+        students: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        lessons: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
+      },
     });
 
     res.status(200).json(data);
@@ -371,23 +591,40 @@ const enrollCourse = async (req, res) => {
   }
 };
 
-//upload
-const uploadFile = async (req, res) => {
-  // console.log(req.file.path);
-  const filePath = req.file.path;
-  // Find the index of the "uploads" substring
-  const startIndex = filePath.indexOf("uploads");
-  // Extract the part of the string starting from "uploads" to the end
-  const extractedString = "/" + filePath.slice(startIndex).replace(/\\/g, "/");
+// add quiz
+const addQuiz = async (req, res) => {
+  const { quizTitle, quizLessoneId, quiz, userId } = req.body;
 
-  console.log(extractedString);
+  quiz.map((data) => {
+    console.log(data);
+  });
 
-  res.status(200).json({ messg: "File uploaded" });
+  try {
+    if (!quizTitle || !quiz) {
+      throw Error("All fields must me filled!");
+    }
+    if (!userId) {
+      throw Error("Must be signin to add course!");
+    }
+
+    const data = await prisma.quiz.create({
+      data: {
+        title: quizTitle,
+        questions: JSON.stringify(quiz),
+        lessonsId: quizLessoneId, // Replace with the actual lessonsId
+      },
+    });
+    console.log(data);
+    res.status(200).json("A Quiz has been added");
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 module.exports = {
   createCourse,
   getallCourse,
+  getmyCourse,
   getoneCourse,
   deleteCourse,
   updateCourse,
@@ -396,8 +633,9 @@ module.exports = {
   getoneLesson,
   deleteLesson,
   enrollCourse,
+  enrolledCourses,
   deleteAllCourse,
   addContent,
   getAllContent,
-  uploadFile,
+  addQuiz,
 };

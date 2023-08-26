@@ -3,10 +3,16 @@ const express = require("express");
 const userRoutes = require("./routes/users");
 const courseRoutes = require("./routes/courses");
 const path = require('path'); // Add this line
-
+const cors = require('cors')
 
 // express app
 const app = express();
+
+// cors
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+}))
 
 // middeleware
 app.use(express.json());

@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-import CourseContent from "./courseContent";
+import MyCourseContent from "./MyCourseContent";
 
-const CourseDetails = ({ courseId, reload }) => {
+const MyCourseDetails = ({ courseId, reload, handleHideDetails }) => {
   const { user } = useAuthContext();
   const [course, setCourse] = useState(null);
 
   var i = 1;
   useEffect(() => {
     const fetchCourses = async () => {
-      const respons = await fetch("/api/courses/courses/" + courseId, {
+      const respons = await fetch("http://localhost:4000/api/courses/courses/" + courseId, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -29,9 +29,28 @@ const CourseDetails = ({ courseId, reload }) => {
   return (
     <div>
       {course && (
-        <div className="border rounded-md shadow">
+        <div className="border rounded-md shadow relative">
           <div className="border-b py-2 px-5 bg-slate-100">
             <h1 className="font-bold text-xl text-gray-600">Course Details</h1>
+            <div
+              onClick={handleHideDetails}
+              className="absolute top-2 right-3  rounded hover:bg-gray-200  cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
           </div>
           <div className="px-5">
             <div className="mt-6">
@@ -61,7 +80,7 @@ const CourseDetails = ({ courseId, reload }) => {
             <div className="mt-8 mb-8">
               {course.lessons &&
                 course.lessons.map((lesson) => (
-                  <CourseContent lesson={lesson} i={i} />
+                  <MyCourseContent lesson={lesson} i={i} />
                 ))}
             </div>
           </div>
@@ -71,4 +90,4 @@ const CourseDetails = ({ courseId, reload }) => {
   );
 };
 
-export default CourseDetails;
+export default MyCourseDetails;

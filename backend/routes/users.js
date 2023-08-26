@@ -1,5 +1,7 @@
 const express = require("express");
 const { uploadImage, validateImage } = require("../middleware/fileUpload");
+const requireAuth = require("../middleware/requireAuth");
+
 
 // controller functions
 const {
@@ -10,10 +12,22 @@ const {
   deleteAllUser,
   loginUser,
   signupUser,
+  setProgressUser,
   uploadFile,
 } = require("../controllers/userController");
 
 const router = express.Router();
+
+// login user
+router.post("/login", loginUser);
+
+// Signup user
+router.post("/signup", signupUser);
+
+
+// check for authentication ///
+router.use(requireAuth);
+
 
 // GET all User
 router.get("/", getallUser);
@@ -27,14 +41,11 @@ router.get("/:id", getoneUser);
 // DELETE a User
 router.delete("/:id", deleteUser);
 
+// set User progress
+router.patch("/setProgress", setProgressUser);
+
 // UPDATE a User
 router.patch("/:id", updateUser);
-
-// login user
-router.post("/login", loginUser);
-
-// Signup user
-router.post("/signup", signupUser);
 
 //upload
 router.post("/upload", uploadImage.single("image"), validateImage, uploadFile);

@@ -21,7 +21,7 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const respons = await fetch(`/api/users/${user.id}`, {
+      const respons = await fetch(`http://localhost:4000/api/users/${user.id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -67,7 +67,7 @@ const Profile = () => {
       <div className="head">
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Profile</title>
+          <title>Profile || SkillUP</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
       </div>

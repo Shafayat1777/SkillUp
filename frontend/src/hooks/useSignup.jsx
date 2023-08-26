@@ -2,19 +2,19 @@ import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 import Cookies from "js-cookie";
 
-export const useLogin = () => {
+export const useSignup = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const login = async (email, password) => {
+  const signup = async (email, password, role) => {
     setIsLoading(true);
     setError(null);
     
-    const response = await fetch("/api/users/login", {
+    const response = await fetch("http://localhost:4000/api/users/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, role }),
     });
 
     const json = await response.json();
@@ -26,13 +26,12 @@ export const useLogin = () => {
     if (response.ok) {
       // save the user to cookies
       Cookies.set("user", JSON.stringify(json));
-      console.log(Cookies.get("user"))
-      
+
       // update the auth context
       dispatch({ type: "LOGIN", payload: json });
       setIsLoading(false);
     }
   };
 
-  return { login, isLoading, error };
+  return { signup, isLoading, error };
 };

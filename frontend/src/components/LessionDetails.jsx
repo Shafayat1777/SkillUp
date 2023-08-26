@@ -1,9 +1,9 @@
 import { useState } from "react";
-import PdfView from "./pdfView";
+import ContentView from "./ContentView";
+import Quiz from "./Quiz";
 
 const LessionDetails = ({ lesson, no }) => {
   const [isVisible, setIsVisible] = useState(false);
-  const [showWindow, setShowWindow] = useState(false);
 
   const handleOnClick = () => {
     if (isVisible) {
@@ -13,18 +13,11 @@ const LessionDetails = ({ lesson, no }) => {
     }
   };
 
-  const handleOpenWindow = () => {
-    setShowWindow(true);
-  };
-  const handleCloseWindow = () => {
-    setShowWindow(false);
-  };
-
   return (
     <div className="mt-10 border rounded-sm bg-orange-50">
       <div className="p-5 flex">
-        <div className="flex items-center">
-          <div className="rounded-full w-6 bg-black text-white text-center">
+        <div className="flex items-center justify-center">
+          <div className="rounded-full w-6 bg-gray-700 text-white text-center">
             {no}
           </div>
           <div className="ml-3 text-gray-600 font-bold text-xl">
@@ -87,33 +80,34 @@ const LessionDetails = ({ lesson, no }) => {
           </button>
         </div>
         {isVisible && (
-          <div className="">
-            {lesson.contents &&
-              lesson.contents.map((content) => (
-                <div onClick={handleOpenWindow}>
-                  <div className="flex items-center px-16 py-1.5 hover:bg-orange-200 cursor-pointer font-bold mb-5">
-                    <div className="border border-md border-orange-400 rounded-full w-8 h-8 flex items-center justify-center">
-                      {content.file.endsWith(".pdf") ? (
-                        <img
-                          className="w-5 h-5"
-                          src="/img/pdf.png"
-                          alt="pdf.img"
-                        />
-                      ) : (
-                        <h1>VIDEO</h1>
-                      )}
-                    </div>
-                    <div className="ml-3">{content.title}</div>
+          <>
+            <div className="mb-5">
+              <h1 className="text-center bg-gray-700 text-white text-lg font-bold w-44 rounded-r-md ">
+                Content
+              </h1>
+            </div>
+            <div className="mb-5">
+              {lesson.contents &&
+                lesson.contents.map((content) => (
+                  <div key={content.id}>
+                    <ContentView content={content} />
                   </div>
-                  {showWindow && (
-                    <PdfView
-                      content={content}
-                      handleCloseWindow={handleCloseWindow}
-                    />
-                  )}
-                </div>
-              ))}
-          </div>
+                ))}
+            </div>
+            <div className="mb-5">
+              <h1 className="text-center bg-gray-700 text-white text-lg font-bold w-44 rounded-r-md ">
+                Quiz
+              </h1>
+            </div>
+            <div className="mb-5">
+            {lesson.quiz &&
+                lesson.quiz.map((quiz) => (
+                  <div key={quiz.id}>
+                    <Quiz quiz={quiz} />
+                  </div>
+                ))}
+            </div>
+          </>
         )}
       </div>
     </div>

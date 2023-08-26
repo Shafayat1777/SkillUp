@@ -9,7 +9,7 @@ const UserDetails = ({ users }) => {
   let i = 1;
 
   const handleClick = async (id) => {
-    const response = await fetch("/api/users/" + id, {
+    const response = await fetch("http://localhost:4000/api/users/" + id, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${user.token}`,

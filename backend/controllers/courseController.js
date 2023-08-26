@@ -511,17 +511,15 @@ const enrollCourse = async (req, res) => {
 
     // Check if the user has existing progress data
     let updatedProgress = user.progress || [];
-  
+
     // Push the new progress object to the progress array
     updatedProgress.push(progress);
 
     // Update the user's progress
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
       where: { id: userId },
       data: { progress: updatedProgress },
     });
-
-    console.log(updatedUser)
 
     res.status(200).json(`You have Enrolled in ${updatedCourse.title} course!`);
     console.log(

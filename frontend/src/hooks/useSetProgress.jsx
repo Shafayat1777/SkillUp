@@ -15,7 +15,6 @@ export const useSetProgress = () => {
           Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
-          progress,
         }),
       }
     );

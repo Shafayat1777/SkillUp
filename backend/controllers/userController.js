@@ -84,24 +84,30 @@ const getProgress = async (req, res) => {
   const userId = req.user.id;
   const { id } = req.params;
   try {
-
     // get the users progress
     const userProgress = await prisma.user.findUnique({
       where: { id: userId },
       select: { progress: true }, // Select only the progress field
     });
 
+    let foundProgress = false;
+    let foundprog = {};
     // check is the progess field has any data. if it does then find the course progress
     if (userProgress.progress.length !== 0) {
       userProgress.progress.map((progress) => {
-          if (progress.courseId === id) {
-            console.log(progress);
-            res.status(200).json(progress);
-          }else{
-            console.log("no");
-            res.status(200).json({});
-          }
+        if (progress.courseId === id) {
+          console.log(progress);
+          foundprog = progress;
+          foundProgress = true;
+        } else {
+          console.log(
+            "progress of this course is not added. Please enroll the course"
+          );
+        }
       });
+
+      if (foundProgress) res.status(200).json(foundprog);
+      else res.status(200).json(foundprog);
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -132,24 +138,59 @@ const setProgressUser = async (req, res) => {
 // update user progress
 const updateProgressUser = async (req, res) => {
   const userId = req.user.id;
-  const {courseId, lessonId, contentId} = req.body
+  const { courseId, lessonId, contentId } = req.body;
 
-  console.log(courseId, lessonId, contentId)
-  // // update data to db
-  // try {
-  //   const user = await prisma.user.findUnique({
-  //     where: { id: userId },
-  //     select: { progress: true }, // Select only the progress field
-  //   });
+  console.log("Hello");
+  // update data to db
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { progress: true }, // Select only the progress field
+    });
 
-  //   // Check if the user has existing progress data
-  //   let updatedProgress = user.progress || [];
-  //   // console.log(updatedProgress);
+    // Check if the user has existing progress data
+    let data = user.progress || [];
 
-  //   res.status(200).json("Progress has been set");
-  // } catch (error) {
-  //   res.status(400).json({ error: error.message });
-  // }
+    // check if the data arrat is empty or not
+    if (data.length > 0) {
+      // Find the course with the given courseId
+      const course = data.find((course) => course.courseId === courseId);
+
+      if (course) {
+        // Find the lesson with the given lessonId within the course
+        const lesson = course.lessons.find(
+          (lesson) => lesson.lessonId === lessonId
+        );
+
+        if (lesson) {
+          // Find the content with the given contentId within the lesson
+          const content = lesson.contents.find(
+            (content) => content.contentId === contentId
+          );
+
+          if (content) {
+            // Update the checked property to true
+            if (content.clicked === false) content.clicked = true;
+          }
+          console.log(content);
+        }
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          progress: data,
+        },
+      });
+      res.status(200).json("Progress has been Updated");
+    } else {
+      res.status(200).json("Initial Progress has Not been Set yet");
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 // login user

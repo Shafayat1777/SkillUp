@@ -5,6 +5,7 @@ const ContentView = ({
   content,
   lessonId,
   handleUpdateContentProgress,
+  handleCourseReload,
 }) => {
   const [showWindow, setShowWindow] = useState(false);
 
@@ -13,6 +14,7 @@ const ContentView = ({
 
     if (contentProgress && contentProgress.clicked !== true && lessonId) {
       handleUpdateContentProgress(lessonId, contentProgress.contentId);
+      handleCourseReload();
     }
   };
   const handleCloseWindow = () => {

@@ -49,6 +49,7 @@ const Dashboard = () => {
       fetchCourses();
     }
   }, [user, dispatch, reload, navigate]);
+  
   const handleDetailsReload = () => {
     if (reload) {
       setReload(false);

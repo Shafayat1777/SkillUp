@@ -21,6 +21,9 @@ const Course = () => {
   const [quizcount, setQuizCount] = useState(0);
   const [studentcount, setStudentCount] = useState(0);
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [reload, setReload] = useState(false);
+  const [totalClicked, setTotalClicked] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     const fetchProgress = async (courseId) => {
@@ -60,7 +63,7 @@ const Course = () => {
     if (user) {
       fetchCourse();
     }
-  }, [user, id]);
+  }, [user, id, reload]);
 
   useEffect(() => {
     // update the course page header data
@@ -89,7 +92,7 @@ const Course = () => {
       const totalStudentCount = course.students.length;
 
       if (course.students) {
-        course.students.map((student) => {
+        course.students.forEach((student) => {
           if (student.id === user.id) {
             setIsEnrolled(true);
           }
@@ -103,6 +106,43 @@ const Course = () => {
     }
   }, [course]);
 
+  useEffect(() => {
+    // update the lesson Progress page header data
+    if (userProgress && userProgress.lessons) {
+      const checkedContentCount = userProgress.lessons.reduce(
+        (count, lesson) => {
+          if (lesson.contents) {
+            lesson.contents.forEach((content) => {
+              count.content++;
+              if (content.clicked === true) {
+                count.clicked++;
+              }
+            });
+          }
+          return count;
+        },
+        { clicked: 0, content: 0 }
+      );
+
+      const checkedQuizCount = userProgress.lessons.reduce(
+        (count, lesson) => {
+          if (lesson.quiz) {
+            lesson.quiz.forEach((quiz) => {
+              count.quiz++;
+              if (quiz.clicked === true) {
+                count.clicked++;
+              }
+            });
+          }
+          return count;
+        },
+        { clicked: 0, quiz: 0 }
+      );
+      setTotalClicked(checkedContentCount.clicked + checkedQuizCount.clicked);
+      setTotalCount(checkedContentCount.content + checkedQuizCount.quiz);
+    }
+  }, [userProgress, reload]);
+
   console.log(userProgress);
 
   const handleEnroll = (courseId) => {
@@ -110,17 +150,17 @@ const Course = () => {
       var progress = { courseId: course.id };
 
       var less = [];
-      course.lessons.map((lesson) => {
+      course.lessons.forEach((lesson) => {
         var les = { lessonId: lesson.id };
 
         var cnts = [];
-        lesson.contents.map((content) => {
+        lesson.contents.forEach((content) => {
           var cnt = { contentId: content.id, clicked: false };
           cnts.push(cnt);
         });
 
         var quzs = [];
-        lesson.quiz.map((quiz) => {
+        lesson.quiz.forEach((quiz) => {
           var quz = { quizId: quiz.id, quizScore: "", clicked: false };
           quzs.push(quz);
         });
@@ -133,15 +173,22 @@ const Course = () => {
       progress.lessons = less;
 
       enrollcourse(courseId, progress);
+      handleCourseReload();
       if (!errorEnroll) setIsEnrolled(true);
     }
   };
   const handleProgress = () => {
     setProgress();
   };
-
   const handleUpdateContentProgress = (lessonId, contentId) => {
     updateProgress(userProgress.courseId, lessonId, contentId);
+  };
+  const handleCourseReload = () => {
+    if (reload) {
+      setReload(false);
+    } else {
+      setReload(true);
+    }
   };
 
   return (
@@ -169,11 +216,27 @@ const Course = () => {
                   </div>
                 )
               )}
-              <div className="top-banner p-10 border rounded-sm w-full h-[18rem] bg-gray-800">
-                <h1 className=" mb-10 font-semibold text-white text-3xl">
-                  {course.title}
-                </h1>
-
+              <div className="top-banner p-10 border rounded-sm w-full  bg-gray-800">
+                <div className="mb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                  <div className=" font-semibold text-white text-3xl">
+                    {course.title}
+                  </div>
+                  {userProgress && (
+                    <div className="progress-bar flex items-center">
+                      <div className="mr-2 w-40 h-2 bg-gray-200 shadow-inner rounded-full overflow-hidden">
+                        <div
+                          className="w-40 h-4 bg-green-400"
+                          style={{
+                            width: `${(totalClicked / totalCount) * 100}%`,
+                          }}
+                        ></div>
+                      </div>
+                      <div className="text-green-400">
+                        {Math.round((totalClicked / totalCount) * 100)}%
+                      </div>
+                    </div>
+                  )}
+                </div>
                 <div className="mb-5">
                   <button
                     onClick={handleProgress}
@@ -368,6 +431,8 @@ const Course = () => {
                         handleUpdateContentProgress={
                           handleUpdateContentProgress
                         }
+                        handleCourseReload={handleCourseReload}
+                        reload={reload}
                       />
                     ))}
                 </div>

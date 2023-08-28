@@ -6,12 +6,14 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { Helmet } from "react-helmet";
 import { useEnrollCourse } from "../hooks/useEnroll";
 import { useSetProgress } from "../hooks/useSetProgress";
+import { useUpdateProgress } from "../hooks/useUpdateProgress";
 
 const Course = () => {
   const { id } = useParams();
   const { user } = useAuthContext();
   const { enrollcourse, responseEnroll, errorEnroll } = useEnrollCourse();
   const { setProgress } = useSetProgress();
+  const { updateProgress } = useUpdateProgress();
   const [course, setCourse] = useState(null);
   const [userProgress, setUserProgress] = useState(null);
   const [pdfcount, setPdfCount] = useState(0);
@@ -21,25 +23,9 @@ const Course = () => {
   const [isEnrolled, setIsEnrolled] = useState(false);
 
   useEffect(() => {
-    const fetchCourse = async () => {
+    const fetchProgress = async (courseId) => {
       const respons = await fetch(
-        `http://localhost:4000/api/courses/courses/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      const json = await respons.json();
-
-      if (respons.ok) {
-        setCourse(json);
-      }
-    };
-
-    const fetchProgress = async () => {
-      const respons = await fetch(
-        `http://localhost:4000/api/users/user/userProgress/`,
+        `http://localhost:4000/api/users/user/userProgress/${courseId}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -53,13 +39,31 @@ const Course = () => {
       }
     };
 
+    const fetchCourse = async () => {
+      const respons = await fetch(
+        `http://localhost:4000/api/courses/courses/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      const json = await respons.json();
+
+      if (respons.ok) {
+        setCourse(json);
+
+        fetchProgress(json.id);
+      }
+    };
+
     if (user) {
       fetchCourse();
-      fetchProgress();
     }
-  }, [user]);
+  }, [user, id]);
 
   useEffect(() => {
+    // update the course page header data
     if (course && course.lessons) {
       const totalCount = course.lessons.reduce(
         (acc, lesson) => {
@@ -135,9 +139,14 @@ const Course = () => {
   const handleProgress = () => {
     setProgress();
   };
+
+  const handleUpdateContentProgress = (lessonId, contentId) => {
+    updateProgress(userProgress.courseId, lessonId, contentId);
+  };
+
   return (
     <div>
-      {course && userProgress && (
+      {course && (
         <div>
           <div className="head">
             <Helmet>
@@ -186,53 +195,55 @@ const Course = () => {
                     </svg>
                     Bookmark
                   </button>
-                  <button
-                    disabled={isEnrolled}
-                    onClick={() => handleEnroll(course.id)}
-                    className={`ml-5 py-1 px-3 border rounded-sm font-semibold text-white ${
-                      isEnrolled
-                        ? "border-yellow-400"
-                        : "hover:bg-gray-700 hover:border-yellow-400"
-                    }`}
-                  >
-                    {isEnrolled ? (
-                      <div className="flex items-center">
-                        Enrolled
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          className={`w-5 h-5 ml-2 ${
-                            isEnrolled ? "text-yellow-400" : ""
-                          }`}
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </div>
-                    ) : (
-                      <div className="flex items-center">
-                        Enroll
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          className="w-5 h-5 ml-2 text-yellow-400"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </button>
+                  {user && user.role !== "TEACHER" && (
+                    <button
+                      disabled={isEnrolled}
+                      onClick={() => handleEnroll(course.id)}
+                      className={`ml-5 py-1 px-3 border rounded-sm font-semibold text-white ${
+                        isEnrolled
+                          ? "border-yellow-400"
+                          : "hover:bg-gray-700 hover:border-yellow-400"
+                      }`}
+                    >
+                      {isEnrolled ? (
+                        <div className="flex items-center">
+                          Enrolled
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1.5"
+                            stroke="currentColor"
+                            className={`w-5 h-5 ml-2 ${
+                              isEnrolled ? "text-yellow-400" : ""
+                            }`}
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </div>
+                      ) : (
+                        <div className="flex items-center">
+                          Enroll
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="w-5 h-5 ml-2 text-yellow-400"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-11.25a.75.75 0 00-1.5 0v2.5h-2.5a.75.75 0 000 1.5h2.5v2.5a.75.75 0 001.5 0v-2.5h2.5a.75.75 0 000-1.5h-2.5v-2.5z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      )}
+                    </button>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap content-between text-white">
@@ -344,9 +355,19 @@ const Course = () => {
                   {course.lessons &&
                     course.lessons.map((lesson, i) => (
                       <LessionDetails
+                        lessonProgress={
+                          userProgress
+                            ? userProgress.lessons
+                              ? userProgress.lessons[i]
+                              : null
+                            : null
+                        }
                         key={lesson.id}
                         lesson={lesson}
                         no={i + 1}
+                        handleUpdateContentProgress={
+                          handleUpdateContentProgress
+                        }
                       />
                     ))}
                 </div>

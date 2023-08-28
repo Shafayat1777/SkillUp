@@ -12,11 +12,11 @@ import Courses from "./pages/Courses";
 import Course from "./pages/Course";
 import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
-import NotFound from "./pages/NotFound";
 import Session from "./pages/Session";
 import Loading from "./pages/Loading";
 import Enrolled from "./pages/Enrolled";
-import Unauthorized from "./pages/Unauthorized";
+import NotFound from "./NotFound";
+import Unauthorized from "./Unauthorized";
 
 function App() {
   const { user } = useAuthContext();
@@ -47,18 +47,7 @@ function App() {
                 loading ? <Loading /> : !user ? <Login /> : <Navigate to="/" />
               }
             />
-            <Route
-              path="/"
-              element={
-                loading ? (
-                  <Loading />
-                ) : user ? (
-                  <Home />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
+            <Route path="/" element={<Home />} />
             <Route
               path="/profile"
               element={
@@ -104,7 +93,7 @@ function App() {
                   user.role !== "TEACHER" ? (
                     <Enrolled />
                   ) : (
-                    <Unauthorized/>
+                    <Unauthorized />
                   )
                 ) : (
                   <Navigate to="/login" />
@@ -120,25 +109,14 @@ function App() {
                   user.role !== "STUDENT" ? (
                     <Dashboard />
                   ) : (
-                    <Unauthorized/>
+                    <Unauthorized />
                   )
                 ) : (
                   <Navigate to="/login" />
                 )
               }
             />
-            <Route
-              path="/about"
-              element={
-                loading ? (
-                  <Loading />
-                ) : user ? (
-                  <About />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
+            <Route path="/about" element={<About />} />
             <Route path="/session" element={<Session />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -143,7 +143,7 @@ const Quiz = ({
           </div>
           <div className="ml-3">{quiz.title}</div>
 
-          {quizProgress.quizScore && (
+          {quizProgress && quizProgress.quizScore && (
             <div className="absolute right-14 text-orange-400 font-normal">
               Score: {quizProgress.quizScore + "/" + parsedQuestions.length}
             </div>

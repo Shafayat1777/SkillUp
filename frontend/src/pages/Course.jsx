@@ -224,7 +224,7 @@ const Course = () => {
                   <div className=" font-semibold text-white text-3xl">
                     {course.title}
                   </div>
-                  {userProgress && (
+                  {userProgress && userProgress.courseId === course.id && (
                     <div className="progress-bar flex items-center">
                       <div className="mr-2 w-40 h-2 bg-gray-200 shadow-inner rounded-full overflow-hidden">
                         <div

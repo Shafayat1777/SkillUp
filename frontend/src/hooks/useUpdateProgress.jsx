@@ -6,7 +6,7 @@ export const useUpdateProgress = () => {
 
   const updateContentProgress = async (courseId, lessonId, contentId) => {
     const response = await fetch(
-      "http://localhost:4000/api/users/updateProgress/",
+      "http://localhost:4000/api/users/updateContentProgress/",
       {
         method: "PATCH",
         headers: {

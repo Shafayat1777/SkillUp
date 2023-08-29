@@ -96,7 +96,7 @@ const getProgress = async (req, res) => {
     if (userProgress.progress.length !== 0) {
       userProgress.progress.map((progress) => {
         if (progress.courseId === id) {
-          // console.log(progress);
+          console.log(progress);
           foundprog = progress;
           foundProgress = true;
         }

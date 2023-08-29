@@ -13,7 +13,8 @@ const {
   signupUser,
   setProgressUser,
   getProgress,
-  updateProgressUser,
+  updateProgressContent,
+  updateProgressQuiz,
   uploadFile,
 } = require("../controllers/userController");
 
@@ -46,8 +47,11 @@ router.patch("/setProgress", setProgressUser);
 // Get user Progress given courseId
 router.get("/user/userProgress/:id", getProgress);
 
-// update user progress
-router.patch("/updateProgress", updateProgressUser)
+// update user content progress
+router.patch("/updateContentProgress", updateProgressContent)
+
+// update user quiz progress
+router.patch("/updateQuizProgress", updateProgressQuiz)
 
 // UPDATE a User
 router.patch("/:id", updateUser);

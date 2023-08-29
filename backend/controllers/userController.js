@@ -96,18 +96,19 @@ const getProgress = async (req, res) => {
     if (userProgress.progress.length !== 0) {
       userProgress.progress.map((progress) => {
         if (progress.courseId === id) {
-          console.log(progress);
+          // console.log(progress);
           foundprog = progress;
           foundProgress = true;
-        } else {
-          console.log(
-            "progress of this course is not added. Please enroll the course"
-          );
         }
       });
 
       if (foundProgress) res.status(200).json(foundprog);
-      else res.status(200).json(foundprog);
+      else {
+        console.log(
+          "progress of this course is not added. Please enroll the course"
+        );
+        res.status(200).json(foundprog);
+      }
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -135,8 +136,8 @@ const setProgressUser = async (req, res) => {
   }
 };
 
-// update user progress
-const updateProgressUser = async (req, res) => {
+// update user content progress
+const updateProgressContent = async (req, res) => {
   const userId = req.user.id;
   const { courseId, lessonId, contentId } = req.body;
 
@@ -173,6 +174,65 @@ const updateProgressUser = async (req, res) => {
             if (content.clicked === false) content.clicked = true;
           }
           console.log(content);
+        }
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          progress: data,
+        },
+      });
+      res.status(200).json("Progress has been Updated");
+    } else {
+      res.status(200).json("Initial Progress has Not been Set yet");
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// update user quiz progress
+const updateProgressQuiz = async (req, res) => {
+  const userId = req.user.id;
+  const { courseId, lessonId, quizId, quizScore, totalScore } = req.body;
+
+  console.log("Hello");
+  console.log(quizScore + "/" + totalScore);
+  // update data to db
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { progress: true }, // Select only the progress field
+    });
+
+    // Check if the user has existing progress data
+    let data = user.progress || [];
+
+    // check if the data arrat is empty or not
+    if (data.length > 0) {
+      // Find the course with the given courseId
+      const course = data.find((course) => course.courseId === courseId);
+
+      if (course) {
+        // Find the lesson with the given lessonId within the course
+        const lesson = course.lessons.find(
+          (lesson) => lesson.lessonId === lessonId
+        );
+
+        if (lesson) {
+          // Find the quiz with the given quizId within the lesson
+          const quiz = lesson.quiz.find((quiz) => quiz.quizId === quizId);
+
+          if (quiz) {
+            // Update the checked property to true
+            if (quiz.quizScore === "" || quiz.quizScore < quizScore)
+              quiz.quizScore = quizScore;
+            if (quiz.clicked === false && quiz.quizScore === totalScore) quiz.clicked = true;
+          }
+          console.log(quiz);
         }
       }
 
@@ -295,6 +355,7 @@ module.exports = {
   signupUser,
   getProgress,
   setProgressUser,
-  updateProgressUser,
+  updateProgressContent,
+  updateProgressQuiz,
   uploadFile,
 };

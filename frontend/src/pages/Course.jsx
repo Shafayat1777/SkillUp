@@ -13,7 +13,7 @@ const Course = () => {
   const { user } = useAuthContext();
   const { enrollcourse, responseEnroll, errorEnroll } = useEnrollCourse();
   const { setProgress } = useSetProgress();
-  const { updateProgress } = useUpdateProgress();
+  const { updateContentProgress, updateQuizProgress } = useUpdateProgress();
   const [course, setCourse] = useState(null);
   const [userProgress, setUserProgress] = useState(null);
   const [pdfcount, setPdfCount] = useState(0);
@@ -104,7 +104,7 @@ const Course = () => {
       setQuizCount(totalQuizCount);
       setStudentCount(totalStudentCount);
     }
-  }, [course]);
+  }, [user, course]);
 
   useEffect(() => {
     // update the lesson Progress page header data
@@ -181,7 +181,10 @@ const Course = () => {
     setProgress();
   };
   const handleUpdateContentProgress = (lessonId, contentId) => {
-    updateProgress(userProgress.courseId, lessonId, contentId);
+    updateContentProgress(userProgress.courseId, lessonId, contentId);
+  };
+  const handleUpdateQuizProgress = (lessonId, quizId, quizScore, totalScore) => {
+    updateQuizProgress(userProgress.courseId, lessonId, quizId, quizScore, totalScore);
   };
   const handleCourseReload = () => {
     if (reload) {
@@ -431,6 +434,7 @@ const Course = () => {
                         handleUpdateContentProgress={
                           handleUpdateContentProgress
                         }
+                        handleUpdateQuizProgress={handleUpdateQuizProgress}
                         handleCourseReload={handleCourseReload}
                         reload={reload}
                       />

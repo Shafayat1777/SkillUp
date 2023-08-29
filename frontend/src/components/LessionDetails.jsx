@@ -7,6 +7,7 @@ const LessionDetails = ({
   lesson,
   no,
   handleUpdateContentProgress,
+  handleUpdateQuizProgress,
   handleCourseReload,
   reload,
 }) => {
@@ -72,7 +73,9 @@ const LessionDetails = ({
                 }}
               ></div>
             </div>
-            <div>{Math.round((totalClicked / totalCount) * 100)}%</div>
+            <div className="text-gray-600">
+              {Math.round((totalClicked / totalCount) * 100)}%
+            </div>
           </div>
         )}
       </div>
@@ -160,9 +163,17 @@ const LessionDetails = ({
             </div>
             <div className="mb-5">
               {lesson.quiz &&
-                lesson.quiz.map((quiz) => (
+                lesson.quiz.map((quiz, i) => (
                   <div key={quiz.id}>
-                    <Quiz quiz={quiz} />
+                    <Quiz
+                      quiz={quiz}
+                      quizProgress={
+                        lessonProgress ? lessonProgress.quiz[i] : null
+                      }
+                      lessonId={lessonProgress ? lessonProgress.lessonId : null}
+                      handleUpdateQuizProgress={handleUpdateQuizProgress}
+                      handleCourseReload={handleCourseReload}
+                    />
                   </div>
                 ))}
             </div>

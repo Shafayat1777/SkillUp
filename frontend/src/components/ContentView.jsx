@@ -24,7 +24,7 @@ const ContentView = ({
   return (
     <div>
       <div onClick={handleOpenWindow}>
-        <div className="relative flex items-center px-16 hover:bg-orange-100 cursor-pointer font-bold">
+        <div className="relative flex items-center px-10 hover:bg-orange-100 cursor-pointer font-bold">
           <div
             className={`w-12 flex items-center justify-center ${
               contentProgress &&

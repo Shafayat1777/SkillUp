@@ -22,7 +22,7 @@ model User {
   designation    String?
   country        String?
   city           String?
-  socials        Json?
+  socials        Json? 
   progress       Json?
   gender         Gender?   @default(DONT_DISCLOSE)
   profile_pic    String?   @default("")

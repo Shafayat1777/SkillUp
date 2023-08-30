@@ -96,7 +96,7 @@ const getProgress = async (req, res) => {
     if (userProgress.progress.length !== 0) {
       userProgress.progress.map((progress) => {
         if (progress.courseId === id) {
-          console.log(progress);
+          // console.log(progress);
           foundprog = progress;
           foundProgress = true;
         }
@@ -141,7 +141,6 @@ const updateProgressContent = async (req, res) => {
   const userId = req.user.id;
   const { courseId, lessonId, contentId } = req.body;
 
-  console.log("Hello");
   // update data to db
   try {
     const user = await prisma.user.findUnique({
@@ -291,10 +290,10 @@ const loginUser = async (req, res) => {
 
 // signup user
 const signupUser = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { firstName, lastName, email, password, socials, role } = req.body;
   try {
     // validation
-    if (!email || !password || !role) {
+    if (!firstName || !lastName || !email || !password || !role) {
       throw Error("All fields must me filled!");
     }
     if (!validator.isEmail(email)) {
@@ -324,8 +323,11 @@ const signupUser = async (req, res) => {
     // add user to db
     const data = await prisma.user.create({
       data: {
+        first_name: firstName,
+        last_name: lastName,
         email,
         password: hash,
+        socials,
         role,
       },
     });

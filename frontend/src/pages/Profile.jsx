@@ -15,17 +15,21 @@ const Profile = () => {
   const [designation, setDesignation] = useState("");
   const [about, setAbout] = useState("");
   const [city, setCity] = useState("");
+  const [socials, setSocials] = useState("");
   const [country, setCountry] = useState("");
   const [gender, setGender] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
     const fetchCourse = async () => {
-      const respons = await fetch(`http://localhost:4000/api/users/${user.id}`, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const respons = await fetch(
+        `http://localhost:4000/api/users/${user.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
       const json = await respons.json();
       if (respons.ok) {
         setData(json);
@@ -36,6 +40,7 @@ const Profile = () => {
         setDesignation(json.designation);
         setAbout(json.about);
         setCity(json.city);
+        setSocials(json.socials)
         setCountry(json.country);
         setGender(json.gender);
       }
@@ -45,7 +50,7 @@ const Profile = () => {
       fetchCourse();
     }
   }, [user, isSubmitted]);
-
+console.log(socials)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(false);
@@ -71,7 +76,7 @@ const Profile = () => {
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
       </div>
-      
+
       {data && (
         <div className="my-8 grid md:grid-cols-2 xl:grid-cols-3 gap-5">
           <div className="mx-8 md:mx-auto md:w-72">
@@ -185,6 +190,7 @@ const Profile = () => {
               <h1 className="font-semibold">Social Accounts</h1>
               <div className="mt-5">
                 <input
+                  value=""
                   type="text"
                   placeholder="Link social profile"
                   className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
@@ -192,6 +198,7 @@ const Profile = () => {
               </div>
               <div className="mt-5">
                 <input
+                  value=""
                   type="text"
                   placeholder="Link social profile"
                   className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
@@ -199,6 +206,7 @@ const Profile = () => {
               </div>
               <div className="mt-5">
                 <input
+                  value=""
                   type="text"
                   placeholder="Link social profile"
                   className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
@@ -206,6 +214,7 @@ const Profile = () => {
               </div>
               <div className="mt-5">
                 <input
+                  value=""
                   type="text"
                   placeholder="Link social profile"
                   className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"

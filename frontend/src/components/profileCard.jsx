@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const ProfileCard = ({ user }) => {
   return (
     <div>
@@ -34,18 +36,49 @@ const ProfileCard = ({ user }) => {
                 </h1>
               </div>
               <div>
-                <h1 className="text-xs  text-gray-500">
-                  {user.designation}
-                </h1>
-                <h1 className="text-xs  text-gray-500">
-                  {user.institute}
-                </h1>
+                <h1 className="text-xs  text-gray-500">{user.designation}</h1>
+                <h1 className="text-xs  text-gray-500">{user.institute}</h1>
               </div>
             </div>
-            <div className="flex items-center justify-center mt-3 mb-6">
+            <div className="flex flex-col items-center justify-center mt-3 mb-6">
               <h1 className="text-xs text-gray-500">Get Connected</h1>
-              <div>
-                <img src="" alt="" />
+              <div className="mt-4 flex items-center gap-5">
+                {user.socials && user.socials.social1 && (
+                  <Link to={user.socials.social1}>
+                    <img
+                      className="w-6 h-6 hover:bg-gray-300 rounded-full"
+                      src="/img/assets/github.png"
+                      alt="github.png"
+                    />
+                  </Link>
+                )}
+                {user.socials && user.socials.social2 && (
+                  <Link to={user.socials.social2}>
+                    <img
+                      className="w-6 h-6 hover:bg-blue-300 rounded-full"
+                      src="/img/assets/facebook.png"
+                      alt="facebook.png"
+                    />
+                  </Link>
+                )}
+                {user.socials && user.socials.social3 && (
+                  <Link to={user.socials.social3}>
+                    <img
+                      className="w-6 h-6 hover:bg-blue-400 rounded-full"
+                      src="/img/assets/linkedin.png"
+                      alt="linkedin.png"
+                    />
+                  </Link>
+                )}
+                {user.socials && user.socials.social4 && (
+                  <Link to={user.socials.social4}>
+                    <img
+                      className="w-6 h-6 hover:bg-red-500 rounded-full"
+                      src="/img/assets/youtube.png"
+                      alt="youtube.png"
+                    />
+                  </Link>
+                )}
               </div>
             </div>
           </div>

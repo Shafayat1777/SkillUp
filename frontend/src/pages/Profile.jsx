@@ -15,7 +15,12 @@ const Profile = () => {
   const [designation, setDesignation] = useState("");
   const [about, setAbout] = useState("");
   const [city, setCity] = useState("");
-  const [socials, setSocials] = useState("");
+  const [socials, setSocials] = useState({
+    social1: "",
+    social2: "",
+    social3: "",
+    social4: "",
+  });
   const [country, setCountry] = useState("");
   const [gender, setGender] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -40,7 +45,7 @@ const Profile = () => {
         setDesignation(json.designation);
         setAbout(json.about);
         setCity(json.city);
-        setSocials(json.socials)
+        setSocials(json.socials);
         setCountry(json.country);
         setGender(json.gender);
       }
@@ -50,7 +55,7 @@ const Profile = () => {
       fetchCourse();
     }
   }, [user, isSubmitted]);
-console.log(socials)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(false);
@@ -62,10 +67,23 @@ console.log(socials)
       designation,
       about,
       city,
+      socials,
       country,
       gender
     );
     setIsSubmitted(true);
+  };
+
+  const handleAboutChange = (e) => {
+    const inputValue = e.target.value;
+
+    if (inputValue.length <= 250) {
+      setAbout(inputValue);
+    }else{
+      const remainingText = inputValue.slice(0, -(inputValue.length-250))
+      // console.log("rem: "+remainingText.length)
+      setAbout(remainingText);
+    }
   };
   return (
     <div>
@@ -89,14 +107,14 @@ console.log(socials)
                 <div className="grid grid-cols-2 gap-5">
                   <input
                     type="text"
-                    value={first_name}
+                    value={first_name ? first_name : ""}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="First Name"
                     className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
                   />
                   <input
                     type="text"
-                    value={last_name}
+                    value={last_name ? last_name : ""}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="Last Name"
                     className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
@@ -105,7 +123,7 @@ console.log(socials)
                 <div className="mt-5">
                   <input
                     type="text"
-                    value={email}
+                    value={email ? email : ""}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Email"
                     className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
@@ -114,14 +132,14 @@ console.log(socials)
                 <div className="mt-5 grid grid-cols-2 gap-5">
                   <input
                     type="text"
-                    value={institute}
+                    value={institute ? institute : ""}
                     onChange={(e) => setInstitute(e.target.value)}
                     placeholder="Institute"
                     className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
                   />
                   <input
                     type="text"
-                    value={designation}
+                    value={designation ? designation : ""}
                     placeholder="Designation"
                     onChange={(e) => setDesignation(e.target.value)}
                     className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
@@ -130,14 +148,14 @@ console.log(socials)
                 <div className="mt-5 grid grid-cols-2 gap-5">
                   <input
                     type="text"
-                    value={country}
+                    value={country ? country : ""}
                     onChange={(e) => setCountry(e.target.value)}
                     placeholder="Country"
                     className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
                   />
                   <input
                     type="text"
-                    value={city}
+                    value={city ? city : ""}
                     onChange={(e) => setCity(e.target.value)}
                     placeholder="City"
                     className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
@@ -145,7 +163,7 @@ console.log(socials)
                 </div>
                 <div className="mt-5">
                   <select
-                    value={gender}
+                    value={gender ? gender : ""}
                     onChange={(e) => setGender(e.target.value)}
                     className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
                   >
@@ -156,15 +174,18 @@ console.log(socials)
                     <option value="DONT_DISCLOSE">Don't Disclose</option>
                   </select>
                 </div>
-                <div className="mt-5">
+                <div className="mt-5 relative">
                   <textarea
-                    value={about}
-                    onChange={(e) => setAbout(e.target.value)}
-                    className="border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
+                    value={about ? about : ""}
+                    onChange={(e) => handleAboutChange(e)}
+                    className=" border border-gray-400 px-2 py-1 w-full focus:outline-orange-500 focus:shadow-lg"
                     cols="30"
-                    rows="10"
+                    rows="5"
                     placeholder="Bio"
                   ></textarea>
+                  <p className="text-gray-500 absolute bottom-2 right-2">
+                    {about ? about.length + "/" + 250 : 0 + "/" + 250}
+                  </p>
                 </div>
                 <div className="mt-5">
                   <button
@@ -188,35 +209,79 @@ console.log(socials)
           <div className="mx-8 xl:mx-auto flex justify-center items-start mt-5 lg:mt-0 md:col-span-2 xl:col-span-1">
             <div className="border rounded-lg p-4 shadow w-full xl:w-96">
               <h1 className="font-semibold">Social Accounts</h1>
-              <div className="mt-5">
+              <div className="mt-5 flex items-center">
+                <img
+                  className="w-7 h-7 mr-2"
+                  src="/img/assets/github.png"
+                  alt="github.png"
+                />
                 <input
-                  value=""
+                  value={socials.social1}
+                  onChange={(e) =>
+                    setSocials((prevSocials) => ({
+                      ...prevSocials,
+                      social1: e.target.value,
+                    }))
+                  }
                   type="text"
-                  placeholder="Link social profile"
+                  placeholder="Link Github profile"
                   className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
                 />
               </div>
-              <div className="mt-5">
+              <div className="mt-5 flex items-center">
+                <img
+                  className="w-7 h-7 mr-2"
+                  src="/img/assets/facebook.png"
+                  alt="facebook.png"
+                />
                 <input
-                  value=""
+                  value={socials.social2}
+                  onChange={(e) =>
+                    setSocials((prevSocials) => ({
+                      ...prevSocials,
+                      social2: e.target.value,
+                    }))
+                  }
                   type="text"
-                  placeholder="Link social profile"
+                  placeholder="Link Facebook profile"
                   className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
                 />
               </div>
-              <div className="mt-5">
+              <div className="mt-5 flex items-center">
+                <img
+                  className="w-7 h-7 mr-2"
+                  src="/img/assets/linkedin.png"
+                  alt="linkedin.png"
+                />
                 <input
-                  value=""
+                  value={socials.social3}
+                  onChange={(e) =>
+                    setSocials((prevSocials) => ({
+                      ...prevSocials,
+                      social3: e.target.value,
+                    }))
+                  }
                   type="text"
-                  placeholder="Link social profile"
+                  placeholder="Link LinkedIn profile"
                   className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
                 />
               </div>
-              <div className="mt-5">
+              <div className="mt-5 flex items-center">
+                <img
+                  className="w-7 h-7 mr-2"
+                  src="/img/assets/youtube.png"
+                  alt="youtube.png"
+                />
                 <input
-                  value=""
+                  value={socials.social4}
+                  onChange={(e) =>
+                    setSocials((prevSocials) => ({
+                      ...prevSocials,
+                      social4: e.target.value,
+                    }))
+                  }
                   type="text"
-                  placeholder="Link social profile"
+                  placeholder="Link Youtube profile"
                   className="border border-gray-400 px-2 py-1 w-full xl:w-80 focus:outline-orange-500 focus:shadow-lg"
                 />
               </div>

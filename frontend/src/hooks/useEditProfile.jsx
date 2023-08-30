@@ -15,6 +15,7 @@ export const useEditProfile = () => {
     designation,
     about,
     city,
+    socials,
     country,
     gender
   ) => {
@@ -35,6 +36,7 @@ export const useEditProfile = () => {
         designation,
         about,
         city,
+        socials,
         country,
         gender
       }),

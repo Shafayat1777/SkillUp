@@ -17,12 +17,12 @@ model User {
   email          String    @unique
   password       String
   role           Role      @default(STUDENT)
-  about          String?
+  about          String?   @db.VarChar(250)
   institute      String?
   designation    String?
   country        String?
   city           String?
-  socials        Json? 
+  socials        Json?
   progress       Json?
   gender         Gender?   @default(DONT_DISCLOSE)
   profile_pic    String?   @default("")

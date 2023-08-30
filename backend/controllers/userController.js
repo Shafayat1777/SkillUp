@@ -63,9 +63,47 @@ const deleteAllUser = async (req, res) => {
 // update a user
 const updateUser = async (req, res) => {
   const { id } = req.params;
+  const { socials } = req.body;
 
   // update data to db
   try {
+    if (socials.social1) {
+      if (!validator.isURL(socials.social1)) {
+        throw Error("Social links must be actual links!");
+      } else if (!socials.social1.includes("github.com")) {
+        throw Error(
+          "Link added is not from Github! Please add Github profile link"
+        );
+      }
+    }
+    if (socials.social2) {
+      if (!validator.isURL(socials.social2)) {
+        throw Error("Social links must be actual links!");
+      } else if (!socials.social2.includes("facebook.com")) {
+        throw Error(
+          "Link added is not from Facebook! Please add Facebook profile link"
+        );
+      }
+    }
+    if (socials.social3) {
+      if (!validator.isURL(socials.social3)) {
+        throw Error("Social links must be actual links!");
+      } else if (!socials.social3.includes("linkedin.com")) {
+        throw Error(
+          "Link added is not from LinkedIn! Please add LinkedIn profile link"
+        );
+      }
+    }
+    if (socials.social4) {
+      if (!validator.isURL(socials.social4)) {
+        throw Error("Social links must be actual links!");
+      } else if (!socials.social4.includes("youtube.com")) {
+        throw Error(
+          "Link added is not from Youtube! Please add Youtube profile link"
+        );
+      }
+    }
+
     const data = await prisma.user.update({
       where: {
         id,
@@ -229,7 +267,8 @@ const updateProgressQuiz = async (req, res) => {
             // Update the checked property to true
             if (quiz.quizScore === "" || quiz.quizScore < quizScore)
               quiz.quizScore = quizScore;
-            if (quiz.clicked === false && quiz.quizScore === totalScore) quiz.clicked = true;
+            if (quiz.clicked === false && quiz.quizScore === totalScore)
+              quiz.clicked = true;
           }
           console.log(quiz);
         }

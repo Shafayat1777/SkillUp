@@ -26,8 +26,10 @@ const Profile = () => {
   const [country, setCountry] = useState("");
   const [gender, setGender] = useState("");
   const [profile_pic, setProfilePic] = useState(null);
+  const [pic, setPic] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [changeProfilePic, setChangeProfilePic] = useState(false);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -52,14 +54,19 @@ const Profile = () => {
         setSocials(json.socials);
         setCountry(json.country);
         setGender(json.gender);
+        setPic(json.Profile);
       }
     };
 
     if (user) {
       fetchCourse();
     }
-  }, [user, isSubmitted]);
+  }, [user, isSubmitted, reload]);
 
+  const handleReload = () => {
+    if (reload) setReload(false);
+    else setReload(true);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitted(false);
@@ -97,10 +104,27 @@ const Profile = () => {
   const handleRemovePicFile = () => {
     setProfilePic(null);
   };
-
   const handleChangePic = () => {
-    updatePic(profile_pic)
-  }
+    updatePic(profile_pic);
+    handleReload();
+  };
+
+  const handledeletePic = async () => {
+    const respons = await fetch(
+      `http://localhost:4000/api/users/user/deletePic`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+    const json = await respons.json();
+    if (respons.ok) {
+      handleReload();
+    }
+  };
 
   return (
     <div>
@@ -166,7 +190,7 @@ const Profile = () => {
                       />
                     </label>
                     <p className="">Maximum upload size: 1MB</p>
-                    {errorPic && (<p>{errorPic}</p>)}
+                    {errorPic && <p>{errorPic}</p>}
                     {profile_pic && (
                       <div className="flex flex-col items-center">
                         <p className="mt-5 rounded-md border p-1 flex items-center">
@@ -191,27 +215,38 @@ const Profile = () => {
                             />
                           </svg>
                         </p>
-                        <p disabled={isLoadingPic} onClick={handleChangePic} className="mt-5 w-24 p-1 text-center hover:bg-orange-100 shadow rounded-md inline  cursor-pointer transition-all duration-300 ease-out">Update Pic</p>
+                        <p
+                          disabled={isLoadingPic}
+                          onClick={handleChangePic}
+                          className="mt-5 w-24 p-1 text-center hover:bg-orange-100 shadow rounded-md inline  cursor-pointer transition-all duration-300 ease-out"
+                        >
+                          Update Pic
+                        </p>
                       </div>
                     )}
                   </div>
-                  <p className="hover:bg-orange-100 cursor-pointer py-1 px-3 rounded font-semibold flex items-center transition-all duration-500 ease-out">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-4 h-4 mr-2"
+                  {pic && (
+                    <p
+                      onClick={handledeletePic}
+                      className="hover:bg-orange-100 cursor-pointer py-1 px-3 rounded font-semibold flex items-center transition-all duration-500 ease-out"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    Remove photo
-                  </p>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-4 h-4 mr-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      Remove photo
+                    </p>
+                  )}
                 </div>
               )}
               <p className="mb-4 py-1 px-3  text-center border rounded  hover:bg-orange-200 cursor-pointer hover:shadow transition-all duration-500 ease-out font-semibold">

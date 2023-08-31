@@ -16,6 +16,7 @@ const {
   updateProgressContent,
   updateProgressQuiz,
   updateProfilePic,
+  deleteProfilePic,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -58,5 +59,8 @@ router.patch("/:id", updateUser);
 
 //update profile pic
 router.patch("/user/updatePic", uploadImage.single("profile_pic"), validateImage, updateProfilePic);
+
+// update user quiz progress
+router.patch("/user/deletePic", deleteProfilePic)
 
 module.exports = router;

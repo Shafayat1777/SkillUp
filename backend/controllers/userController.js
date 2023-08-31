@@ -434,6 +434,47 @@ const updateProfilePic = async (req, res) => {
   }
 };
 
+const deleteProfilePic = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    const oldpic = user.profile_pic;
+    if (oldpic) {
+      // delete the existing pic
+      const startIndex = oldpic.indexOf("uploads");
+      // Extract the part of the string starting from "uploads" to the end
+      const extractedString = "../backend/" + oldpic.slice(startIndex);
+      fs.unlink(extractedString, (err) => {
+        if (err) {
+          console.log("Error deleting the Pic:", err);
+        } else {
+          console.log("Pic deleted successfully.");
+        }
+      });
+    }
+
+    const data = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        profile_pic: "",
+      },
+    });
+
+    res.status(200).json({ mssg: "Image Updated" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getallUser,
   getoneUser,
@@ -447,4 +488,5 @@ module.exports = {
   updateProgressContent,
   updateProgressQuiz,
   updateProfilePic,
+  deleteProfilePic,
 };

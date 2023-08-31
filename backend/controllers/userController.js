@@ -2,6 +2,7 @@ const prisma = require("../prisma/prisma");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 // create jwt token
 const createToken = (id) => {
@@ -210,7 +211,7 @@ const updateProgressContent = async (req, res) => {
             // Update the checked property to true
             if (content.clicked === false) content.clicked = true;
           }
-          console.log(content);
+          // console.log(content);
         }
       }
 
@@ -236,8 +237,6 @@ const updateProgressQuiz = async (req, res) => {
   const userId = req.user.id;
   const { courseId, lessonId, quizId, quizScore, totalScore } = req.body;
 
-  console.log("Hello");
-  console.log(quizScore + "/" + totalScore);
   // update data to db
   try {
     const user = await prisma.user.findUnique({
@@ -270,7 +269,7 @@ const updateProgressQuiz = async (req, res) => {
             if (quiz.clicked === false && quiz.quizScore === totalScore)
               quiz.clicked = true;
           }
-          console.log(quiz);
+          // console.log(quiz);
         }
       }
 
@@ -381,9 +380,58 @@ const signupUser = async (req, res) => {
 };
 
 //upload
-const uploadFile = async (req, res) => {
-  console.log(req.file.path);
-  res.status(200).json({ mssg: "File uploaded" });
+const updateProfilePic = async (req, res) => {
+  const userId = req.user.id;
+  var profile_pic = "";
+
+  try {
+    if (req.file) {
+      const filePath = req.file.path;
+      // Find the index of the "uploads" substring
+      const startIndex = filePath.indexOf("uploads");
+      // Extract the part of the string starting from "uploads" to the end
+      profile_pic =
+        "http://localhost:4000/" +
+        filePath.slice(startIndex).replace(/\\/g, "/");
+    } else {
+      throw Error("Must add an Image!");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    const oldpic = user.profile_pic;
+    if (oldpic) {
+      // delete the existing pic
+      const startIndex = oldpic.indexOf("uploads");
+      // Extract the part of the string starting from "uploads" to the end
+      const extractedString = "../backend/" + oldpic.slice(startIndex);
+      fs.unlink(extractedString, (err) => {
+        if (err) {
+          console.log("Error deleting the Pic:", err);
+        } else {
+          console.log("Pic deleted successfully.");
+        }
+      });
+    }
+
+    const data = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        profile_pic,
+      },
+    });
+
+    res.status(200).json({ mssg: "Image Updated" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ error: error.message });
+  }
 };
 
 module.exports = {
@@ -398,5 +446,5 @@ module.exports = {
   setProgressUser,
   updateProgressContent,
   updateProgressQuiz,
-  uploadFile,
+  updateProfilePic,
 };

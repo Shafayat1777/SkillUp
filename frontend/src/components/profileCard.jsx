@@ -8,15 +8,15 @@ const ProfileCard = ({ user }) => {
           <div className="rounded-sm border shadow w-full">
             <div className="flex items-center justify-center pt-10 flex-col">
               <img
-                className="rounded-full w-32"
-                src="/img/default_avatar.png"
+                className="rounded-full w-32 h-32"
+                src={`${user.profile_pic? user.profile_pic:"/img/default_avatar.png"}`}
                 alt=""
               />
               <h1 className="text-gray-800 font-semibold text-xl mt-5">
                 {user.first_name} {user.last_name}
               </h1>
               <h1 className="text-gray-800 text-sm">
-                {user.city}, {user.country}
+                {user.city} {user.city && user.country && ","} {user.country}
               </h1>
               <p className="text-gray-800 text-sm p-4 text-center">
                 {user.about}

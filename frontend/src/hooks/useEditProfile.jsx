@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useAuthContext } from "./useAuthContext";
 
-
 export const useEditProfile = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
@@ -21,7 +20,6 @@ export const useEditProfile = () => {
   ) => {
     setIsLoading(true);
     setError(null);
-    console.log(first_name)
     const response = await fetch(`http://localhost:4000/api/users/${user.id}`, {
       method: "PATCH",
       headers: {
@@ -38,7 +36,7 @@ export const useEditProfile = () => {
         city,
         socials,
         country,
-        gender
+        gender,
       }),
     });
 

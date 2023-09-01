@@ -2,6 +2,7 @@ const prisma = require("../prisma/prisma");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 // create jwt token
 const createToken = (id) => {
@@ -63,9 +64,47 @@ const deleteAllUser = async (req, res) => {
 // update a user
 const updateUser = async (req, res) => {
   const { id } = req.params;
+  const { socials } = req.body;
 
   // update data to db
   try {
+    if (socials.social1) {
+      if (!validator.isURL(socials.social1)) {
+        throw Error("Social links must be actual links!");
+      } else if (!socials.social1.includes("github.com")) {
+        throw Error(
+          "Link added is not from Github! Please add Github profile link"
+        );
+      }
+    }
+    if (socials.social2) {
+      if (!validator.isURL(socials.social2)) {
+        throw Error("Social links must be actual links!");
+      } else if (!socials.social2.includes("facebook.com")) {
+        throw Error(
+          "Link added is not from Facebook! Please add Facebook profile link"
+        );
+      }
+    }
+    if (socials.social3) {
+      if (!validator.isURL(socials.social3)) {
+        throw Error("Social links must be actual links!");
+      } else if (!socials.social3.includes("linkedin.com")) {
+        throw Error(
+          "Link added is not from LinkedIn! Please add LinkedIn profile link"
+        );
+      }
+    }
+    if (socials.social4) {
+      if (!validator.isURL(socials.social4)) {
+        throw Error("Social links must be actual links!");
+      } else if (!socials.social4.includes("youtube.com")) {
+        throw Error(
+          "Link added is not from Youtube! Please add Youtube profile link"
+        );
+      }
+    }
+
     const data = await prisma.user.update({
       where: {
         id,
@@ -84,24 +123,31 @@ const getProgress = async (req, res) => {
   const userId = req.user.id;
   const { id } = req.params;
   try {
-
     // get the users progress
     const userProgress = await prisma.user.findUnique({
       where: { id: userId },
       select: { progress: true }, // Select only the progress field
     });
 
+    let foundProgress = false;
+    let foundprog = {};
     // check is the progess field has any data. if it does then find the course progress
     if (userProgress.progress.length !== 0) {
       userProgress.progress.map((progress) => {
-          if (progress.courseId === id) {
-            console.log(progress);
-            res.status(200).json(progress);
-          }else{
-            console.log("no");
-            res.status(200).json({});
-          }
+        if (progress.courseId === id) {
+          // console.log(progress);
+          foundprog = progress;
+          foundProgress = true;
+        }
       });
+
+      if (foundProgress) res.status(200).json(foundprog);
+      else {
+        console.log(
+          "progress of this course is not added. Please enroll the course"
+        );
+        res.status(200).json(foundprog);
+      }
     }
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -129,27 +175,119 @@ const setProgressUser = async (req, res) => {
   }
 };
 
-// update user progress
-const updateProgressUser = async (req, res) => {
+// update user content progress
+const updateProgressContent = async (req, res) => {
   const userId = req.user.id;
-  const {courseId, lessonId, contentId} = req.body
+  const { courseId, lessonId, contentId } = req.body;
 
-  console.log(courseId, lessonId, contentId)
-  // // update data to db
-  // try {
-  //   const user = await prisma.user.findUnique({
-  //     where: { id: userId },
-  //     select: { progress: true }, // Select only the progress field
-  //   });
+  // update data to db
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { progress: true }, // Select only the progress field
+    });
 
-  //   // Check if the user has existing progress data
-  //   let updatedProgress = user.progress || [];
-  //   // console.log(updatedProgress);
+    // Check if the user has existing progress data
+    let data = user.progress || [];
 
-  //   res.status(200).json("Progress has been set");
-  // } catch (error) {
-  //   res.status(400).json({ error: error.message });
-  // }
+    // check if the data arrat is empty or not
+    if (data.length > 0) {
+      // Find the course with the given courseId
+      const course = data.find((course) => course.courseId === courseId);
+
+      if (course) {
+        // Find the lesson with the given lessonId within the course
+        const lesson = course.lessons.find(
+          (lesson) => lesson.lessonId === lessonId
+        );
+
+        if (lesson) {
+          // Find the content with the given contentId within the lesson
+          const content = lesson.contents.find(
+            (content) => content.contentId === contentId
+          );
+
+          if (content) {
+            // Update the checked property to true
+            if (content.clicked === false) content.clicked = true;
+          }
+          // console.log(content);
+        }
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          progress: data,
+        },
+      });
+      res.status(200).json("Progress has been Updated");
+    } else {
+      res.status(200).json("Initial Progress has Not been Set yet");
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// update user quiz progress
+const updateProgressQuiz = async (req, res) => {
+  const userId = req.user.id;
+  const { courseId, lessonId, quizId, quizScore, totalScore } = req.body;
+
+  // update data to db
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { progress: true }, // Select only the progress field
+    });
+
+    // Check if the user has existing progress data
+    let data = user.progress || [];
+
+    // check if the data arrat is empty or not
+    if (data.length > 0) {
+      // Find the course with the given courseId
+      const course = data.find((course) => course.courseId === courseId);
+
+      if (course) {
+        // Find the lesson with the given lessonId within the course
+        const lesson = course.lessons.find(
+          (lesson) => lesson.lessonId === lessonId
+        );
+
+        if (lesson) {
+          // Find the quiz with the given quizId within the lesson
+          const quiz = lesson.quiz.find((quiz) => quiz.quizId === quizId);
+
+          if (quiz) {
+            // Update the checked property to true
+            if (quiz.quizScore === "" || quiz.quizScore < quizScore)
+              quiz.quizScore = quizScore;
+            if (quiz.clicked === false && quiz.quizScore === totalScore)
+              quiz.clicked = true;
+          }
+          // console.log(quiz);
+        }
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          progress: data,
+        },
+      });
+      res.status(200).json("Progress has been Updated");
+    } else {
+      res.status(200).json("Initial Progress has Not been Set yet");
+    }
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 // login user
@@ -193,10 +331,10 @@ const loginUser = async (req, res) => {
 
 // signup user
 const signupUser = async (req, res) => {
-  const { email, password, role } = req.body;
+  const { firstName, lastName, email, password, socials, role } = req.body;
   try {
     // validation
-    if (!email || !password || !role) {
+    if (!firstName || !lastName || !email || !password || !role) {
       throw Error("All fields must me filled!");
     }
     if (!validator.isEmail(email)) {
@@ -224,8 +362,11 @@ const signupUser = async (req, res) => {
     // add user to db
     const data = await prisma.user.create({
       data: {
+        first_name: firstName,
+        last_name: lastName,
         email,
         password: hash,
+        socials,
         role,
       },
     });
@@ -242,9 +383,99 @@ const signupUser = async (req, res) => {
 };
 
 //upload
-const uploadFile = async (req, res) => {
-  console.log(req.file.path);
-  res.status(200).json({ mssg: "File uploaded" });
+const updateProfilePic = async (req, res) => {
+  const userId = req.user.id;
+  var profile_pic = "";
+
+  try {
+    if (req.file) {
+      const filePath = req.file.path;
+      // Find the index of the "uploads" substring
+      const startIndex = filePath.indexOf("uploads");
+      // Extract the part of the string starting from "uploads" to the end
+      profile_pic =
+        "http://localhost:4000/" +
+        filePath.slice(startIndex).replace(/\\/g, "/");
+    } else {
+      throw Error("Must add an Image!");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    const oldpic = user.profile_pic;
+    if (oldpic) {
+      // delete the existing pic
+      const startIndex = oldpic.indexOf("uploads");
+      // Extract the part of the string starting from "uploads" to the end
+      const extractedString = "../backend/" + oldpic.slice(startIndex);
+      fs.unlink(extractedString, (err) => {
+        if (err) {
+          console.log("Error deleting the Pic:", err);
+        } else {
+          console.log("Pic deleted successfully.");
+        }
+      });
+    }
+
+    const data = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        profile_pic,
+      },
+    });
+
+    res.status(200).json({ mssg: "Image Updated" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const deleteProfilePic = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    const oldpic = user.profile_pic;
+    if (oldpic) {
+      // delete the existing pic
+      const startIndex = oldpic.indexOf("uploads");
+      // Extract the part of the string starting from "uploads" to the end
+      const extractedString = "../backend/" + oldpic.slice(startIndex);
+      fs.unlink(extractedString, (err) => {
+        if (err) {
+          console.log("Error deleting the Pic:", err);
+        } else {
+          console.log("Pic deleted successfully.");
+        }
+      });
+    }
+
+    const data = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        profile_pic: "",
+      },
+    });
+
+    res.status(200).json({ mssg: "Image Updated" });
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).json({ error: error.message });
+  }
 };
 
 
@@ -258,6 +489,8 @@ module.exports = {
   signupUser,
   getProgress,
   setProgressUser,
-  updateProgressUser,
-  uploadFile,
+  updateProgressContent,
+  updateProgressQuiz,
+  updateProfilePic,
+  deleteProfilePic,
 };

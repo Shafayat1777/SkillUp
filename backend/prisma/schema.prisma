@@ -17,7 +17,7 @@ model User {
   email          String    @unique
   password       String
   role           Role      @default(STUDENT)
-  about          String?
+  about          String?   @db.VarChar(250)
   institute      String?
   designation    String?
   country        String?

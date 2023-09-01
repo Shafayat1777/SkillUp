@@ -13,8 +13,10 @@ const {
   signupUser,
   setProgressUser,
   getProgress,
-  updateProgressUser,
-  uploadFile,
+  updateProgressContent,
+  updateProgressQuiz,
+  updateProfilePic,
+  deleteProfilePic,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -46,13 +48,19 @@ router.patch("/setProgress", setProgressUser);
 // Get user Progress given courseId
 router.get("/user/userProgress/:id", getProgress);
 
-// update user progress
-router.patch("/updateProgress", updateProgressUser)
+// update user content progress
+router.patch("/updateContentProgress", updateProgressContent)
+
+// update user quiz progress
+router.patch("/updateQuizProgress", updateProgressQuiz)
 
 // UPDATE a User
 router.patch("/:id", updateUser);
 
-//upload
-router.post("/upload", uploadImage.single("image"), validateImage, uploadFile);
+//update profile pic
+router.patch("/user/updatePic", uploadImage.single("profile_pic"), validateImage, updateProfilePic);
+
+// update user quiz progress
+router.patch("/user/deletePic", deleteProfilePic)
 
 module.exports = router;

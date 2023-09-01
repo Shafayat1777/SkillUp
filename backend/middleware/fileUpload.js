@@ -8,7 +8,14 @@ const imageStorage = multer.diskStorage({
     cb(null, "../backend/uploads/img");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + "_" + req.body.id + ".png");
+    const extension = file.originalname.split(".")[1];
+    if (extension === "jpg" || extension === "jpeg") {
+      cb(null, Date.now() + "_" + req.user.id + ".jpg");
+    } else if (extension === "png") {
+      cb(null, Date.now() + "_" + req.user.id + ".png");
+    } else {
+      cb(new Error("Invalid file extension"));
+    }
   },
 });
 
@@ -31,9 +38,9 @@ const validateImage = async (req, res, next) => {
     });
   }
 
-  if (req.file.size > 2 * 1024 * 1024) {
+  if (req.file.size > 1 * 1024 * 1024) {
     return res.status(400).json({
-      error: "File too large. Max file size is 2MB.",
+      error: "File too large. Max file size is 1MB.",
     });
   }
 
@@ -52,7 +59,7 @@ const pdfStorage = multer.diskStorage({
 
 // Middleware to upload PDF
 const uploadPDF = multer({
-  storage: pdfStorage
+  storage: pdfStorage,
 });
 
 // Middleware to validate the PDF type and size before uploading
@@ -89,7 +96,7 @@ const videoStorage = multer.diskStorage({
 
 // Middleware to upload PDF
 const uploadVideo = multer({
-  storage: videoStorage
+  storage: videoStorage,
 });
 
 module.exports = {

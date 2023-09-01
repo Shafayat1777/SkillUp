@@ -54,9 +54,6 @@ const Home = () => {
           
           {/* Popular Courses */}
           <PopularCourses/>
-         
-          <Footer/>
-
       </main>
 
       <div className="users">{users && <UserDetails users={users} />}</div>

@@ -17,6 +17,7 @@ import Session from "./pages/Session";
 import Loading from "./pages/Loading";
 import Enrolled from "./pages/Enrolled";
 import Unauthorized from "./pages/Unauthorized";
+import Footer from "./components/Footer";
 
 function App() {
   const { user } = useAuthContext();
@@ -143,6 +144,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
+        <Footer />
       </BrowserRouter>
     </div>
   );

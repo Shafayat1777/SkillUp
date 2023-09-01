@@ -79,8 +79,6 @@ const updateUser = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
-=======
 // get progress
 const getProgress = async (req, res) => {
   const userId = req.user.id;
@@ -119,7 +117,6 @@ const setProgressUser = async (req, res) => {
   }
 };
 
->>>>>>> 2d8216b901e8d513ef245e529d9287e7d2198151
 // login user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -224,10 +221,7 @@ module.exports = {
   deleteAllUser,
   loginUser,
   signupUser,
-<<<<<<< HEAD
-=======
   getProgress,
   setProgressUser,
->>>>>>> 2d8216b901e8d513ef245e529d9287e7d2198151
   uploadFile,
 };

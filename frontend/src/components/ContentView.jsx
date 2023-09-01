@@ -1,28 +1,66 @@
 import { useState } from "react";
 
-const ContentView = ({ content }) => {
+const ContentView = ({
+  contentProgress,
+  content,
+  lessonId,
+  handleUpdateContentProgress,
+}) => {
   const [showWindow, setShowWindow] = useState(false);
 
   const handleOpenWindow = () => {
     setShowWindow(true);
+
+    if (contentProgress && contentProgress.clicked !== true && lessonId) {
+      handleUpdateContentProgress(lessonId, contentProgress.contentId);
+    }
   };
   const handleCloseWindow = () => {
     setShowWindow(false);
   };
-  
 
   return (
     <div>
       <div onClick={handleOpenWindow}>
-        <div className="flex items-center px-16 py-1.5 hover:bg-orange-100 cursor-pointer font-bold">
-          <div className=" border border-orange-500 rounded-full w-8 h-8 flex items-center justify-center">
-            {content.file.endsWith(".pdf") ? (
-              <img className="w-5 h-5" src="/img/pdf.png" alt="pdf.img" />
-            ) : (
-              <img className="w-5 h-5" src="/img/video.png" alt="video.img" />
-            )}
+        <div className="relative flex items-center px-16 hover:bg-orange-100 cursor-pointer font-bold">
+          <div
+            className={`w-12 flex items-center justify-center ${
+              contentProgress &&
+              contentProgress.clicked === true &&
+              "border-l-4 border-orange-400"
+            } `}
+          >
+            <div
+              className={`border border-orange-500 rounded-full w-8 h-8 flex items-center justify-center my-1.5 ${
+                contentProgress &&
+                contentProgress.clicked === true &&
+                "bg-orange-200"
+              } `}
+            >
+              {content.file.endsWith(".pdf") ? (
+                <img className="w-5 h-5" src="/img/pdf.png" alt="pdf.img" />
+              ) : (
+                <img className="w-5 h-5" src="/img/video.png" alt="video.img" />
+              )}
+            </div>
           </div>
           <div className="ml-3">{content.title}</div>
+          {contentProgress && contentProgress.clicked === true && (
+            <div className="absolute right-6 border rounded-full border-green-500">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="w-5 h-5 text-green-500"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          )}
         </div>
       </div>
       {showWindow && (
@@ -54,7 +92,6 @@ const ContentView = ({ content }) => {
               <iframe
                 className=" rounded-b-md w-full h-full"
                 src={content.file}
-                frameborder="0"
                 title="Embedded PDF content"
               ></iframe>
             ) : (
@@ -62,7 +99,6 @@ const ContentView = ({ content }) => {
                 className=" rounded-b-md w-full h-full"
                 src={content.file}
                 title="Embedded video player"
-                frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
               ></iframe>

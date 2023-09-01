@@ -13,6 +13,7 @@ const {
   signupUser,
   setProgressUser,
   getProgress,
+  updateProgressUser,
   uploadFile,
 } = require("../controllers/userController");
 
@@ -42,11 +43,14 @@ router.delete("/:id", deleteUser);
 // set User progress
 router.patch("/setProgress", setProgressUser);
 
+// Get user Progress given courseId
+router.get("/user/userProgress/:id", getProgress);
+
+// update user progress
+router.patch("/updateProgress", updateProgressUser)
+
 // UPDATE a User
 router.patch("/:id", updateUser);
-
-// Get user Progress
-router.get("/user/userProgress", getProgress);
 
 //upload
 router.post("/upload", uploadImage.single("image"), validateImage, uploadFile);

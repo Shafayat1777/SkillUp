@@ -2,7 +2,12 @@ import { useState } from "react";
 import ContentView from "./ContentView";
 import Quiz from "./Quiz";
 
-const LessionDetails = ({ lesson, no }) => {
+const LessionDetails = ({
+  lessonProgress,
+  lesson,
+  no,
+  handleUpdateContentProgress,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
 
   const handleOnClick = () => {
@@ -88,9 +93,16 @@ const LessionDetails = ({ lesson, no }) => {
             </div>
             <div className="mb-5">
               {lesson.contents &&
-                lesson.contents.map((content) => (
+                lesson.contents.map((content, i) => (
                   <div key={content.id}>
-                    <ContentView content={content} />
+                    <ContentView
+                      contentProgress={
+                        lessonProgress ? lessonProgress.contents[i] : null
+                      }
+                      content={content}
+                      lessonId={lessonProgress ? lessonProgress.lessonId : null}
+                      handleUpdateContentProgress={handleUpdateContentProgress}
+                    />
                   </div>
                 ))}
             </div>
@@ -100,7 +112,7 @@ const LessionDetails = ({ lesson, no }) => {
               </h1>
             </div>
             <div className="mb-5">
-            {lesson.quiz &&
+              {lesson.quiz &&
                 lesson.quiz.map((quiz) => (
                   <div key={quiz.id}>
                     <Quiz quiz={quiz} />

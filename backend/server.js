@@ -43,6 +43,7 @@ const io = socket(server, {
   },
 });
 
+// listen on connection
 io.on("connection", (socket) => {
   console.log("Made connection id:" + socket.id);
   

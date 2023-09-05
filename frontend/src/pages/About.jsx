@@ -11,8 +11,9 @@ const About = () => {
   const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
+    let socket;
     if (user) {
-      const socket = io.connect("http://localhost:4000");
+      socket = io.connect("http://localhost:4000");
       setSock(socket);
       // Listen for events
       socket.on("chat", (data) => {
@@ -28,11 +29,18 @@ const About = () => {
         if (!data) setFeedback("");
       });
     }
+
+    return () => {
+      // Clean up the socket connection when the component unmounts
+      if (socket) {
+        socket.disconnect();
+      }
+    };
   }, [user]);
 
   const handleSendMessage = () => {
     if (sock && message && user) {
-      sock.emit("chat", { message, id: user.id, pic: user.profile_pic });
+      sock.emit("chat", { message, id: user.id, pic: user.profile_pic, user_name: user.fist_name });
       setMessage("");
     }
   };
@@ -53,62 +61,60 @@ const About = () => {
       </div>
 
       <div>
-        <div className="border m-10 h-[48rem] flex flex-col justify-between shadow">
+        <div className="border m-10  shadow">
           <div className="p-5 border-b text-2xl font-semibold text-gray-600">
             ChatRoom
           </div>
 
-          <div className=" p-5 text-gray-600 h-full font-normal text-lg items-end overflow-auto flex flex-col justify-end">
-            {output.length > 0 &&
-              output.map((data, i) => (
-                <div
-                  className={` flex p-3 ${
-                    user.id === data.id ? "justify-end" : "mr-auto"
-                  }`}
-                >
-                  {user.id === data.id ? (
-                    <>
-                      <p
-                        key={i}
-                        className={` px-3 py-1 rounded-full bg-slate-100 ${
-                          user.id === data.id ? "bg-orange-500 text-white" : ""
-                        }`}
-                      >
-                        {data.message}
-                      </p>
-
-                      <img
-                        className={`w-10 h-10 rounded-full ml-2`}
-                        src={`${
-                          user.profile_pic
-                            ? user.profile_pic
-                            : "/img/default_avatar.png"
-                        }`}
-                        alt=""
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <img
-                        className={`w-10 h-10 rounded-full mr-2`}
-                        src={`${
-                          data.pic ? data.pic : "/img/default_avatar.png"
-                        }`}
-                        alt=""
-                      />
-                      <p
-                        key={i}
-                        className={` px-3 py-1 rounded-full bg-slate-100 ${
-                          user.id === data.id ? "bg-orange-500 text-white" : ""
-                        }`}
-                      >
-                        {data.message}
-                      </p>
-                    </>
-                  )}
-                </div>
-              ))}
-
+          <div className="overflow-auto p-5 bg-slate-100 text-gray-600 h-[20rem] font-normal text-lg items-end flex flex-col justify-end">
+            
+              {output.length > 0 &&
+                output.map((data, i) => (
+                  <div
+                    className={` relative flex p-3 ${
+                      user.id === data.id ? "justify-end" : "mr-auto"
+                    }`}
+                  >
+                    {user.id === data.id ? (
+                      <>
+                        <p
+                          key={i}
+                          className={` px-3 py-1 rounded-full bg-orange-500 text-white`}
+                        >
+                          {data.message}
+                        </p>
+                        <span className=" top-[-30px]  absolute rounded-full bg-orange-200 px-2 opacity-80 font-light text-md text-black">{user.fist_name}</span>
+                        <img
+                          className={`w-10 h-10 rounded-full ml-2`}
+                          src={`${
+                            user.profile_pic
+                              ? user.profile_pic
+                              : "/img/default_avatar.png"
+                          }`}
+                          alt=""
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <img
+                          className={`w-10 h-10 rounded-full mr-2`}
+                          src={`${
+                            data.pic ? data.pic : "/img/default_avatar.png"
+                          }`}
+                          alt=""
+                        />
+                        
+                        <p
+                          key={i}
+                          className={` px-3 py-1 rounded-full bg-slate-100`}
+                        >
+                          {data.message}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                ))}
+            
             {feedback && (
               <div className={`flex mr-auto p-3 text-gray-400`}>
                 <em>{feedback + " is typing..."}</em>

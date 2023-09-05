@@ -12,14 +12,15 @@ const About = () => {
   const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
+    let socket;
     if (user) {
-      const socket = io.connect("http://localhost:4000");
+      socket = io.connect("http://localhost:4000");
       setSock(socket);
       // Listen for events
       socket.on("chat", (data) => {
         setOutput((prevMsg) => [
           ...prevMsg,
-          { message: data.message, id: data.id },
+          { message: data.message, id: data.id, pic: data.pic },
         ]);
         setFeedback("");
       });
@@ -29,11 +30,18 @@ const About = () => {
         if (!data) setFeedback("");
       });
     }
+
+    return () => {
+      // Clean up the socket connection when the component unmounts
+      if (socket) {
+        socket.disconnect();
+      }
+    };
   }, [user]);
 
   const handleSendMessage = () => {
-    if (sock && message) {
-      sock.emit("chat", { message, id: user.id });
+    if (sock && message && user) {
+      sock.emit("chat", { message, id: user.id, pic: user.profile_pic, user_name: user.fist_name });
       setMessage("");
     }
   };
@@ -54,32 +62,62 @@ const About = () => {
       </div>
 
       <div>
-        <div className="border m-10 h-[48rem] flex flex-col justify-between ">
+        <div className="border m-10  shadow">
           <div className="p-5 border-b text-2xl font-semibold text-gray-600">
             ChatRoom
           </div>
 
-        
-          <div className="flex flex-col items-end h-full rounded-lg  bg-blue-100 text-gray-800 p-10 overflow-y-scroll">
-
-            {output.length > 0 &&
-              output.map((data, i) => (
-                <div
-                  className={` flex p-3 ${user.id === data.id ? "justify-end" : "mr-auto"
+          <div className="overflow-auto p-5 bg-slate-100 text-gray-600 h-[20rem] font-normal text-lg items-end flex flex-col justify-end">
+            
+              {output.length > 0 &&
+                output.map((data, i) => (
+                  <div
+                    className={` relative flex p-3 ${
+                      user.id === data.id ? "justify-end" : "mr-auto"
                     }`}
-                >
-                  <p
-                    key={i}
-                    className={` border px-3 py-1 rounded-full bg-slate-100 ${user.id === data.id ? "bg-blue-500 text-white" : ""
-                      }`}
                   >
-                    {data.message}
-                  </p>
-                </div>
-              ))}
-
+                    {user.id === data.id ? (
+                      <>
+                        <p
+                          key={i}
+                          className={` px-3 py-1 rounded-full bg-orange-500 text-white`}
+                        >
+                          {data.message}
+                        </p>
+                        <span className=" top-[-30px]  absolute rounded-full bg-orange-200 px-2 opacity-80 font-light text-md text-black">{user.fist_name}</span>
+                        <img
+                          className={`w-10 h-10 rounded-full ml-2`}
+                          src={`${
+                            user.profile_pic
+                              ? user.profile_pic
+                              : "/img/default_avatar.png"
+                          }`}
+                          alt=""
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <img
+                          className={`w-10 h-10 rounded-full mr-2`}
+                          src={`${
+                            data.pic ? data.pic : "/img/default_avatar.png"
+                          }`}
+                          alt=""
+                        />
+                        
+                        <p
+                          key={i}
+                          className={` px-3 py-1 rounded-full bg-slate-100`}
+                        >
+                          {data.message}
+                        </p>
+                      </>
+                    )}
+                  </div>
+                ))}
+            
             {feedback && (
-              <div className="px-3 py-2 text-gray-400">
+              <div className={`flex mr-auto p-3 text-gray-400`}>
                 <em>{feedback + " is typing..."}</em>
               </div>
             )}
@@ -127,7 +165,7 @@ const About = () => {
             />
             <div
               onClick={handleSendMessage}
-              className=" ml-5 border rounded-full p-2 flex items-center justify-center hover:bg-blue-400 cursor-pointer"
+              className=" ml-5 border rounded-full p-2 flex items-center justify-center hover:bg-orange-400 cursor-pointer"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -135,7 +173,7 @@ const About = () => {
                 viewBox="0 0 24 24"
                 strokeWidth="1"
                 stroke="currentColor"
-                className="w-6 h-6 text-blue-400"
+                className="w-6 h-6 text-orange-400"
               >
                 <path
                   strokeLinecap="round"

@@ -33,7 +33,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        {user && <Navbar />}
+        <Navbar />
         <div className="pages">
           <Routes>
             <Route

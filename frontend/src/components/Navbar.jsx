@@ -31,7 +31,7 @@ const Navbar = () => {
         
         <div className="md:block">
           <Link to="/">
-            <h1 className=" text-2xl text-gray-500 hover:text-orange-500 cursor-pointer">
+            <h1 className=" text-2xl text-teal-600 hover:text-orange-500 cursor-pointer">
               SkillUp
             </h1>
           </Link>

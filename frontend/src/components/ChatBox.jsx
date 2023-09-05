@@ -1,96 +1,104 @@
 const ChatBox = () => {
     return ( 
-        <div className="flex flex-col items-center justify-center w-screen min-h-screen bg-gray-100 text-gray-800 p-10">
-            <div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
-                <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
-                    <div className="flex w-full mt-2 space-x-3 max-w-xs">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-                        <div>
-                            <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                                <p className="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <div>
+            {/* <div className="head">
+                <Helmet>
+                    <meta charSet="utf-8" />
+                    <title>About</title>
+                    <link rel="canonical" href="http://mysite.com/example" />
+                </Helmet>
+            </div> */}
+
+            <div>
+                <div className="border m-10  shadow">
+                    <div className="p-5 border-b text-2xl font-semibold text-gray-600">
+                        ChatRoom
+                    </div>
+
+                    <div className="overflow-y-scroll p-5 bg-slate-100 text-gray-600 h-[20rem] font-normal text-lg items-end flex flex-col ">
+
+                        {output.length > 0 &&
+                            output.map((data, i) => (
+                                <div
+                                    className={`bg-orange-300 shadow-lg min-h-fit max-w-md rounded-lg mb-4 relative  flex p-3 ${user.id === data.id ? "justify-end" : "mr-auto"
+                                        }`}
+                                >
+                                    {user.id === data.id ? (
+                                        <>
+                                            <p
+                                                key={i}
+                                                className={` px-3 py-1 rounded-full  text-black`}
+                                            >
+                                                {data.message}
+                                            </p>
+                                            <span className=" top-[-30px]  absolute rounded-full bg-orange-200 px-2 opacity-80 font-light text-md text-black">{user.fist_name}</span>
+                                            <img
+                                                className={`w-10 h-10 rounded-full ml-2`}
+                                                src={`${user.profile_pic
+                                                        ? user.profile_pic
+                                                        : "/img/default_avatar.png"
+                                                    }`}
+                                                alt=""
+                                            />
+
+                                        </>
+                                    ) : (
+                                        <>
+                                            <img
+                                                className={`w-10 h-10 rounded-full mr-2`}
+                                                src={`${data.pic ? data.pic : "/img/default_avatar.png"
+                                                    }`}
+                                                alt=""
+                                            />
+
+                                            <p
+                                                key={i}
+                                                className={` px-3 py-1 rounded-full bg-slate-100`}
+                                            >
+                                                {data.message}
+                                            </p>
+                                        </>
+                                    )}
+                                </div>
+                            ))}
+
+                        {feedback && (
+                            <div className={`flex mr-auto p-3 text-gray-400`}>
+                                <em>{feedback + " is typing..."}</em>
                             </div>
-                            <span className="text-xs text-gray-500 leading-none">2 min ago</span>
+                        )}
+                    </div>
+                    <div className="border-t p-5 flex items-center">
+                        <input
+                            onKeyDown={(e) => handleFeedback(e)}
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            type="text"
+                            placeholder="Type something..."
+                            className="border rounded-full p-2 w-full"
+                        />
+                        <div
+                            onClick={handleSendMessage}
+                            className=" ml-5 border rounded-full p-2 flex items-center justify-center hover:bg-orange-400 cursor-pointer"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="white"
+                                viewBox="0 0 24 24"
+                                strokeWidth="1"
+                                stroke="currentColor"
+                                className="w-6 h-6 text-orange-400"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                                />
+                            </svg>
                         </div>
                     </div>
-                    <div classNameName="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end">
-                        <div>
-                            <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                                <p className="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.</p>
-                            </div>
-                            <span className="text-xs text-gray-500 leading-none">2 min ago</span>
-                        </div>
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-                    </div>
-                    <div className="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end">
-                        <div>
-                            <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                                <p className="text-sm">Lorem ipsum dolor sit amet.</p>
-                            </div>
-                            <span className="text-xs text-gray-500 leading-none">2 min ago</span>
-                        </div>
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-                    </div>
-                    <div className="flex w-full mt-2 space-x-3 max-w-xs">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-                        <div>
-                            <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                                <p className="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-                            </div>
-                            <span className="text-xs text-gray-500 leading-none">2 min ago</span>
-                        </div>
-                    </div>
-                    <div className="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end">
-                        <div>
-                            <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                                <p className="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-                            </div>
-                            <span className="text-xs text-gray-500 leading-none">2 min ago</span>
-                        </div>
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-                    </div>
-                    <div className="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end">
-                        <div>
-                            <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                                <p className="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.</p>
-                            </div>
-                            <span className="text-xs text-gray-500 leading-none">2 min ago</span>
-                        </div>
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-                    </div>
-                    <div className="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end">
-                        <div>
-                            <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                                <p className="text-sm">Lorem ipsum dolor sit amet.</p>
-                            </div>
-                            <span className="text-xs text-gray-500 leading-none">2 min ago</span>
-                        </div>
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-                    </div>
-                    <div className="flex w-full mt-2 space-x-3 max-w-xs">
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-                        <div>
-                            <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
-                                <p className="text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-                            </div>
-                            <span className="text-xs text-gray-500 leading-none">2 min ago</span>
-                        </div>
-                    </div>
-                    <div className="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end">
-                        <div>
-                            <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
-                                <p className="text-sm">Lorem ipsum dolor sit.</p>
-                            </div>
-                            <span className="text-xs text-gray-500 leading-none">2 min ago</span>
-                        </div>
-                        <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
-                    </div>
-                </div>
-                {/* Input Box */}
-                <div className="bg-gray-300 p-4">
-                    <input className="flex items-center h-10 w-full rounded px-3 text-sm" type="text" placeholder="Type your message…"/>
                 </div>
             </div>
-            
 
         </div>
      );

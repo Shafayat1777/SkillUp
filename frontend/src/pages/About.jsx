@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { useAuthContext } from "../hooks/useAuthContext";
 
+
 const About = () => {
   const { user } = useAuthContext();
   const [sock, setSock] = useState(null);
@@ -53,24 +54,24 @@ const About = () => {
       </div>
 
       <div>
-        <div className="border m-10 h-[48rem] flex flex-col justify-between">
+        <div className="border m-10 h-[48rem] flex flex-col justify-between ">
           <div className="p-5 border-b text-2xl font-semibold text-gray-600">
             ChatRoom
           </div>
 
-          <div className=" p-5 text-gray-600 h-full font-normal text-lg items-end overflow-auto flex flex-col justify-end">
+        
+          <div className="flex flex-col items-end h-full rounded-lg  bg-blue-100 text-gray-800 p-10 overflow-y-scroll">
+
             {output.length > 0 &&
               output.map((data, i) => (
                 <div
-                  className={` flex p-3 ${
-                    user.id === data.id ? "justify-end" : "mr-auto"
-                  }`}
+                  className={` flex p-3 ${user.id === data.id ? "justify-end" : "mr-auto"
+                    }`}
                 >
                   <p
                     key={i}
-                    className={` border px-3 py-1 rounded-full bg-slate-100 ${
-                      user.id === data.id ? "bg-blue-500 text-white" : ""
-                    }`}
+                    className={` border px-3 py-1 rounded-full bg-slate-100 ${user.id === data.id ? "bg-blue-500 text-white" : ""
+                      }`}
                   >
                     {data.message}
                   </p>
@@ -82,8 +83,39 @@ const About = () => {
                 <em>{feedback + " is typing..."}</em>
               </div>
             )}
+            
+                {/* {output.length > 0 &&
+                  output.map((data, i) => (
+                      <div className="flex flex-col mb-5  w-fit  ">
+                        <div className="flex flex-col flex-grow p-4 ">
+                        
+                          <div className="flex  mt-2 space-x-3 max-w-xs">
+                            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+                            
+                            <div>
+                              <div
+                                className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg"
+                              >
+                                <p
+                                  key={i}
+                                  className='text-sm'
+                                >
+                                  {data.message}
+                                </p>
+                              </div>
+                              <span className="text-xs text-gray-500 leading-none">2 min ago</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+              ))}
+                {feedback && (
+                  <div className="px-3 py-2 text-gray-400">
+                    <em>{feedback + " is typing..."}</em>
+                  </div>
+                )} */}
+              
           </div>
-
           <div className="border-t p-5 flex items-center">
             <input
               onKeyDown={(e) => handleFeedback(e)}
@@ -115,6 +147,7 @@ const About = () => {
           </div>
         </div>
       </div>
+
     </div>
   );
 };

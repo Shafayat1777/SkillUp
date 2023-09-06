@@ -20,7 +20,7 @@ export const useEditProfile = () => {
   ) => {
     setIsLoading(true);
     setError(null);
-    const response = await fetch(`http://localhost:4000/api/users/${user.id}`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/users/${user.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

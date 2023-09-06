@@ -6,7 +6,7 @@ export const useGetUsers = () => {
   const [users, setUsers] = useState(null);
 
   const getusers = async () => {
-    const respons = await fetch("http://localhost:4000/api/users/", {
+    const respons = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/users/`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },

@@ -10,7 +10,7 @@ export const useEnrollCourse = () => {
     setIsResponseEnroll(null)
     setErrorEnroll(null);
     console.log(courseId)
-    const response = await fetch("http://localhost:4000/api/courses/enroll", {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/courses/enroll`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

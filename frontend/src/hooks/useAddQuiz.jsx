@@ -15,7 +15,7 @@ export const useAddQuiz = () => {
     setErrorQuiz(null);
     var userId = user.id;
 
-    const response = await fetch("http://localhost:4000/api/courses/quiz/", {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/courses/quiz/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

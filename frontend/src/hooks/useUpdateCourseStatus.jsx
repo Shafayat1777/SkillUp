@@ -7,7 +7,7 @@ export const useUpdateCourseState = () => {
     if (user && user.token) {
       console.log(courseId, status)
       const response = await fetch(
-        `http://localhost:4000/api/courses/course/updateCourseStatus/${courseId}`,
+        `${process.env.REACT_APP_BACKEND_HOST}/courses/course/updateCourseStatus/${courseId}`,
         {
           method: "PATCH",
           headers: {

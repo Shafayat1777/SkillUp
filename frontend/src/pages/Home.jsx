@@ -23,7 +23,7 @@ const Home = () => {
         },
       });
       const json = await respons.json();
-
+      console.log("Hello",respons.json())
       if (respons.ok) {
         dispatch({ type: "SET_USERS", payload: json });
       }

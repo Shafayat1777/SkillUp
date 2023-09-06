@@ -6,7 +6,7 @@ export const useUpdateProgress = () => {
 
   const updateContentProgress = async (courseId, lessonId, contentId) => {
     const response = await fetch(
-      "http://localhost:4000/api/users/updateContentProgress/",
+      `${process.env.REACT_APP_BACKEND_HOST}/users/updateContentProgress/`,
       {
         method: "PATCH",
         headers: {
@@ -20,7 +20,7 @@ export const useUpdateProgress = () => {
 
   const updateQuizProgress = async (courseId, lessonId, quizId, quizScore, totalScore) => {
     const response = await fetch(
-      "http://localhost:4000/api/users/updateQuizProgress/",
+      `${process.env.REACT_APP_BACKEND_HOST}/users/updateQuizProgress/`,
       {
         method: "PATCH",
         headers: {

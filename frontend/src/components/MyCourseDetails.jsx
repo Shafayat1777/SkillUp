@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import MyCourseContent from "./MyCourseContent";
 import Users from "./Users";
+// require(process.env)
 
 const MyCourseDetails = ({
   courseId,
@@ -16,7 +17,7 @@ const MyCourseDetails = ({
   useEffect(() => {
     const fetchCourses = async () => {
       const respons = await fetch(
-        "http://localhost:4000/api/courses/courses/" + courseId,
+        `${process.env.REACT_APP_BACKEND_HOST}/courses/courses/ + ${courseId}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -38,7 +39,7 @@ const MyCourseDetails = ({
   const handleChangeUserStatus = async (userId, userStatus) => {
     if (user) {
       const response = await fetch(
-        `http://localhost:4000/api/users/user/userStatus/${userId}`,
+        `${process.env.REACT_APP_BACKEND_HOST}/users/user/userStatus/${userId}`,
         {
           method: "PATCH",
           headers: {

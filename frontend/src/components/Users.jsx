@@ -8,7 +8,7 @@ const Users = ({ users, handleReload }) => {
   const handleChangeUserStatus = async (userId, userStatus) => {
     if (user) {
       const response = await fetch(
-        `http://localhost:4000/api/users/user/userStatus/${userId}`,
+        `${process.env.REACT_APP_BACKEND_HOST}/users/user/userStatus/${userId}`,
         {
           method: "PATCH",
           headers: {

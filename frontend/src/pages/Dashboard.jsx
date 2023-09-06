@@ -23,7 +23,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       const respons = await fetch(
-        "http://localhost:4000/api/courses/mycourses/",
+        `${process.env.REACT_APP_BACKEND_HOST}/courses/mycourses/`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,

@@ -11,7 +11,7 @@ export const useSignup = () => {
     setIsLoading(true);
     setError(null);
     
-    const response = await fetch("http://localhost:4000/api/users/signup", {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/users/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ firstName, lastName, email, password, socials, role }),

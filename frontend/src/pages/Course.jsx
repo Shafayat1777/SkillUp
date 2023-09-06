@@ -30,7 +30,7 @@ const Course = () => {
   useEffect(() => {
     const fetchProgress = async (courseId) => {
       const respons = await fetch(
-        `http://localhost:4000/api/users/user/userProgress/${courseId}`,
+        `${process.env.REACT_APP_BACKEND_HOST}/users/user/userProgress/${courseId}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -46,7 +46,7 @@ const Course = () => {
 
     const fetchCourse = async () => {
       const respons = await fetch(
-        `http://localhost:4000/api/courses/courses/${id}`,
+        `${process.env.REACT_APP_BACKEND_HOST}/courses/courses/${id}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,

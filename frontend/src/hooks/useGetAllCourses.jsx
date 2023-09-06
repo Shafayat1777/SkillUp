@@ -6,7 +6,7 @@ export const useGetAllCourses = () => {
   const [courses, setCourses] = useState(null);
 
   const getallcourses = async () => {
-    const respons = await fetch("http://localhost:4000/api/courses/courses", {
+    const respons = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/courses/courses`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },

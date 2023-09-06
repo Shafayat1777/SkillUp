@@ -8,8 +8,8 @@ const AboutSection = () => {
                 </div>
             </div>
             <div className="w-full bg-gray-100 px-10 pt-10">
-                <div className="container mx-auto">
-                    <div className="lg:flex md:flex sm:flex items-center xl:justify-between flex-wrap md:justify-around sm:justify-around lg:justify-around">
+                <div className=" mx-auto">
+                    <div className="flex items-center xl:justify-evenly  flex-wrap md:justify-around sm:justify-around lg:justify-around">
                         <div className="xl:w-1/3 sm:w-3/4 md:w-2/5 relative mt-16 mb-32 sm:mb-24 xl:max-w-sm lg:w-2/5 hover:scale-105 hover:-translate-y-1 duration-300 transition ease-in-out delay-150">
                             <div className="rounded overflow-hidden shadow-md   bg-white">
                                 <div className="absolute -mt-20 w-full flex justify-center">

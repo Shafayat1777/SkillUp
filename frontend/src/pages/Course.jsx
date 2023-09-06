@@ -218,7 +218,7 @@ const Course = () => {
     if (user && course) {
       if (comment) {
         const response = await fetch(
-          "http://localhost:4000/api/courses/comment/",
+          `${REACT_APP_BACKEND_HOST}/courses/comment/`,
           {
             method: "POST",
             headers: {

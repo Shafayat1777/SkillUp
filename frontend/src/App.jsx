@@ -17,7 +17,7 @@ import Loading from "./pages/Loading";
 import Enrolled from "./pages/Enrolled";
 import NotFound from "./NotFound";
 import Unauthorized from "./Unauthorized";
-import Footer from "./components/Footer";
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
   const { user } = useAuthContext();
@@ -117,6 +117,7 @@ function App() {
                 )
               }
             />
+            <Route path="/adminpanel" element={<AdminPanel />} />
             <Route path="/about" element={<About />} />
             <Route path="/session" element={<Session />} />
             <Route path="*" element={<NotFound />} />

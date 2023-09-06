@@ -71,7 +71,18 @@ const Navbar = () => {
           >
             <h1>Courses</h1>
           </Link>
-          {user && user.role && user.role !== "TEACHER" && (
+          <Link
+            onClick={() => handleLinkClick("/adminpanel")}
+            className={`${
+              activeLink === "/adminpanel"
+                ? "navLink ml-6 border-b-4 border-orange-500"
+                : "navLink ml-6"
+            }`}
+            to="/adminpanel"
+          >
+            <h1>Admin panel</h1>
+          </Link>
+          {user.role && user.role !== "TEACHER" && (
             <Link
               onClick={() => handleLinkClick("/enrolled")}
               className={`${
@@ -116,13 +127,13 @@ const Navbar = () => {
             <div className="flex">
               <Link
                 to="/signup"
-                className="w-20 h-8 border border-orange-500 hover:bg-orange-200 text-orange-500 text-center rounded flex items-center justify-center"
+                className="w-20 h-8 border transition-all ease-out duration-500 font-semibold hover:bg-orange-300 hover:text-gray-600 text-orange-500 text-center rounded flex items-center justify-center"
               >
                 Signup
               </Link>
               <Link
                 to="/login"
-                className="ml-4 w-20 h-8 border border-orange-500 hover:bg-orange-200 text-orange-500 text-center rounded flex items-center justify-center"
+                className="ml-4 w-20 h-8 border transition-all ease-out duration-500 font-semibold hover:bg-orange-300 hover:text-gray-600 text-orange-500 text-center rounded flex items-center justify-center"
               >
                 Log in
               </Link>
@@ -140,7 +151,7 @@ const Navbar = () => {
                 {user.role}
               </h3>
               <button
-                className="ml-4 w-20 h-8 border border-orange-500 hover:bg-orange-200 text-orange-500 text-center rounded"
+                className="ml-4 w-20 h-8 border transition-all ease-out duration-500 font-semibold hover:bg-orange-300 hover:text-gray-600 text-orange-500 text-center rounded"
                 onClick={handleClick}
               >
                 Log out

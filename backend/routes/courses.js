@@ -19,6 +19,7 @@ const {
   addContent,
   getAllContent,
   addQuiz,
+  updateCourseStatus,
 } = require("../controllers/courseController");
 
 const router = express.Router();
@@ -76,6 +77,9 @@ router.patch("/enroll", enrollCourse); // Adjust the route for enrolling a cours
 
 //Enroll a course
 router.get("/enrolled", enrolledCourses); // Adjust the route for enrolling a course
+
+// update course status
+router.patch("/course/updateCourseStatus/:id", updateCourseStatus);
 
 // DELETE all courses
 // router.delete("/courses/deleteAll", deleteAllCourse); // If you want to keep the delete all courses route, use a unique identifier like "/courses/deleteAll"

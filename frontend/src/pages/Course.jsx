@@ -149,7 +149,7 @@ const Course = () => {
 
   const handleEnroll = (courseId) => {
     if (course) {
-      var progress = { courseId: course.id };
+      var progress = { courseId: course.id, totalClicked:0, totalCount:0};
 
       var less = [];
       course.lessons.forEach((lesson) => {
@@ -505,9 +505,7 @@ const Course = () => {
           </div>
           {chat && (
             <div
-              className={`absolute top-0 transition-all duration-2000 ease-out ${
-                chat ? "right-0" : "right-[-400px]"
-              }`}
+              className={` fixed bottom-0 transition-all duration-2000 ease-out right-2`}
             >
               <ChatRoom />
             </div>

@@ -82,7 +82,7 @@ const Navbar = () => {
           >
             <h1>Admin panel</h1>
           </Link>
-          {user.role && user.role !== "TEACHER" && (
+          {user && user.role && user.role !== "TEACHER" && (
             <Link
               onClick={() => handleLinkClick("/enrolled")}
               className={`${

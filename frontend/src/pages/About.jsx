@@ -66,7 +66,7 @@ const About = () => {
             ChatRoom
           </div>
 
-          <div className="overflow-auto p-5 bg-slate-100 text-gray-600 h-[20rem] font-normal text-lg items-end flex flex-col justify-end">
+          <div className="overflow-auto p-5 bg-slate-100 text-gray-600 h-[20rem] font-normal text-lg items-end flex flex-col">
               
               {output.length > 0 &&
                 output.map((data, i) => (

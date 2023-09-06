@@ -46,10 +46,42 @@ const AdminPanel = () => {
     <div className="flex">
       <div className="Side_Nav w-52 h-screen border"></div>
 
-      <div className=" border px-5 py-10">
-        {users && <Users users={users} handleReload={handleReload} />}
+      <div className=" border">
+        <div className="border-y py-2 px-5 text-lg font-semibold bg-slate-100">
+          Enrolled Students
+        </div>
+        {users && (
+          <div className="py-10">
+            <Users users={users} handleReload={handleReload} />
+          </div>
+        )}
+
+        <div className="border-y py-2 px-5 text-lg font-semibold bg-slate-100">
+          Processing Courses
+        </div>
         {courses && (
-          <CoursesAll courses={courses} handleShowDetails={handleShowDetails} handleReload={handleReload} />
+          <div className="py-10">
+            <CoursesAll
+              courses={courses}
+              courseStatus={"PROCESSING"}
+              handleShowDetails={handleShowDetails}
+              handleReload={handleReload}
+            />
+          </div>
+        )}
+
+        <div className="border-y py-2 px-5 text-lg font-semibold bg-slate-100">
+          Active Courses
+        </div>
+        {courses && (
+          <div className="py-10">
+            <CoursesAll
+              courses={courses}
+              courseStatus={"ACTIVE"}
+              handleShowDetails={handleShowDetails}
+              handleReload={handleReload}
+            />
+          </div>
         )}
       </div>
 

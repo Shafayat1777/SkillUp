@@ -469,7 +469,25 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                             Importing & Cleaning Data
                           </option>
                           <option value="Applied Finance">
-                            Applied Finance
+                            Web Development
+                          </option>
+                          <option value="Applied Finance">
+                            Android App Development
+                          </option>
+                          <option value="Applied Finance">
+                            Basic Programming
+                          </option>
+                          <option value="Applied Finance">
+                            Advance Programming
+                          </option>
+                          <option value="Applied Finance">
+                            System Desing
+                          </option>
+                          <option value="Applied Finance">
+                            Software Engineering
+                          </option>
+                          <option value="Applied Finance">
+                            Software Testing
                           </option>
                           <option value="Programming">Programming</option>
                           <option value="Management">Management</option>

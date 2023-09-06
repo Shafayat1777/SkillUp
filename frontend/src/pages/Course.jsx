@@ -149,7 +149,7 @@ const Course = () => {
 
   const handleEnroll = (courseId) => {
     if (course) {
-      var progress = { courseId: course.id };
+      var progress = { courseId: course.id, totalClicked:0, totalCount:0};
 
       var less = [];
       course.lessons.forEach((lesson) => {

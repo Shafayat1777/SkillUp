@@ -215,6 +215,51 @@ const updateProgressContent = async (req, res) => {
         }
       }
 
+      const checkedContentCount = data
+        .find((course) => course.courseId === courseId)
+        .lessons.reduce(
+          (count, lesson) => {
+            if (lesson.contents) {
+              lesson.contents.forEach((content) => {
+                count.content++;
+                if (content.clicked === true) {
+                  count.clicked++;
+                }
+              });
+            }
+            return count;
+          },
+          { clicked: 0, content: 0 }
+        );
+
+      const checkedQuizCount = data
+        .find((course) => course.courseId === courseId)
+        .lessons.reduce(
+          (count, lesson) => {
+            if (lesson.quiz) {
+              lesson.quiz.forEach((quiz) => {
+                count.quiz++;
+                if (quiz.clicked === true) {
+                  count.clicked++;
+                }
+              });
+            }
+            return count;
+          },
+          { clicked: 0, quiz: 0 }
+        );
+
+      const TotalClicked =
+        checkedContentCount.clicked + checkedQuizCount.clicked;
+      const TotalCount = checkedContentCount.content + checkedQuizCount.quiz;
+
+      // console.log(TotalClicked, TotalCount)
+      if (course) {
+        course.totalClicked = TotalClicked;
+        course.totalCount = TotalCount;
+        console.log(course)
+      }
+
       const updatedUser = await prisma.user.update({
         where: {
           id: userId,
@@ -271,6 +316,51 @@ const updateProgressQuiz = async (req, res) => {
           }
           // console.log(quiz);
         }
+      }
+
+      const checkedContentCount = data
+        .find((course) => course.courseId === courseId)
+        .lessons.reduce(
+          (count, lesson) => {
+            if (lesson.contents) {
+              lesson.contents.forEach((content) => {
+                count.content++;
+                if (content.clicked === true) {
+                  count.clicked++;
+                }
+              });
+            }
+            return count;
+          },
+          { clicked: 0, content: 0 }
+        );
+
+      const checkedQuizCount = data
+        .find((course) => course.courseId === courseId)
+        .lessons.reduce(
+          (count, lesson) => {
+            if (lesson.quiz) {
+              lesson.quiz.forEach((quiz) => {
+                count.quiz++;
+                if (quiz.clicked === true) {
+                  count.clicked++;
+                }
+              });
+            }
+            return count;
+          },
+          { clicked: 0, quiz: 0 }
+        );
+
+      const TotalClicked =
+        checkedContentCount.clicked + checkedQuizCount.clicked;
+      const TotalCount = checkedContentCount.content + checkedQuizCount.quiz;
+
+      // console.log(TotalClicked, TotalCount)
+      if (course) {
+        course.totalClicked = TotalClicked;
+        course.totalCount = TotalCount;
+        console.log(course)
       }
 
       const updatedUser = await prisma.user.update({
@@ -489,7 +579,7 @@ const deleteProfilePic = async (req, res) => {
 
 const updateUserStatus = async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { userStatus } = req.body;
 
   try {
     const data = await prisma.user.update({
@@ -497,7 +587,7 @@ const updateUserStatus = async (req, res) => {
         id,
       },
       data: {
-        isBlocked: status,
+        isBlocked: userStatus,
       },
     });
 

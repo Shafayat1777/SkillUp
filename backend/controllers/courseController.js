@@ -18,6 +18,22 @@ const getallCourse = async (req, res) => {
             socials: true,
           },
         },
+        students: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            progress:true,
+            socials: true,
+            isBlocked: true,
+            createdAt: true, 
+            updatedAt: true, 
+          },
+        },
         lessons: {
           orderBy: {
             createdAt: "asc",
@@ -69,7 +85,11 @@ const getmyCourse = async (req, res) => {
             role: true,
             institute: true,
             designation: true,
+            progress:true,
             socials: true,
+            isBlocked: true,
+            createdAt: true, 
+            updatedAt: true, 
           },
         },
         lessons: {
@@ -126,6 +146,10 @@ const getoneCourse = async (req, res) => {
             institute: true,
             designation: true,
             socials: true,
+            progress:true,
+            isBlocked: true,
+            createdAt: true, 
+            updatedAt: true, 
           },
         },
         lessons: {
@@ -621,7 +645,7 @@ const addQuiz = async (req, res) => {
 
 const updateCourseStatus = async (req, res) => {
   const { id } = req.params;
-  const {status} = req.body;
+  const { status } = req.body;
 
   console.log(id, status);
 
@@ -632,7 +656,7 @@ const updateCourseStatus = async (req, res) => {
         id,
       },
       data: {
-        course_status:status
+        course_status: status,
       },
     });
 

@@ -135,6 +135,7 @@ const Dashboard = () => {
                 courseId={showDetails}
                 reload={reload}
                 handleHideDetails={handleHideDetails}
+                handleReload={handleDetailsReload}
               />
             )}
           </div>

@@ -1,7 +1,7 @@
 import format from "date-fns/format";
 import { useUpdateCourseState } from "../hooks/useUpdateCourseStatus";
 
-const CoursesAll = ({ courses, handleShowDetails, handleReload }) => {
+const CoursesAll = ({ courses, courseStatus, handleShowDetails, handleReload }) => {
   const { updatecoursestate } = useUpdateCourseState();
   const handleChangeUserStatus = (course) => {
     if (course) {
@@ -45,7 +45,7 @@ const CoursesAll = ({ courses, handleShowDetails, handleReload }) => {
         </thead>
         <tbody className="divide-y divide-gray-100">
           {courses
-            .filter((course) => course.course_status === "PROCESSING")
+            .filter((course) => course.course_status === courseStatus)
             .map((course, i) => (
               <tr
                 key={course.id}

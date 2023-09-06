@@ -28,7 +28,6 @@ const Navbar = () => {
   return (
     <nav className="p-4 shadow-md">
       <div className=" mx-5 md:mx-20 lg:md:mx-40 flex justify-between items-center">
-        
         <div className="md:block">
           <Link to="/">
             <h1 className=" text-2xl text-teal-600 hover:text-orange-500 cursor-pointer">
@@ -71,18 +70,20 @@ const Navbar = () => {
           >
             <h1>Courses</h1>
           </Link>
-          <Link
-            onClick={() => handleLinkClick("/adminpanel")}
-            className={`${
-              activeLink === "/adminpanel"
-                ? "navLink ml-6 border-b-4 border-orange-500"
-                : "navLink ml-6"
-            }`}
-            to="/adminpanel"
-          >
-            <h1>Admin panel</h1>
-          </Link>
-          {user && user.role && user.role !== "TEACHER" && (
+          {user.role && user.role === "ADMIN" && (
+            <Link
+              onClick={() => handleLinkClick("/adminpanel")}
+              className={`${
+                activeLink === "/adminpanel"
+                  ? "navLink ml-6 border-b-4 border-orange-500"
+                  : "navLink ml-6"
+              }`}
+              to="/adminpanel"
+            >
+              <h1>Admin panel</h1>
+            </Link>
+          )}
+          {user.role && user.role !== "TEACHER" && (
             <Link
               onClick={() => handleLinkClick("/enrolled")}
               className={`${
@@ -121,7 +122,7 @@ const Navbar = () => {
             <h1>Profile</h1>
           </Link>
         </div>
-        
+
         <div className="flex items-center">
           {!user && (
             <div className="flex">

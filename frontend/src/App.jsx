@@ -118,7 +118,17 @@ function App() {
                 )
               }
             />
-            <Route path="/adminpanel" element={<AdminPanel />} />
+            <Route path="/adminpanel" element={loading ? (
+                  <Loading />
+                ) : user ? (
+                  user.role === "ADMIN" ? (
+                    <AdminPanel />
+                  ) : (
+                    <Unauthorized />
+                  )
+                ) : (
+                  <Navigate to="/login" />
+                )} />
             <Route path="/about" element={<About />} />
             <Route path="/session" element={<Session />} />
             <Route path="*" element={<NotFound />} />

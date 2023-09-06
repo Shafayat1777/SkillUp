@@ -22,11 +22,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const respons = await fetch("http://localhost:4000/api/courses/mycourses/", {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const respons = await fetch(
+        "http://localhost:4000/api/courses/mycourses/",
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
       const json = await respons.json();
 
       if (respons.ok) {
@@ -49,7 +52,7 @@ const Dashboard = () => {
       fetchCourses();
     }
   }, [user, dispatch, reload, navigate]);
-  
+
   const handleDetailsReload = () => {
     if (reload) {
       setReload(false);
@@ -65,14 +68,14 @@ const Dashboard = () => {
     setShowForm(false);
   };
   const handleShowDetails = (courseId) => {
-    setShowDetails(courseId);
+    if (showDetails) setShowDetails(null);
+    else setShowDetails(courseId);
   };
 
-  const handleHideDetails = (courseId) => {
-    if(showDetails){
+  const handleHideDetails = () => {
+    if (showDetails) {
       setShowDetails(null);
     }
-    
   };
   const closeShowDetails = () => {
     setShowDetails(null);
@@ -128,7 +131,11 @@ const Dashboard = () => {
           </div>
           <div className="my-4">
             {showDetails && (
-              <MyCourseDetails courseId={showDetails} reload={reload} handleHideDetails={handleHideDetails} />
+              <MyCourseDetails
+                courseId={showDetails}
+                reload={reload}
+                handleHideDetails={handleHideDetails}
+              />
             )}
           </div>
         </div>

@@ -487,6 +487,26 @@ const deleteProfilePic = async (req, res) => {
   }
 };
 
+const updateUserStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  try {
+    const data = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        isBlocked: status,
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getallUser,
   getoneUser,
@@ -501,4 +521,5 @@ module.exports = {
   updateProgressQuiz,
   updateProfilePic,
   deleteProfilePic,
+  updateUserStatus,
 };

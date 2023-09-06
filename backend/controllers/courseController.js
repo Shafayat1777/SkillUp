@@ -619,6 +619,29 @@ const addQuiz = async (req, res) => {
   }
 };
 
+const updateCourseStatus = async (req, res) => {
+  const { id } = req.params;
+  const {status} = req.body;
+
+  console.log(id, status);
+
+  //update data to db
+  try {
+    const data = await prisma.courses.update({
+      where: {
+        id,
+      },
+      data: {
+        course_status:status
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createCourse,
   getallCourse,
@@ -636,4 +659,5 @@ module.exports = {
   addContent,
   getAllContent,
   addQuiz,
+  updateCourseStatus,
 };

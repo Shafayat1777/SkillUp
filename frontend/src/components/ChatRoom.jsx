@@ -51,7 +51,7 @@ const ChatRoom = () => {
 
   return (
     <div>
-      <div className="bg-white border m-10 h-[48rem] w-[22.7rem] flex flex-col justify-between shadow">
+      <div className="bg-white border h-[40rem] w-[22rem] flex flex-col justify-between shadow">
         <div className="p-5 border-b text-2xl font-semibold text-gray-600">
           ChatRoom
         </div>
@@ -60,7 +60,7 @@ const ChatRoom = () => {
           {output.length > 0 &&
             output.map((data, i) => (
               <div
-                className={` flex p-3 ${
+                className={`border w-full flex p-2 ${
                   user.id === data.id ? "justify-end" : "mr-auto"
                 }`}
               >
@@ -68,7 +68,7 @@ const ChatRoom = () => {
                   <>
                     <p
                       key={i}
-                      className="px-3 py-1 rounded-full bg-orange-500 text-white"
+                      className="flex px-3 py-1 rounded-md bg-orange-500 text-white whitespace-normal overflow-wrap-normal"
                     >
                       {data.message}
                     </p>
@@ -90,10 +90,7 @@ const ChatRoom = () => {
                       src={`${data.pic ? data.pic : "/img/default_avatar.png"}`}
                       alt=""
                     />
-                    <p
-                      key={i}
-                      className="px-3 py-1 rounded-full bg-slate-100" 
-                    >
+                    <p key={i} className="px-3 py-1 rounded-full bg-slate-100">
                       {data.message}
                     </p>
                   </>
@@ -109,13 +106,15 @@ const ChatRoom = () => {
         </div>
 
         <div className="border-t p-5 flex items-center">
-          <input
+          <textarea
             onKeyDown={(e) => handleFeedback(e)}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             type="text"
             placeholder="Type something..."
-            className="border rounded-full p-2 w-full"
+            className="border rounded p-2 w-full resize-y" // Use the 'resize-y' class to allow vertical resizing
+            rows={Math.min(Math.max(Math.ceil(message.length / 28), 1), 8)} // Limit to a maximum of 5 rows
+            style={{ minHeight: "40px" }} // Optional: Set a minimum height
           />
           <div
             onClick={handleSendMessage}

@@ -52,7 +52,11 @@ const AdminPanel = () => {
         </div>
         {users && (
           <div className="py-10">
-            <Users users={users} handleReload={handleReload} />
+            <Users
+              users={users}
+              handleReload={handleReload}
+              closeShowDetails={closeShowDetails}
+            />
           </div>
         )}
 
@@ -66,6 +70,7 @@ const AdminPanel = () => {
               courseStatus={"PROCESSING"}
               handleShowDetails={handleShowDetails}
               handleReload={handleReload}
+              closeShowDetails={closeShowDetails}
             />
           </div>
         )}
@@ -80,6 +85,7 @@ const AdminPanel = () => {
               courseStatus={"ACTIVE"}
               handleShowDetails={handleShowDetails}
               handleReload={handleReload}
+              closeShowDetails={closeShowDetails}
             />
           </div>
         )}

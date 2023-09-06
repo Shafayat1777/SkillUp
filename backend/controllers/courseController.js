@@ -27,11 +27,11 @@ const getallCourse = async (req, res) => {
             role: true,
             institute: true,
             designation: true,
-            progress:true,
+            progress: true,
             socials: true,
             isBlocked: true,
-            createdAt: true, 
-            updatedAt: true, 
+            createdAt: true,
+            updatedAt: true,
           },
         },
         lessons: {
@@ -85,11 +85,11 @@ const getmyCourse = async (req, res) => {
             role: true,
             institute: true,
             designation: true,
-            progress:true,
+            progress: true,
             socials: true,
             isBlocked: true,
-            createdAt: true, 
-            updatedAt: true, 
+            createdAt: true,
+            updatedAt: true,
           },
         },
         lessons: {
@@ -146,10 +146,15 @@ const getoneCourse = async (req, res) => {
             institute: true,
             designation: true,
             socials: true,
-            progress:true,
+            progress: true,
             isBlocked: true,
-            createdAt: true, 
-            updatedAt: true, 
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        Comment: {
+          orderBy: {
+            createdAt: "desc",
           },
         },
         lessons: {
@@ -645,9 +650,7 @@ const addQuiz = async (req, res) => {
 
 const updateCourseStatus = async (req, res) => {
   const { id } = req.params;
-  const { status } = req.body;
-
-  console.log(id, status);
+  const { courseStatus } = req.body;
 
   //update data to db
   try {
@@ -656,11 +659,50 @@ const updateCourseStatus = async (req, res) => {
         id,
       },
       data: {
-        course_status: status,
+        course_status: courseStatus,
       },
     });
 
     res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// add a comment
+const addComment = async (req, res) => {
+  const { comment, courseId, first_name, last_name, profile_pic } = req.body;
+  const authorId = req.user.id;
+
+  console.log(first_name, last_name)
+  // add data to db
+  try {
+    if (!comment) {
+      throw Error("All fields must me filled!");
+    }
+
+    const course = await prisma.courses.findUnique({
+      where: {
+        id: courseId,
+      },
+    });
+
+    if (!course) {
+      throw Error("No such course exists!");
+    }
+
+    const data = await prisma.comment.create({
+      data: {
+        comment,
+        courseId,
+        first_name,
+        last_name,
+        profile_pic,
+        authorId,
+      },
+    });
+
+    res.status(200).json("Added a comment");
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -684,4 +726,5 @@ module.exports = {
   getAllContent,
   addQuiz,
   updateCourseStatus,
+  addComment,
 };

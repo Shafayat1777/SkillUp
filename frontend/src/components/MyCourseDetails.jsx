@@ -120,7 +120,7 @@ const MyCourseDetails = ({
 
           <div className="">
             <div className="border-y py-2 px-5 text-lg font-semibold bg-slate-100">
-              Enrolled Students
+              Enrolled Students ({course.students.length})
             </div>
             <table className="w-full">
               <thead className=" border-b-2 border-gray-200">

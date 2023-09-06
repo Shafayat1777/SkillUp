@@ -9,11 +9,10 @@ const Courses = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const respons = await fetch("http://localhost:4000/api/courses/courses", {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
+      const respons = await fetch(
+        "http://localhost:4000/api/courses/courses",
+        {}
+      );
       const json = await respons.json();
 
       if (respons.ok) {
@@ -21,9 +20,7 @@ const Courses = () => {
       }
     };
 
-    if (user) {
-      fetchCourses();
-    }
+    fetchCourses();
   }, [user]);
 
   return (
@@ -75,21 +72,27 @@ const Courses = () => {
 
           <div className="catagorys my-5">
             <p className="font-bold text-gray-600 text-md">
-              {courses && `${courses.filter((course) => course.course_status === "ACTIVE").length} courses`}
+              {courses &&
+                `${
+                  courses.filter((course) => course.course_status === "ACTIVE")
+                    .length
+                } courses`}
             </p>
           </div>
 
           <div className="course-cards mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* grid 2xl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-5 */}
             {courses &&
-              courses.filter((course) => course.course_status === "ACTIVE").map((course) => (
-                <div
-                  key={course.id}
-                  className="transition-transform transform hover:translate-y-[-10px]"
-                >
-                  <CourseCard className="" key={course.id} course={course} />
-                </div>
-              ))}
+              courses
+                .filter((course) => course.course_status === "ACTIVE")
+                .map((course) => (
+                  <div
+                    key={course.id}
+                    className="transition-transform transform hover:translate-y-[-10px]"
+                  >
+                    <CourseCard className="" key={course.id} course={course} />
+                  </div>
+                ))}
           </div>
         </div>
       </div>

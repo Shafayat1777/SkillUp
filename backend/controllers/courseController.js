@@ -245,6 +245,7 @@ const deleteCourse = async (req, res) => {
             quiz: true,
           },
         },
+        Comment: true,
       },
     });
 
@@ -303,6 +304,18 @@ const deleteCourse = async (req, res) => {
         },
       },
     });
+
+    // Delete the comments related to the course
+    const commentIds = course.Comment.map((comment) => comment.id);
+    await prisma.comment.deleteMany({
+      where: {
+        id: {
+          in: commentIds,
+        },
+      },
+    });
+
+    console.log(course);
 
     // Delete the course itself
     await prisma.courses.delete({
@@ -674,7 +687,7 @@ const addComment = async (req, res) => {
   const { comment, courseId, first_name, last_name, profile_pic } = req.body;
   const authorId = req.user.id;
 
-  console.log(first_name, last_name)
+  console.log(first_name, last_name);
   // add data to db
   try {
     if (!comment) {

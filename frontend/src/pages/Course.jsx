@@ -27,7 +27,6 @@ const Course = () => {
   const [totalClicked, setTotalClicked] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [chat, setChat] = useState(false);
-  const [comments, setComments] = useState("");
   const [comment, setComment] = useState("");
 
   useEffect(() => {
@@ -50,24 +49,18 @@ const Course = () => {
     const fetchCourse = async () => {
       const respons = await fetch(
         `http://localhost:4000/api/courses/courses/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
+        {}
       );
       const json = await respons.json();
 
       if (respons.ok) {
         setCourse(json);
 
-        fetchProgress(json.id);
+        if (user) fetchProgress(json.id);
       }
     };
 
-    if (user) {
-      fetchCourse();
-    }
+    fetchCourse();
   }, [user, id, reload]);
 
   useEffect(() => {
@@ -315,31 +308,12 @@ const Course = () => {
                   )}
                 </div>
                 <div className="mb-5">
-                  <button
-                    onClick={handleProgress}
-                    className=" py-1 px-3 border rounded-sm font-semibold text-white hover:bg-gray-700"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6 inline mr-2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
-                      />
-                    </svg>
-                    Bookmark
-                  </button>
+                  
                   {user && user.role !== "TEACHER" && (
                     <button
                       disabled={isEnrolled}
                       onClick={() => handleEnroll(course.id)}
-                      className={`ml-5 py-1 px-3 border rounded-sm font-semibold text-white ${
+                      className={` py-1 px-3 border rounded-sm font-semibold text-white ${
                         isEnrolled
                           ? "border-yellow-400"
                           : "hover:bg-gray-700 hover:border-yellow-400"
@@ -502,6 +476,7 @@ const Course = () => {
                               : null
                             : null
                         }
+                        isEnrolled={isEnrolled}
                         key={lesson.id}
                         lesson={lesson}
                         no={i + 1}
@@ -530,7 +505,7 @@ const Course = () => {
                             <>
                               <div className="w-12 h-12 border rounded-full flex items-center justify-center bg-gray-600 mr-2">
                                 <img
-                                  className="w-10 h-10"
+                                  className="w-10 h-10 rounded-full"
                                   src={`${
                                     cmt.profile_pic
                                       ? cmt.profile_pic
@@ -557,47 +532,49 @@ const Course = () => {
                           </div>
                         ))}
                     </div>
-                    <div className="border-t p-5 flex items-center">
-                      <textarea
-                        value={comment}
-                        onChange={(e) => setComment(e.target.value)}
-                        type="text"
-                        placeholder="Write a comment..."
-                        className="border rounded p-2 w-full resize-y" // Use the 'resize-y' class to allow vertical resizing
-                        rows={Math.min(
-                          Math.max(Math.ceil(comment.length / 28), 1),
-                          8
-                        )} // Limit to a maximum of 5 rows
-                        style={{ minHeight: "40px" }} // Optional: Set a minimum height
-                      />
-                      <div
-                        onClick={() =>
-                          handleAddComment(
-                            course.id,
-                            user.id,
-                            user.first_name,
-                            user.last_name,
-                            user.profile_pic
-                          )
-                        }
-                        className=" ml-5 border rounded-full p-2 flex items-center justify-center hover:bg-orange-400 cursor-pointer"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="white"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1"
-                          stroke="currentColor"
-                          className="w-6 h-6 text-orange-400"
+                    {user && isEnrolled && (
+                      <div className="border-t p-5 flex items-center">
+                        <textarea
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                          type="text"
+                          placeholder="Write a comment..."
+                          className="border rounded p-2 w-full resize-y" // Use the 'resize-y' class to allow vertical resizing
+                          rows={Math.min(
+                            Math.max(Math.ceil(comment.length / 28), 1),
+                            8
+                          )} // Limit to a maximum of 5 rows
+                          style={{ minHeight: "40px" }} // Optional: Set a minimum height
+                        />
+                        <div
+                          onClick={() =>
+                            handleAddComment(
+                              course.id,
+                              user.id,
+                              user.first_name,
+                              user.last_name,
+                              user.profile_pic
+                            )
+                          }
+                          className=" ml-5 border rounded-full p-2 flex items-center justify-center hover:bg-orange-400 cursor-pointer"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                          />
-                        </svg>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="white"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1"
+                            stroke="currentColor"
+                            className="w-6 h-6 text-orange-400"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                            />
+                          </svg>
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
 

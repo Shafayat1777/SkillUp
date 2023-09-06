@@ -33,7 +33,7 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        {user && <Navbar />}
+        <Navbar />
         <div className="pages">
           <Routes>
             <Route
@@ -56,18 +56,6 @@ function App() {
                   <Loading />
                 ) : user ? (
                   <Profile />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            <Route
-              path="/course/:id"
-              element={
-                loading ? (
-                  <Loading />
-                ) : user ? (
-                  <Course />
                 ) : (
                   <Navigate to="/login" />
                 )
@@ -122,6 +110,7 @@ function App() {
               }
             />
             <Route path="/courses" element={<Courses />} />
+            <Route path="/course/:id" element={<Course />} />
             <Route path="/about" element={<About />} />
             <Route path="/session" element={<Session />} />
             <Route path="*" element={<NotFound />} />

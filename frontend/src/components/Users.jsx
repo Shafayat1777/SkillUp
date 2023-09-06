@@ -1,9 +1,11 @@
 import format from "date-fns/format";
-import { useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { useState } from "react";
 
-const Users = ({ users, handleReload }) => {
+const Users = ({ users, handleReload, closeShowDetails }) => {
   const { user } = useAuthContext();
+  const [deleteError, setDeleteError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
   const handleChangeUserStatus = async (userId, userStatus) => {
     if (user) {
@@ -28,6 +30,30 @@ const Users = ({ users, handleReload }) => {
     }
   };
 
+  const handleClick = async (id) => {
+    const response = await fetch("http://localhost:4000/api/users/" + id, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
+    const json = await response.json();
+
+    if (response.ok) {
+      setSuccess(json.messg);
+      closeShowDetails();
+      handleReload();
+    }
+    if (!response.ok) {
+      setDeleteError(json.error);
+    }
+  };
+
+  const handleClose = () => {
+    setDeleteError(null);
+    setSuccess(null);
+  };
   return (
     <div className="overflow-auto rounded-lg shadow border">
       <table className="w-full">
@@ -103,7 +129,29 @@ const Users = ({ users, handleReload }) => {
               <td className="p-3 text-sm text-gray-700">
                 {format(new Date(user.updatedAt), "dd/MM/yyyy")}
               </td>
-              <td className="p-3 text-sm text-gray-700">
+              <td className="p-3 text-sm text-gray-700 flex">
+                {user.role !== "ADMIN" && (
+                  <div
+                    onClick={() => handleClick(user.id)}
+                    className="border mr-2 rounded-full w-8 h-8 flex items-center justify-center hover:text-red-500 hover:border-red-500 cursor-pointer"
+                  >
+                    <svg
+                      onClick={() => handleClick(user.id)}
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1"
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                      />
+                    </svg>
+                  </div>
+                )}
                 {user.isBlocked ? (
                   <div
                     onClick={() => handleChangeUserStatus(user.id, false)}
@@ -152,6 +200,57 @@ const Users = ({ users, handleReload }) => {
           ))}
         </tbody>
       </table>
+
+      <div className="">
+        {deleteError && (
+          <div className="relative mt-4 w-full border rounded border-red-400 text-center text-red-400 bg-red-100 tracking-wider">
+            {deleteError}
+            <div
+              onClick={handleClose}
+              className="absolute top-0.5 right-1 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+        )}
+        {success && (
+          <div className="relative mt-4 w-full border rounded border-green-400 text-center text-green-400 bg-green-100 tracking-wider">
+            {success}
+            <div
+              onClick={handleClose}
+              className="absolute top-0.5 right-1 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

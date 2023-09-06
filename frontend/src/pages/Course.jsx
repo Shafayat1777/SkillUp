@@ -1,3 +1,4 @@
+import format from "date-fns/format";
 import ProfileCard from "../components/profileCard";
 import LessionDetails from "../components/LessionDetails";
 import ChatRoom from "../components/ChatRoom";
@@ -26,6 +27,8 @@ const Course = () => {
   const [totalClicked, setTotalClicked] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [chat, setChat] = useState(false);
+  const [comments, setComments] = useState("");
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const fetchProgress = async (courseId) => {
@@ -145,11 +148,9 @@ const Course = () => {
     }
   }, [userProgress, reload]);
 
-  console.log(userProgress);
-
   const handleEnroll = (courseId) => {
     if (course) {
-      var progress = { courseId: course.id, totalClicked:0, totalCount:0};
+      var progress = { courseId: course.id, totalClicked: 0, totalCount: 0 };
 
       var less = [];
       course.lessons.forEach((lesson) => {
@@ -204,6 +205,45 @@ const Course = () => {
       setReload(false);
     } else {
       setReload(true);
+    }
+  };
+
+  const handleAddComment = async (
+    courseId,
+    userId,
+    first_name,
+    last_name,
+    profile_pic
+  ) => {
+    if (user && course) {
+      if (comment) {
+        const response = await fetch(
+          "http://localhost:4000/api/courses/comment/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user.token}`,
+            },
+            body: JSON.stringify({
+              comment,
+              courseId,
+              first_name,
+              last_name,
+              profile_pic,
+              userId,
+            }),
+          }
+        );
+
+        const json = await response.json();
+
+        if (!response.ok) {
+        }
+        if (response.ok) {
+          handleCourseReload();
+        }
+      }
     }
   };
 
@@ -473,6 +513,92 @@ const Course = () => {
                         reload={reload}
                       />
                     ))}
+
+                  <div className="mt-10 border">
+                    <div className="text-lg font-bold text-gray-600 px-5 py-2 border-b">
+                      Comments ({course.Comment && course.Comment.length})
+                    </div>
+                    <div className="px-5">
+                      {course.Comment &&
+                        course.Comment.map((cmt, i) => (
+                          <div
+                            key={cmt.id}
+                            className={`${
+                              i === course.Comment.length - 1 ? "" : "border-b"
+                            } flex py-3`}
+                          >
+                            <>
+                              <div className="w-12 h-12 border rounded-full flex items-center justify-center bg-gray-600 mr-2">
+                                <img
+                                  className="w-10 h-10"
+                                  src={`${
+                                    cmt.profile_pic
+                                      ? cmt.profile_pic
+                                      : "/img/default_avatar.png"
+                                  }`}
+                                  alt=""
+                                />
+                              </div>
+                              <div>
+                                <div className=" text-gray-600 font-bold">
+                                  {cmt.first_name + " " + cmt.last_name}
+                                  <span className="ml-2 text-sm text-gray-400 font-normal">
+                                    {format(
+                                      new Date(cmt.createdAt),
+                                      "dd/MM/yyyy"
+                                    )}
+                                  </span>
+                                </div>
+                                <div className="text-gray-600 text-sm font-semibold">
+                                  {cmt.comment}
+                                </div>
+                              </div>
+                            </>
+                          </div>
+                        ))}
+                    </div>
+                    <div className="border-t p-5 flex items-center">
+                      <textarea
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        type="text"
+                        placeholder="Write a comment..."
+                        className="border rounded p-2 w-full resize-y" // Use the 'resize-y' class to allow vertical resizing
+                        rows={Math.min(
+                          Math.max(Math.ceil(comment.length / 28), 1),
+                          8
+                        )} // Limit to a maximum of 5 rows
+                        style={{ minHeight: "40px" }} // Optional: Set a minimum height
+                      />
+                      <div
+                        onClick={() =>
+                          handleAddComment(
+                            course.id,
+                            user.id,
+                            user.first_name,
+                            user.last_name,
+                            user.profile_pic
+                          )
+                        }
+                        className=" ml-5 border rounded-full p-2 flex items-center justify-center hover:bg-orange-400 cursor-pointer"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="white"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1"
+                          stroke="currentColor"
+                          className="w-6 h-6 text-orange-400"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="w-full relative">

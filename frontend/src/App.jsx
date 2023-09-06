@@ -62,18 +62,6 @@ function App() {
               }
             />
             <Route
-              path="/courses"
-              element={
-                loading ? (
-                  <Loading />
-                ) : user ? (
-                  <Courses />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            <Route
               path="/course/:id"
               element={
                 loading ? (
@@ -117,7 +105,10 @@ function App() {
                 )
               }
             />
-            <Route path="/adminpanel" element={loading ? (
+            <Route
+              path="/adminpanel"
+              element={
+                loading ? (
                   <Loading />
                 ) : user ? (
                   user.role === "ADMIN" ? (
@@ -127,7 +118,10 @@ function App() {
                   )
                 ) : (
                   <Navigate to="/login" />
-                )} />
+                )
+              }
+            />
+            <Route path="/courses" element={<Courses />} />
             <Route path="/about" element={<About />} />
             <Route path="/session" element={<Session />} />
             <Route path="*" element={<NotFound />} />

@@ -45,7 +45,12 @@ const deleteUser = async (req, res) => {
         id: id,
       },
     });
-    res.status(200).json(data);
+    res
+      .status(200)
+      .json(
+        "Successfully deleted user:",
+        data.first_name + " " + data.last_name_name
+      );
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -257,7 +262,7 @@ const updateProgressContent = async (req, res) => {
       if (course) {
         course.totalClicked = TotalClicked;
         course.totalCount = TotalCount;
-        console.log(course)
+        console.log(course);
       }
 
       const updatedUser = await prisma.user.update({
@@ -360,7 +365,7 @@ const updateProgressQuiz = async (req, res) => {
       if (course) {
         course.totalClicked = TotalClicked;
         course.totalCount = TotalCount;
-        console.log(course)
+        console.log(course);
       }
 
       const updatedUser = await prisma.user.update({
@@ -413,7 +418,8 @@ const loginUser = async (req, res) => {
     res.status(200).json({
       id: user.id,
       role: user.role,
-      fist_name: user.first_name,
+      first_name: user.first_name,
+      last_name: user.last_name,
       profile_pic: user.profile_pic,
       token,
     });

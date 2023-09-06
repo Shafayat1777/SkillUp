@@ -70,7 +70,7 @@ const Navbar = () => {
           >
             <h1>Courses</h1>
           </Link>
-          {user.role && user.role === "ADMIN" && (
+          {user && user.role && user.role === "ADMIN" && (
             <Link
               onClick={() => handleLinkClick("/adminpanel")}
               className={`${
@@ -83,7 +83,7 @@ const Navbar = () => {
               <h1>Admin panel</h1>
             </Link>
           )}
-          {user.role && user.role !== "TEACHER" && (
+          {user && user.role && user.role !== "TEACHER" && (
             <Link
               onClick={() => handleLinkClick("/enrolled")}
               className={`${
@@ -96,7 +96,7 @@ const Navbar = () => {
               <h1>Enrolled</h1>
             </Link>
           )}
-          {user.role && user.role !== "STUDENT" && (
+          {user && user.role && user.role !== "STUDENT" && (
             <Link
               onClick={() => handleLinkClick("/dashboard")}
               className={`${

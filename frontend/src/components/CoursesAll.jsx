@@ -1,20 +1,68 @@
 import format from "date-fns/format";
 import { useUpdateCourseState } from "../hooks/useUpdateCourseStatus";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useState } from "react";
 
-const CoursesAll = ({ courses, courseStatus, handleShowDetails, handleReload }) => {
+const CoursesAll = ({
+  courses,
+  courseStatus,
+  handleShowDetails,
+  handleReload,
+  closeShowDetails,
+}) => {
   const { updatecoursestate } = useUpdateCourseState();
-  const handleChangeUserStatus = (course) => {
-    if (course) {
-      if (course.course_status === "PROCESSING") {
-        updatecoursestate(course.id, "ACTIVE");
-        handleReload();
-      } else {
-        updatecoursestate(course.id, "PROCESSING");
+  const { user } = useAuthContext();
+  const [deleteError, setDeleteError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const handleChangeUserStatus = async (courseId, courseStatus) => {
+    if (user) {
+      const response = await fetch(
+        `http://localhost:4000/api/courses/course/updateCourseStatus/${courseId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({
+            courseStatus,
+          }),
+        }
+      );
+      const json = await response.json();
+      if (response.ok) {
         handleReload();
       }
     }
   };
 
+  const handleClick = async (id) => {
+    const response = await fetch(
+      "http://localhost:4000/api/courses/courses/" + id,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+
+    const json = await response.json();
+
+    if (response.ok) {
+      setSuccess(json.messg);
+      closeShowDetails();
+      handleReload();
+    }
+    if (!response.ok) {
+      setDeleteError(json.error);
+    }
+  };
+  const handleClose = () => {
+    setDeleteError(null);
+    setSuccess(null);
+  };
   return (
     <div className="overflow-auto rounded-lg shadow border">
       <table className="w-full">
@@ -83,11 +131,11 @@ const CoursesAll = ({ courses, courseStatus, handleShowDetails, handleReload }) 
                 </td>
                 <td className="p-3 text-sm text-gray-700 flex justify-evenly">
                   <div
-                    onClick={null}
+                    onClick={() => handleClick(course.id)}
                     className="border mr-2 rounded-full w-8 h-8 flex items-center justify-center hover:text-red-500 hover:border-red-500 cursor-pointer"
                   >
                     <svg
-                      onClick={null}
+                      onClick={() => handleClick(course.id)}
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -104,7 +152,9 @@ const CoursesAll = ({ courses, courseStatus, handleShowDetails, handleReload }) 
                   </div>
                   {course.course_status === "PROCESSING" ? (
                     <div
-                      onClick={() => handleChangeUserStatus(course)}
+                      onClick={() =>
+                        handleChangeUserStatus(course.id, "ACTIVE")
+                      }
                       className="flex items-center border px-2 py-1 rounded text-normal font-semibold hover:bg-green-200 cursor-pointer"
                     >
                       <svg
@@ -125,7 +175,9 @@ const CoursesAll = ({ courses, courseStatus, handleShowDetails, handleReload }) 
                     </div>
                   ) : (
                     <div
-                      onClick={() => handleChangeUserStatus(course)}
+                      onClick={() =>
+                        handleChangeUserStatus(course.id, "PROCESSING")
+                      }
                       className="flex items-center border px-2 py-1 rounded text-normal font-semibold hover:bg-gray-200 cursor-pointer"
                     >
                       <svg
@@ -150,6 +202,56 @@ const CoursesAll = ({ courses, courseStatus, handleShowDetails, handleReload }) 
             ))}
         </tbody>
       </table>
+      <div className="">
+        {deleteError && (
+          <div className="relative mt-4 w-full border rounded border-red-400 text-center text-red-400 bg-red-100 tracking-wider">
+            {deleteError}
+            <div
+              onClick={handleClose}
+              className="absolute top-0.5 right-1 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+        )}
+        {success && (
+          <div className="relative mt-4 w-full border rounded border-green-400 text-center text-green-400 bg-green-100 tracking-wider">
+            {success}
+            <div
+              onClick={handleClose}
+              className="absolute top-0.5 right-1 cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -20,6 +20,7 @@ import Unauthorized from "./Unauthorized";
 import AdminPanel from "./pages/AdminPanel";
 import Category from "./pages/Category";
 import Search from "./pages/Search";
+import Footer from "./components/Footer";
 
 function App() {
   const { user } = useAuthContext();
@@ -120,6 +121,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
+        <Footer/>
       </BrowserRouter>
     </div>
   );

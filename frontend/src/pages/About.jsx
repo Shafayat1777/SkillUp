@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet";
+import AboutSection from "../components/AboutSection";
 
 const About = () => {
   return (
@@ -11,9 +12,7 @@ const About = () => {
         </Helmet>
       </div>
 
-      <div>
-        <img src="/img/assets/certificate.svg" alt="Certificate" />
-      </div>
+      <AboutSection/>
     </div>
   );
 };

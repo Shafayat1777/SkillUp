@@ -55,6 +55,65 @@ const getallCourse = async (req, res) => {
   }
 };
 
+// get all Course by catagory
+const getAllCoursesByCategory = async (req, res) => {
+  const { category } = req.params; // Assuming you pass the category as a URL parameter
+
+  try {
+    const data = await prisma.courses.findMany({
+      where: {
+        category: category, // Replace 'category' with the actual field name in your Courses model
+      },
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        students: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            progress: true,
+            socials: true,
+            isBlocked: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        lessons: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 // get my course
 const getmyCourse = async (req, res) => {
   const user_id = req.user.id;
@@ -740,4 +799,5 @@ module.exports = {
   addQuiz,
   updateCourseStatus,
   addComment,
+  getAllCoursesByCategory
 };

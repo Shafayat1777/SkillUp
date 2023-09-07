@@ -21,6 +21,7 @@ const {
   addQuiz,
   updateCourseStatus,
   addComment,
+  getAllCoursesByCategory,
 } = require("../controllers/courseController");
 
 const router = express.Router();
@@ -29,6 +30,9 @@ const router = express.Router();
 
 // GET all courses
 router.get("/courses", getallCourse); // Use a unique identifier, e.g., "/courses" instead of "/"
+
+// GET all courses by catagory
+router.get("/coursesBycategory/:category", getAllCoursesByCategory);
 
 // GET single course
 router.get("/courses/:id", getoneCourse); // Adjust the route for getting a single course as well

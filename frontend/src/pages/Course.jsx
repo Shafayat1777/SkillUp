@@ -89,7 +89,7 @@ const Course = () => {
 
       const totalStudentCount = course.students.length;
 
-      if (course.students) {
+      if (course.students && user) {
         course.students.forEach((student) => {
           if (student.id === user.id) {
             setIsEnrolled(true);
@@ -240,6 +240,9 @@ const Course = () => {
     }
   };
 
+  const handleCloseChat =() => {
+    setChat(false)
+  }
   return (
     <div>
       {course && (
@@ -610,7 +613,7 @@ const Course = () => {
             <div
               className={` fixed bottom-0 transition-all duration-2000 ease-out right-2`}
             >
-              <ChatRoom />
+              <ChatRoom handleCloseChat={handleCloseChat}/>
             </div>
           )}
         </div>

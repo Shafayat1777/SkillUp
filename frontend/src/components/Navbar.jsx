@@ -182,7 +182,7 @@ const Navbar = () => {
             </svg>
 
             {ham && (
-              <div className="w-60 border bg-white  absolute top-9 right-[-410%] md:right-[-740%]">
+              <div className="w-60 border bg-white  absolute top-9 right-[-410%] md:right-[-740%] z-50">
                 <Link
                   onClick={() => handleLinkClick("/")}
                   className={`${activeLink === "/" ? " text-orange-500" : ""}`}

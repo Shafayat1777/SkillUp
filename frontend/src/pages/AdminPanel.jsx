@@ -43,55 +43,59 @@ const AdminPanel = () => {
   };
 
   return (
-    <div className="flex">
-      <div className="Side_Nav w-52 h-screen border"></div>
-
-      <div className=" border">
-        <div className="border-y py-2 px-5 text-lg font-semibold bg-slate-100">
-          Enrolled Students
-        </div>
-        {users && (
-          <div className="py-10">
-            <Users
-              users={users}
-              handleReload={handleReload}
-              closeShowDetails={closeShowDetails}
-            />
+    <div className=" p-10 ">
+      <div className="">
+        <div className="border mb-10">
+          <div className="border-y py-2 px-5 text-lg font-semibold bg-slate-100">
+            Enrolled Students
           </div>
-        )}
-
-        <div className="border-y py-2 px-5 text-lg font-semibold bg-slate-100">
-          Processing Courses
+          {users && (
+            <div className="max-h-xs overflow-auto">
+              <Users
+                users={users}
+                handleReload={handleReload}
+                closeShowDetails={closeShowDetails}
+              />
+            </div>
+          )}
         </div>
-        {courses && (
-          <div className="py-10">
-            <CoursesAll
-              courses={courses}
-              courseStatus={"PROCESSING"}
-              handleShowDetails={handleShowDetails}
-              handleReload={handleReload}
-              closeShowDetails={closeShowDetails}
-            />
-          </div>
-        )}
 
-        <div className="border-y py-2 px-5 text-lg font-semibold bg-slate-100">
-          Active Courses
-        </div>
-        {courses && (
-          <div className="py-10">
-            <CoursesAll
-              courses={courses}
-              courseStatus={"ACTIVE"}
-              handleShowDetails={handleShowDetails}
-              handleReload={handleReload}
-              closeShowDetails={closeShowDetails}
-            />
+        <div className="border mb-10 rounded-md">
+          <div className="border-y py-2 px-5 text-lg font-semibold bg-slate-100">
+            Processing Courses
           </div>
-        )}
+          {courses && (
+            <div className="max-h-xs overflow-auto">
+              <CoursesAll
+                courses={courses}
+                courseStatus={"PROCESSING"}
+                handleShowDetails={handleShowDetails}
+                handleReload={handleReload}
+                closeShowDetails={closeShowDetails}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="border mb-10 rounded-md">
+          <div className="border-y py-2 px-5 text-lg font-semibold bg-slate-100">
+            Active Courses
+          </div>
+          {courses && (
+            <div className="max-h-xs overflow-auto">
+              <CoursesAll
+                courses={courses}
+                courseStatus={"ACTIVE"}
+                handleShowDetails={handleShowDetails}
+                handleReload={handleReload}
+                closeShowDetails={closeShowDetails}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className=" px-5 py-10 w-full">
+      <div className=" w-full">
         {showDetails && (
           <MyCourseDetails
             courseId={showDetails}

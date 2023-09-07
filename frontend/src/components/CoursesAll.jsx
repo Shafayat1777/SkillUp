@@ -129,10 +129,10 @@ const CoursesAll = ({
                 <td className="p-3 text-sm text-gray-700">
                   {format(new Date(course.updatedAt), "dd/MM/yyyy")}
                 </td>
-                <td className="p-3 text-sm text-gray-700 flex justify-evenly">
+                <td className="p-3 text-sm text-gray-700 flex">
                   <div
                     onClick={() => handleClick(course.id)}
-                    className="border mr-2 rounded-full w-8 h-8 flex items-center justify-center hover:text-red-500 hover:border-red-500 cursor-pointer"
+                    className="border mr-3 rounded-full w-8 h-8 flex items-center justify-center hover:text-red-500 hover:border-red-500 cursor-pointer"
                   >
                     <svg
                       onClick={() => handleClick(course.id)}

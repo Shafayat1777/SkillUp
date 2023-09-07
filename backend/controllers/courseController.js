@@ -114,6 +114,80 @@ const getAllCoursesByCategory = async (req, res) => {
   }
 };
 
+// get all Course by Search
+const getAllCoursesBySearch = async (req, res) => {
+  const { search } = req.params;
+  console.log(search)
+  try {
+    let coursesQuery = {
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        students: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            progress: true,
+            socials: true,
+            isBlocked: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        lessons: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
+      },
+    };
+
+    if (search) {
+      // Filter by search term
+      coursesQuery = {
+        ...coursesQuery,
+        where: {
+          OR: [
+            {
+              title: {
+                startsWith: search, // Use 'startsWith' for similarity search
+              },
+            }
+          ],
+        },
+      };
+    }
+
+    const data = await prisma.courses.findMany(coursesQuery);
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 // get my course
 const getmyCourse = async (req, res) => {
   const user_id = req.user.id;
@@ -799,5 +873,6 @@ module.exports = {
   addQuiz,
   updateCourseStatus,
   addComment,
-  getAllCoursesByCategory
+  getAllCoursesByCategory,
+  getAllCoursesBySearch,
 };

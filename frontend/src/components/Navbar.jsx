@@ -8,6 +8,7 @@ const Navbar = () => {
   const { user } = useAuthContext();
   const [ham, setHam] = useState(false);
   const [activeLink, setActiveLink] = useState(null);
+  const [search, setSearch] = useState("");
 
   const handleClick = () => {
     logout();
@@ -36,7 +37,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="text-gray-500 hidden lg:flex">
+        <div className="text-gray-500 hidden lg:flex items-center">
           <Link
             onClick={() => handleLinkClick("/")}
             className={`${
@@ -123,6 +124,17 @@ const Navbar = () => {
               <h1>Profile</h1>
             </Link>
           )}
+          <input
+            onChange={(e) => setSearch(e.target.value)}
+            className="ml-6 border p-1"
+            type="text"
+            placeholder="Search..."
+          />
+          <Link to={`/search/${search}`}>
+            <div className="border-r border-y w-10 p-1 hover:bg-gray-200 hover:text-gray-500 font-semibold">
+              Go
+            </div>
+          </Link>
         </div>
 
         <div className="flex items-center">
@@ -182,7 +194,20 @@ const Navbar = () => {
             </svg>
 
             {ham && (
-              <div className="w-60 border bg-white  absolute top-9 right-[-410%] md:right-[-740%] z-50">
+              <div className="w-72 border bg-white  absolute top-9 right-[-410%] md:right-[-740%] z-50">
+                <div className="flex items-center">
+                  <input
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="border p-1"
+                    type="text"
+                    placeholder="Search..."
+                  />
+                  <Link to={`/search/${search}`}>
+                    <div className="border-r border-y w-10 p-1 hover:bg-gray-200 hover:text-gray-500 font-semibold">
+                      Go
+                    </div>
+                  </Link>
+                </div>
                 <Link
                   onClick={() => handleLinkClick("/")}
                   className={`${activeLink === "/" ? " text-orange-500" : ""}`}

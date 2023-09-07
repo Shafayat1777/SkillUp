@@ -5,16 +5,16 @@ import { Helmet } from "react-helmet";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-const Category = () => {
+const Search = () => {
   const { user } = useAuthContext();
-  const { category } = useParams();
+  const { search } = useParams();
   const [courses, setCourses] = useState(null);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
       const respons = await fetch(
-        `http://localhost:4000/api/courses/coursesBycategory/${category}`,
+        `http://localhost:4000/api/courses/coursesBysearch/${search}`,
         {}
       );
       const json = await respons.json();
@@ -32,7 +32,7 @@ const Category = () => {
       <div className="head">
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Courses - {category} || SkillUP</title>
+          <title>Courses - Search || SkillUP</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
       </div>
@@ -109,7 +109,7 @@ const Category = () => {
               to={`/category/Probability & Satistics`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Probability & Satistics
+                Probability & Satistics
               </h3>
             </Link>
             <Link
@@ -119,7 +119,7 @@ const Category = () => {
               to={`/category/Importing & Cleaning Data`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Importing & Cleaning Data
+                Importing & Cleaning Data
               </h3>
             </Link>
             <Link
@@ -129,7 +129,7 @@ const Category = () => {
               to={`/category/AI & Machine Learning`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Applied Finance
+                Applied Finance
               </h3>
             </Link>
             <Link
@@ -139,7 +139,7 @@ const Category = () => {
               to={`/category/Basic Python Programming`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Basic Python Programming
+                Basic Python Programming
               </h3>
             </Link>
             <Link
@@ -149,7 +149,7 @@ const Category = () => {
               to={`/category/Web Development With PHP`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Web Development With PHP
+                Web Development With PHP
               </h3>
             </Link>
             <Link
@@ -159,7 +159,7 @@ const Category = () => {
               to={`/category/Android App Development With Flutter`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Android App Development With Flutter
+                Android App Development With Flutter
               </h3>
             </Link>
             <Link
@@ -169,7 +169,7 @@ const Category = () => {
               to={`/category/Software Testing`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Software Testing
+                Software Testing
               </h3>
             </Link>
             <Link
@@ -179,7 +179,7 @@ const Category = () => {
               to={`/category/Programming`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Programming
+                Programming
               </h3>
             </Link>
             <Link
@@ -189,7 +189,7 @@ const Category = () => {
               to={`/category/Management`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Management
+                Management
               </h3>
             </Link>
             <Link
@@ -199,7 +199,7 @@ const Category = () => {
               to={`/category/Case Study`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Case Study
+                Case Study
               </h3>
             </Link>
             <Link
@@ -209,7 +209,7 @@ const Category = () => {
               to={`/category/UI UX Desing`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              UI UX Desing
+                UI UX Desing
               </h3>
             </Link>
             <Link
@@ -219,7 +219,7 @@ const Category = () => {
               to={`/category/Others`}
             >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
-              Others
+                Others
               </h3>
             </Link>
           </div>
@@ -254,4 +254,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default Search;

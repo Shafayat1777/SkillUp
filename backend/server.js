@@ -11,14 +11,11 @@ const app = express();
 // cors
 // app.use(
 //   cors({
-//     origin: ["https://28a1-103-86-108-192.ngrok-free.app"],
+//     origin: "*",
 //     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 //   })
 // );
-
-app.use(cors(
-  { origin: 'https://28a1-103-86-108-192.ngrok-free.app'}
-))
+app.use(cors())
 
 // middeleware
 app.use(express.json()); // convers all request to json format
@@ -43,7 +40,7 @@ const server = app.listen(process.env.PORT, () => {
 // initialize socket
 const io = socket(server, {
   cors: {
-    origin: ["https://28a1-103-86-108-192.ngrok-free.app"],
+    origin: "*",
   },
 });
 

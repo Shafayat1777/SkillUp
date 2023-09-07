@@ -19,6 +19,8 @@ import Enrolled from "./pages/Enrolled";
 import NotFound from "./NotFound";
 import Unauthorized from "./Unauthorized";
 import AdminPanel from "./pages/AdminPanel";
+import Category from "./pages/Category";
+import Search from "./pages/Search";
 
 function App() {
   const { user } = useAuthContext();
@@ -57,18 +59,6 @@ function App() {
                   <Loading />
                 ) : user ? (
                   <Profile />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            <Route
-              path="/course/:id"
-              element={
-                loading ? (
-                  <Loading />
-                ) : user ? (
-                  <Course />
                 ) : (
                   <Navigate to="/login" />
                 )
@@ -123,6 +113,9 @@ function App() {
               }
             />
             <Route path="/courses" element={<Courses />} />
+            <Route path="/course/:id" element={<Course />} />
+            <Route path="/category/:category" element={<Category />} />
+            <Route path="/search/:search" element={<Search />} />
             <Route path="/about" element={<About />} />
             <Route path="/session" element={<Session />} />
             <Route path="*" element={<NotFound />} />

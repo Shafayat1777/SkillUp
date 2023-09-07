@@ -8,6 +8,7 @@ const Navbar = () => {
   const { user } = useAuthContext();
   const [ham, setHam] = useState(false);
   const [activeLink, setActiveLink] = useState(null);
+  const [search, setSearch] = useState("");
 
   const handleClick = () => {
     logout();
@@ -36,7 +37,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        <div className="text-gray-500 hidden lg:flex">
+        <div className="text-gray-500 hidden lg:flex items-center">
           <Link
             onClick={() => handleLinkClick("/")}
             className={`${
@@ -110,16 +111,29 @@ const Navbar = () => {
             </Link>
           )}
 
-          <Link
-            onClick={() => handleLinkClick("/profile")}
-            className={`${
-              activeLink === "/profile"
-                ? "navLink ml-6 border-b-4 border-orange-500"
-                : "navLink ml-6"
-            }`}
-            to="/profile"
-          >
-            <h1>Profile</h1>
+          {user && (
+            <Link
+              onClick={() => handleLinkClick("/profile")}
+              className={`${
+                activeLink === "/profile"
+                  ? "navLink ml-6 border-b-4 border-orange-500"
+                  : "navLink ml-6"
+              }`}
+              to="/profile"
+            >
+              <h1>Profile</h1>
+            </Link>
+          )}
+          <input
+            onChange={(e) => setSearch(e.target.value)}
+            className="ml-6 border p-1"
+            type="text"
+            placeholder="Search..."
+          />
+          <Link to={`/search/${search}`}>
+            <div className="border-r border-y w-10 p-1 hover:bg-gray-200 hover:text-gray-500 font-semibold">
+              Go
+            </div>
           </Link>
         </div>
 
@@ -180,7 +194,20 @@ const Navbar = () => {
             </svg>
 
             {ham && (
-              <div className="w-60 border bg-white  absolute top-9 right-[-410%] md:right-[-740%]">
+              <div className="w-72 border bg-white  absolute top-9 right-[-410%] md:right-[-740%] z-50">
+                <div className="flex items-center">
+                  <input
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="border p-1"
+                    type="text"
+                    placeholder="Search..."
+                  />
+                  <Link to={`/search/${search}`}>
+                    <div className="border-r border-y w-10 p-1 hover:bg-gray-200 hover:text-gray-500 font-semibold">
+                      Go
+                    </div>
+                  </Link>
+                </div>
                 <Link
                   onClick={() => handleLinkClick("/")}
                   className={`${activeLink === "/" ? " text-orange-500" : ""}`}
@@ -257,7 +284,7 @@ const Navbar = () => {
                     <h1 className="ml-3">Course</h1>
                   </div>
                 </Link>
-                {user.role && user.role !== "TEACHER" && (
+                {user && user.role && user.role !== "TEACHER" && (
                   <Link
                     onClick={() => handleLinkClick("/enrolled")}
                     className={`${
@@ -285,7 +312,35 @@ const Navbar = () => {
                     </div>
                   </Link>
                 )}
-                {user.role && user.role !== "STUDENT" && (
+                {user && user.role && user.role === "ADMIN" && (
+                  <Link
+                    onClick={() => handleLinkClick("/adminpanel")}
+                    className={`${
+                      activeLink === "/adminpanel" ? " text-orange-500" : ""
+                    }`}
+                    to="/adminpanel"
+                  >
+                    <div className="hover:bg-orange-200 p-3 flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 13.5V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m12-3V3.75m0 9.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 3.75V16.5m-6-9V3.75m0 3.75a1.5 1.5 0 010 3m0-3a1.5 1.5 0 000 3m0 9.75V10.5"
+                        />
+                      </svg>
+
+                      <h1 className="ml-3">Admin Panel</h1>
+                    </div>
+                  </Link>
+                )}
+                {user && user.role && user.role !== "STUDENT" && (
                   <Link
                     onClick={() => handleLinkClick("/dashboard")}
                     className={`${
@@ -313,32 +368,34 @@ const Navbar = () => {
                     </div>
                   </Link>
                 )}
-                <Link
-                  onClick={() => handleLinkClick("/profile")}
-                  className={`${
-                    activeLink === "/profile" ? " text-orange-500" : ""
-                  }`}
-                  to="/profile"
-                >
-                  <div className="hover:bg-orange-200 p-3 flex items-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
+                {user && (
+                  <Link
+                    onClick={() => handleLinkClick("/profile")}
+                    className={`${
+                      activeLink === "/profile" ? " text-orange-500" : ""
+                    }`}
+                    to="/profile"
+                  >
+                    <div className="hover:bg-orange-200 p-3 flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
 
-                    <h1 className="ml-3">Profile</h1>
-                  </div>
-                </Link>
+                      <h1 className="ml-3">Profile</h1>
+                    </div>
+                  </Link>
+                )}
               </div>
             )}
           </div>

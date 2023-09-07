@@ -43,7 +43,7 @@ const CourseCard = ({ course }) => {
           <div className="p-6 mt-6 border-t flex items-center">
             <img
               className="rounded-full w-16"
-              src="./img/default_avatar.png"
+              src="/img/default_avatar.png"
               alt=""
             />
             <div className="ml-4">

@@ -21,21 +21,30 @@ const {
   addQuiz,
   updateCourseStatus,
   addComment,
+  getAllCoursesByCategory,
+  getAllCoursesBySearch
 } = require("../controllers/courseController");
 
 const router = express.Router();
 
-// check for authentication
-router.use(requireAuth);
+
 
 // GET all courses
 router.get("/courses", getallCourse); // Use a unique identifier, e.g., "/courses" instead of "/"
 
-// GET all courses
-router.get("/mycourses", getmyCourse); // Use a unique identifier, e.g., "/courses" instead of "/"
+// GET all courses by catagory
+router.get("/coursesBycategory/:category", getAllCoursesByCategory);
+
+// GET all courses by search
+router.get("/coursesBysearch/:search", getAllCoursesBySearch);
 
 // GET single course
 router.get("/courses/:id", getoneCourse); // Adjust the route for getting a single course as well
+
+// check for authentication
+router.use(requireAuth);
+// GET all courses
+router.get("/mycourses", getmyCourse); // Use a unique identifier, e.g., "/courses" instead of "/"
 
 // POST new course
 router.post("/courses", createCourse); // Adjust the route for creating a new course

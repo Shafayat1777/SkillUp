@@ -55,6 +55,139 @@ const getallCourse = async (req, res) => {
   }
 };
 
+// get all Course by catagory
+const getAllCoursesByCategory = async (req, res) => {
+  const { category } = req.params; // Assuming you pass the category as a URL parameter
+
+  try {
+    const data = await prisma.courses.findMany({
+      where: {
+        category: category, // Replace 'category' with the actual field name in your Courses model
+      },
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        students: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            progress: true,
+            socials: true,
+            isBlocked: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        lessons: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// get all Course by Search
+const getAllCoursesBySearch = async (req, res) => {
+  const { search } = req.params;
+  console.log(search)
+  try {
+    let coursesQuery = {
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        students: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            progress: true,
+            socials: true,
+            isBlocked: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        lessons: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
+      },
+    };
+
+    if (search) {
+      // Filter by search term
+      coursesQuery = {
+        ...coursesQuery,
+        where: {
+          OR: [
+            {
+              title: {
+                startsWith: search, // Use 'startsWith' for similarity search
+              },
+            }
+          ],
+        },
+      };
+    }
+
+    const data = await prisma.courses.findMany(coursesQuery);
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 // get my course
 const getmyCourse = async (req, res) => {
   const user_id = req.user.id;
@@ -245,6 +378,7 @@ const deleteCourse = async (req, res) => {
             quiz: true,
           },
         },
+        Comment: true,
       },
     });
 
@@ -303,6 +437,18 @@ const deleteCourse = async (req, res) => {
         },
       },
     });
+
+    // Delete the comments related to the course
+    const commentIds = course.Comment.map((comment) => comment.id);
+    await prisma.comment.deleteMany({
+      where: {
+        id: {
+          in: commentIds,
+        },
+      },
+    });
+
+    console.log(course);
 
     // Delete the course itself
     await prisma.courses.delete({
@@ -674,7 +820,7 @@ const addComment = async (req, res) => {
   const { comment, courseId, first_name, last_name, profile_pic } = req.body;
   const authorId = req.user.id;
 
-  console.log(first_name, last_name)
+  console.log(first_name, last_name);
   // add data to db
   try {
     if (!comment) {
@@ -727,4 +873,6 @@ module.exports = {
   addQuiz,
   updateCourseStatus,
   addComment,
+  getAllCoursesByCategory,
+  getAllCoursesBySearch,
 };

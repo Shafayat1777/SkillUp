@@ -29,7 +29,7 @@ const ProfileCard = ({ user }) => {
                   className={
                     user.role === "TEACHER"
                       ? "text-xs  text-purple-500"
-                      : "text-xs  text-blue-500"
+                      : user.role === "STUDENT"? "text-xs  text-blue-500": "text-xs  text-yellow-500"
                   }
                 >
                   {user.role}

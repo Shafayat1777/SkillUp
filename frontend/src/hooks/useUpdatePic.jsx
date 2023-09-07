@@ -27,7 +27,7 @@ export const useUpdatePic = () => {
 
     try {
       const { data } = await axios.patch(
-        "http://localhost:4000/api/users/user/updatePic",
+        `${process.env.REACT_APP_BACKEND_HOST}/users/user/updatePic`,
         contentData,
         config
       );

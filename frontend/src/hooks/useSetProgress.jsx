@@ -7,7 +7,7 @@ export const useSetProgress = () => {
   const setProgress = async (progress) => {
 
     const response = await fetch(
-      "http://localhost:4000/api/users/setProgress/",
+      `${process.env.REACT_APP_BACKEND_HOST}/users/setProgress/`,
       {
         method: "PATCH",
         headers: {

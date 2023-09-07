@@ -1,5 +1,7 @@
+import format from "date-fns/format";
 import ProfileCard from "../components/profileCard";
 import LessionDetails from "../components/LessionDetails";
+import ChatRoom from "../components/ChatRoom";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -24,11 +26,13 @@ const Course = () => {
   const [reload, setReload] = useState(false);
   const [totalClicked, setTotalClicked] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
+  const [chat, setChat] = useState(false);
+  const [comment, setComment] = useState("");
 
   useEffect(() => {
     const fetchProgress = async (courseId) => {
       const respons = await fetch(
-        `http://localhost:4000/api/users/user/userProgress/${courseId}`,
+        `${process.env.REACT_APP_BACKEND_HOST}/users/user/userProgress/${courseId}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -44,25 +48,18 @@ const Course = () => {
 
     const fetchCourse = async () => {
       const respons = await fetch(
-        `http://localhost:4000/api/courses/courses/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
+        `${process.env.REACT_APP_BACKEND_HOST}/courses/courses/${id}`
       );
       const json = await respons.json();
 
       if (respons.ok) {
         setCourse(json);
 
-        fetchProgress(json.id);
+        if (user) fetchProgress(json.id);
       }
     };
 
-    if (user) {
-      fetchCourse();
-    }
+    fetchCourse();
   }, [user, id, reload]);
 
   useEffect(() => {
@@ -91,7 +88,7 @@ const Course = () => {
 
       const totalStudentCount = course.students.length;
 
-      if (course.students) {
+      if (course.students && user) {
         course.students.forEach((student) => {
           if (student.id === user.id) {
             setIsEnrolled(true);
@@ -143,11 +140,9 @@ const Course = () => {
     }
   }, [userProgress, reload]);
 
-  console.log(userProgress);
-
   const handleEnroll = (courseId) => {
     if (course) {
-      var progress = { courseId: course.id };
+      var progress = { courseId: course.id, totalClicked: 0, totalCount: 0 };
 
       var less = [];
       course.lessons.forEach((lesson) => {
@@ -205,10 +200,52 @@ const Course = () => {
     }
   };
 
+  const handleAddComment = async (
+    courseId,
+    userId,
+    first_name,
+    last_name,
+    profile_pic
+  ) => {
+    if (user && course) {
+      if (comment) {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_HOST}/courses/comment/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user.token}`,
+            },
+            body: JSON.stringify({
+              comment,
+              courseId,
+              first_name,
+              last_name,
+              profile_pic,
+              userId,
+            }),
+          }
+        );
+
+        const json = await response.json();
+
+        if (!response.ok) {
+        }
+        if (response.ok) {
+          handleCourseReload();
+        }
+      }
+    }
+  };
+
+  const handleCloseChat =() => {
+    setChat(false)
+  }
   return (
     <div>
       {course && (
-        <div>
+        <div className=" relative">
           <div className="head">
             <Helmet>
               <meta charSet="utf-8" />
@@ -273,31 +310,12 @@ const Course = () => {
                   )}
                 </div>
                 <div className="mb-5">
-                  <button
-                    onClick={handleProgress}
-                    className=" py-1 px-3 border rounded-sm font-semibold text-white hover:bg-gray-700"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6 inline mr-2"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
-                      />
-                    </svg>
-                    Bookmark
-                  </button>
+                  
                   {user && user.role !== "TEACHER" && (
                     <button
                       disabled={isEnrolled}
                       onClick={() => handleEnroll(course.id)}
-                      className={`ml-5 py-1 px-3 border rounded-sm font-semibold text-white ${
+                      className={` py-1 px-3 border rounded-sm font-semibold text-white ${
                         isEnrolled
                           ? "border-yellow-400"
                           : "hover:bg-gray-700 hover:border-yellow-400"
@@ -460,6 +478,7 @@ const Course = () => {
                               : null
                             : null
                         }
+                        isEnrolled={isEnrolled}
                         key={lesson.id}
                         lesson={lesson}
                         no={i + 1}
@@ -471,14 +490,131 @@ const Course = () => {
                         reload={reload}
                       />
                     ))}
+
+                  <div className="mt-10 border">
+                    <div className="text-lg font-bold text-gray-600 px-5 py-2 border-b">
+                      Comments ({course.Comment && course.Comment.length})
+                    </div>
+                    <div className="px-5">
+                      {course.Comment &&
+                        course.Comment.map((cmt, i) => (
+                          <div
+                            key={cmt.id}
+                            className={`${
+                              i === course.Comment.length - 1 ? "" : "border-b"
+                            } flex py-3`}
+                          >
+                            <>
+                              <div className="w-12 h-12 border rounded-full flex items-center justify-center bg-gray-600 mr-2">
+                                <img
+                                  className="w-10 h-10 rounded-full"
+                                  src={`${
+                                    cmt.profile_pic
+                                      ? cmt.profile_pic
+                                      : "/img/default_avatar.png"
+                                  }`}
+                                  alt=""
+                                />
+                              </div>
+                              <div>
+                                <div className=" text-gray-600 font-bold">
+                                  {cmt.first_name + " " + cmt.last_name}
+                                  <span className="ml-2 text-sm text-gray-400 font-normal">
+                                    {format(
+                                      new Date(cmt.createdAt),
+                                      "dd/MM/yyyy"
+                                    )}
+                                  </span>
+                                </div>
+                                <div className="text-gray-600 text-sm font-semibold">
+                                  {cmt.comment}
+                                </div>
+                              </div>
+                            </>
+                          </div>
+                        ))}
+                    </div>
+                    {user && isEnrolled && (
+                      <div className="border-t p-5 flex items-center">
+                        <textarea
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                          type="text"
+                          placeholder="Write a comment..."
+                          className="border rounded p-2 w-full resize-y" // Use the 'resize-y' class to allow vertical resizing
+                          rows={Math.min(
+                            Math.max(Math.ceil(comment.length / 28), 1),
+                            8
+                          )} // Limit to a maximum of 5 rows
+                          style={{ minHeight: "40px" }} // Optional: Set a minimum height
+                        />
+                        <div
+                          onClick={() =>
+                            handleAddComment(
+                              course.id,
+                              user.id,
+                              user.first_name,
+                              user.last_name,
+                              user.profile_pic
+                            )
+                          }
+                          className=" ml-5 border rounded-full p-2 flex items-center justify-center hover:bg-orange-400 cursor-pointer"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="white"
+                            viewBox="0 0 24 24"
+                            strokeWidth="1"
+                            stroke="currentColor"
+                            className="w-6 h-6 text-orange-400"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div className="w-full ">
+                <div className="w-full relative">
                   <ProfileCard user={course.teacher} />
+                  {user && isEnrolled && (
+                    <div
+                      onClick={() => (chat ? setChat(false) : setChat(true))}
+                      className="border mt-5 p-2 shadow cursor-pointer font-semibold text-orange-400 hover:bg-orange-100 flex items-center justify-center"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6 mr-2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
+                        />
+                      </svg>
+                      Chat Room
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
+          {chat && (
+            <div
+              className={` fixed bottom-0 transition-all duration-2000 ease-out right-2`}
+            >
+              <ChatRoom handleCloseChat={handleCloseChat}/>
+            </div>
+          )}
         </div>
       )}
     </div>

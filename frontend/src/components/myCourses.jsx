@@ -16,7 +16,7 @@ const MyCourses = ({
   const [success, setSuccess] = useState(null);
 
   const handleClick = async (id) => {
-    const response = await fetch("http://localhost:4000/api/courses/courses/" + id, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/courses/courses/" + ${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -79,7 +79,7 @@ const MyCourses = ({
                 <td className="p-3 text-sm text-gray-700">
                   <Link
                     to={`/course/${course.id}`}
-                    className="font-bold text-blue-500 hover:underline hover:border-blue-500 border rounded-full px-4 py-2 hover:bg-blue-200"
+                    className="font-bold text-blue-500 hover:underline hover:border-blue-500 border rounded-full hover:bg-blue-200 w-10 h-10 flex justify-center items-center"
                   >
                     {i+1}
                   </Link>

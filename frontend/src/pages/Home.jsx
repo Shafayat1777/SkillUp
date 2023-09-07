@@ -8,7 +8,6 @@ import { Helmet } from "react-helmet";
 // components
 import UserDetails from "../components/userDetails";
 import Features from "../components/FeaturesSection";
-import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import PopularCourses from "../components/PopularCourse";
 
@@ -24,7 +23,7 @@ const Home = () => {
         },
       });
       const json = await respons.json();
-
+      console.log("Hello",respons.json())
       if (respons.ok) {
         dispatch({ type: "SET_USERS", payload: json });
       }
@@ -55,9 +54,6 @@ const Home = () => {
           
           {/* Popular Courses */}
           <PopularCourses/>
-         
-          <Footer/>
-
       </main>
 
       <div className="users">{users && <UserDetails users={users} />}</div>

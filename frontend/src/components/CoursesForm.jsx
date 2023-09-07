@@ -469,11 +469,43 @@ const CoursesForm = ({ handleHideForm, courses, handleDetailsReload }) => {
                             Importing & Cleaning Data
                           </option>
                           <option value="Applied Finance">
-                            Applied Finance
+                            Web Development
+                          </option>
+                          <option value="Applied Finance">
+                            Android App Development
+                          </option>
+                          <option value="Applied Finance">
+                            Basic Programming
+                          </option>
+                          <option value="Applied Finance">
+                            Advance Programming
+                          </option>
+                          <option value="Applied Finance">
+                            System Desing
+                          </option>
+                          <option value="Applied Finance">
+                            Software Engineering
+                          </option>
+                          <option value="Applied Finance">
+                            Software Testing
+                          </option>
+                          <option value="Basic Python Programming">
+                            Basic Python Programming
+                          </option>
+                          <option value="Web Development With PHP">
+                            Web Development With PHP
+                          </option>
+                          <option value="Android App Development With Flutter">
+                            Android App Development With Flutter
+                          </option>
+                          <option value="Software Testing">
+                            Software Testing
                           </option>
                           <option value="Programming">Programming</option>
                           <option value="Management">Management</option>
                           <option value="Case Study">Case Study</option>
+
+                          <option value="UI UX Desing">UI UX Desing</option>
                           <option value="Others">Others</option>
                         </select>
                       </td>

@@ -45,7 +45,12 @@ const deleteUser = async (req, res) => {
         id: id,
       },
     });
-    res.status(200).json(data);
+    res
+      .status(200)
+      .json(
+        "Successfully deleted user:",
+        data.first_name + " " + data.last_name_name
+      );
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -215,6 +220,51 @@ const updateProgressContent = async (req, res) => {
         }
       }
 
+      const checkedContentCount = data
+        .find((course) => course.courseId === courseId)
+        .lessons.reduce(
+          (count, lesson) => {
+            if (lesson.contents) {
+              lesson.contents.forEach((content) => {
+                count.content++;
+                if (content.clicked === true) {
+                  count.clicked++;
+                }
+              });
+            }
+            return count;
+          },
+          { clicked: 0, content: 0 }
+        );
+
+      const checkedQuizCount = data
+        .find((course) => course.courseId === courseId)
+        .lessons.reduce(
+          (count, lesson) => {
+            if (lesson.quiz) {
+              lesson.quiz.forEach((quiz) => {
+                count.quiz++;
+                if (quiz.clicked === true) {
+                  count.clicked++;
+                }
+              });
+            }
+            return count;
+          },
+          { clicked: 0, quiz: 0 }
+        );
+
+      const TotalClicked =
+        checkedContentCount.clicked + checkedQuizCount.clicked;
+      const TotalCount = checkedContentCount.content + checkedQuizCount.quiz;
+
+      // console.log(TotalClicked, TotalCount)
+      if (course) {
+        course.totalClicked = TotalClicked;
+        course.totalCount = TotalCount;
+        console.log(course);
+      }
+
       const updatedUser = await prisma.user.update({
         where: {
           id: userId,
@@ -273,6 +323,51 @@ const updateProgressQuiz = async (req, res) => {
         }
       }
 
+      const checkedContentCount = data
+        .find((course) => course.courseId === courseId)
+        .lessons.reduce(
+          (count, lesson) => {
+            if (lesson.contents) {
+              lesson.contents.forEach((content) => {
+                count.content++;
+                if (content.clicked === true) {
+                  count.clicked++;
+                }
+              });
+            }
+            return count;
+          },
+          { clicked: 0, content: 0 }
+        );
+
+      const checkedQuizCount = data
+        .find((course) => course.courseId === courseId)
+        .lessons.reduce(
+          (count, lesson) => {
+            if (lesson.quiz) {
+              lesson.quiz.forEach((quiz) => {
+                count.quiz++;
+                if (quiz.clicked === true) {
+                  count.clicked++;
+                }
+              });
+            }
+            return count;
+          },
+          { clicked: 0, quiz: 0 }
+        );
+
+      const TotalClicked =
+        checkedContentCount.clicked + checkedQuizCount.clicked;
+      const TotalCount = checkedContentCount.content + checkedQuizCount.quiz;
+
+      // console.log(TotalClicked, TotalCount)
+      if (course) {
+        course.totalClicked = TotalClicked;
+        course.totalCount = TotalCount;
+        console.log(course);
+      }
+
       const updatedUser = await prisma.user.update({
         where: {
           id: userId,
@@ -293,7 +388,7 @@ const updateProgressQuiz = async (req, res) => {
 // login user
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
-
+  // console.log(email, password)
   try {
     // validation
     if (!email || !password) {
@@ -305,6 +400,9 @@ const loginUser = async (req, res) => {
         email: email,
       },
     });
+
+
+    // console.log(user)
 
     if (!user) {
       throw Error("Incorrect email!");
@@ -320,16 +418,17 @@ const loginUser = async (req, res) => {
     // create a token
     const token = createToken(user.id);
 
-    res
-      .status(200)
-      .json({
-        id: user.id,
-        role: user.role,
-        fist_name: user.first_name,
-        token,
-      });
+    res.status(200).json({
+      id: user.id,
+      role: user.role,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      profile_pic: user.profile_pic,
+      isBlocked: user.isBlocked,
+      token,
+    });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error.message});
   }
 };
 
@@ -345,9 +444,7 @@ const signupUser = async (req, res) => {
       throw Error("Email is not valid!");
     }
     if (!validator.isStrongPassword(password)) {
-      throw Error(
-        "Password is not strong enough! Must Contain a degit, symbol, capital and small letter"
-      );
+      throw Error("Password is not strong enough!");
     }
 
     // check if the user already exists
@@ -384,6 +481,7 @@ const signupUser = async (req, res) => {
       id: data.id,
       role: data.role,
       fist_name: data.first_name,
+      profile_pic: data.profile_pic,
       token,
     });
   } catch (error) {
@@ -487,6 +585,26 @@ const deleteProfilePic = async (req, res) => {
   }
 };
 
+const updateUserStatus = async (req, res) => {
+  const { id } = req.params;
+  const { userStatus } = req.body;
+
+  try {
+    const data = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        isBlocked: userStatus,
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getallUser,
   getoneUser,
@@ -501,4 +619,5 @@ module.exports = {
   updateProgressQuiz,
   updateProfilePic,
   deleteProfilePic,
+  updateUserStatus,
 };

@@ -103,6 +103,9 @@ const SignUp = () => {
                 />
               </div>
               <div className="mt-5 relative">
+                <p className="text-orange-400 font-thin">*Password must be at least 8 characters long and include symbols [$~%], digits [0-9], and both capital and lowercase letters.</p>
+              </div>
+              <div className="mt-5 relative">
                 <input
                   type={passwordType}
                   onChange={(e) => setPassword(e.target.value)}

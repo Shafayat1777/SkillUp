@@ -34,7 +34,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       const respons = await fetch(
-        `http://localhost:4000/api/users/${user.id}`,
+        `${process.env.REACT_APP_BACKEND_HOST}/users/${user.id}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -111,7 +111,7 @@ const Profile = () => {
 
   const handledeletePic = async () => {
     const respons = await fetch(
-      `http://localhost:4000/api/users/user/deletePic`,
+      `${process.env.REACT_APP_BACKEND_HOST}/users/user/deletePic`,
       {
         method: "PATCH",
         headers: {

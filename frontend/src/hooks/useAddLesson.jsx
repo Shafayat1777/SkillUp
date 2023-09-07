@@ -17,7 +17,7 @@ export const useAddLesson = () => {
     setIsLoadingLesson(true);
     setErrorLesson(null);
 
-    const response = await fetch("http://localhost:4000/api/courses/lessons", {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/courses/lessons`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

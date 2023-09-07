@@ -2,16 +2,21 @@ import CourseCard from "../components/CourseCard";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-const Courses = () => {
+const Search = () => {
   const { user } = useAuthContext();
+  const { search } = useParams();
   const [courses, setCourses] = useState(null);
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
-      const respons = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/courses/courses/`, {
-      });
+      const respons = await fetch(
+        `http://localhost:4000/api/courses/coursesBysearch/${search}`,
+        {}
+      );
       const json = await respons.json();
 
       if (respons.ok) {
@@ -20,14 +25,14 @@ const Courses = () => {
     };
 
     fetchCourses();
-  }, [user]);
+  }, [user, reload]);
 
   return (
     <div>
       <div className="head">
         <Helmet>
           <meta charSet="utf-8" />
-          <title>Courses || SkillUP</title>
+          <title>Courses - Search || SkillUP</title>
           <link rel="canonical" href="http://mysite.com/example" />
         </Helmet>
       </div>
@@ -52,85 +57,167 @@ const Courses = () => {
           </div>
 
           <div className="catagorys mt-10 flex flex-wrap content-between">
-            <h3 className="mb-2 flex items-center mr-2 text-gray-200 font-semibold rounded-md bg-gray-700 py-0.5 px-2 hover:bg-gray-800 cursor-pointer">
-              All
-            </h3>
+            <Link to={`/courses`}>
+              <h3 className="mb-2 flex items-center mr-2 text-gray-200 font-semibold rounded-md bg-gray-700 py-0.5 px-2 hover:bg-gray-800 cursor-pointer">
+                All
+              </h3>
+            </Link>
             <Link to={`/category/Data Manipulation`}>
-              <h3 className="mb-2 flex items-center mr-2 text-gray-700 font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
+              <h3
+                onClick={() => {
+                  reload ? setReload(false) : setReload(true);
+                }}
+                className="mb-2 flex items-center mr-2 text-gray-700 font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer"
+              >
                 Data Manipulation
               </h3>
             </Link>
-            <Link to={`/category/Data Visualization`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Data Visualization`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Data Visualization
               </h3>
             </Link>
-            <Link to={`/category/Data Engineering`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Data Engineering`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Data Engineering
               </h3>
             </Link>
-            <Link to={`/category/AI & Machine Learning`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/AI & Machine Learning`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 AI & Machine Learning
               </h3>
             </Link>
-            <Link to={`/category/Probability & Satistics`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Probability & Satistics`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Probability & Satistics
               </h3>
             </Link>
-            <Link to={`/category/Importing & Cleaning Data`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Importing & Cleaning Data`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Importing & Cleaning Data
               </h3>
             </Link>
-            <Link to={`/category/Applied Finance`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/AI & Machine Learning`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Applied Finance
               </h3>
             </Link>
-            <Link to={`/category/Basic Python Programming`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Basic Python Programming`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Basic Python Programming
               </h3>
             </Link>
-            <Link to={`/category/Web Development With PHP`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Web Development With PHP`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Web Development With PHP
               </h3>
             </Link>
-            <Link to={`/category/Android App Development With Flutter`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Android App Development With Flutter`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Android App Development With Flutter
               </h3>
             </Link>
-            <Link to={`/category/Software Testing`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Software Testing`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Software Testing
               </h3>
             </Link>
-            <Link to={`/category/Programming`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Programming`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Programming
               </h3>
             </Link>
-            <Link to={`/category/Management`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Management`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Management
               </h3>
             </Link>
-            <Link to={`/category/Case Study`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Case Study`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Case Study
               </h3>
             </Link>
-            <Link to={`/category/UI UX Desing`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/UI UX Desing`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 UI UX Desing
               </h3>
             </Link>
-            <Link to={`/category/Others`}>
+            <Link
+              onClick={() => {
+                reload ? setReload(false) : setReload(true);
+              }}
+              to={`/category/Others`}
+            >
               <h3 className="mb-2 flex items-center mr-2 text-gray-700  font-semibold rounded-md bg-gray-200 py-0.5 px-2 hover:bg-gray-300 cursor-pointer">
                 Others
               </h3>
@@ -167,4 +254,4 @@ const Courses = () => {
   );
 };
 
-export default Courses;
+export default Search;

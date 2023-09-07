@@ -18,6 +18,22 @@ const getallCourse = async (req, res) => {
             socials: true,
           },
         },
+        students: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            progress: true,
+            socials: true,
+            isBlocked: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
         lessons: {
           orderBy: {
             createdAt: "asc",
@@ -32,6 +48,139 @@ const getallCourse = async (req, res) => {
         },
       },
     });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// get all Course by catagory
+const getAllCoursesByCategory = async (req, res) => {
+  const { category } = req.params; // Assuming you pass the category as a URL parameter
+
+  try {
+    const data = await prisma.courses.findMany({
+      where: {
+        category: category, // Replace 'category' with the actual field name in your Courses model
+      },
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        students: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            progress: true,
+            socials: true,
+            isBlocked: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        lessons: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// get all Course by Search
+const getAllCoursesBySearch = async (req, res) => {
+  const { search } = req.params;
+  console.log(search)
+  try {
+    let coursesQuery = {
+      include: {
+        teacher: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            socials: true,
+          },
+        },
+        students: {
+          select: {
+            first_name: true,
+            last_name: true,
+            about: true,
+            email: true,
+            role: true,
+            institute: true,
+            designation: true,
+            progress: true,
+            socials: true,
+            isBlocked: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        lessons: {
+          orderBy: {
+            createdAt: "asc",
+          },
+          include: {
+            contents: {
+              orderBy: {
+                createdAt: "asc",
+              },
+            },
+          },
+        },
+      },
+    };
+
+    if (search) {
+      // Filter by search term
+      coursesQuery = {
+        ...coursesQuery,
+        where: {
+          OR: [
+            {
+              title: {
+                startsWith: search, // Use 'startsWith' for similarity search
+              },
+            }
+          ],
+        },
+      };
+    }
+
+    const data = await prisma.courses.findMany(coursesQuery);
 
     res.status(200).json(data);
   } catch (error) {
@@ -69,7 +218,11 @@ const getmyCourse = async (req, res) => {
             role: true,
             institute: true,
             designation: true,
+            progress: true,
             socials: true,
+            isBlocked: true,
+            createdAt: true,
+            updatedAt: true,
           },
         },
         lessons: {
@@ -126,6 +279,15 @@ const getoneCourse = async (req, res) => {
             institute: true,
             designation: true,
             socials: true,
+            progress: true,
+            isBlocked: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        },
+        Comment: {
+          orderBy: {
+            createdAt: "desc",
           },
         },
         lessons: {
@@ -216,6 +378,7 @@ const deleteCourse = async (req, res) => {
             quiz: true,
           },
         },
+        Comment: true,
       },
     });
 
@@ -274,6 +437,18 @@ const deleteCourse = async (req, res) => {
         },
       },
     });
+
+    // Delete the comments related to the course
+    const commentIds = course.Comment.map((comment) => comment.id);
+    await prisma.comment.deleteMany({
+      where: {
+        id: {
+          in: commentIds,
+        },
+      },
+    });
+
+    console.log(course);
 
     // Delete the course itself
     await prisma.courses.delete({
@@ -619,6 +794,66 @@ const addQuiz = async (req, res) => {
   }
 };
 
+const updateCourseStatus = async (req, res) => {
+  const { id } = req.params;
+  const { courseStatus } = req.body;
+
+  //update data to db
+  try {
+    const data = await prisma.courses.update({
+      where: {
+        id,
+      },
+      data: {
+        course_status: courseStatus,
+      },
+    });
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+// add a comment
+const addComment = async (req, res) => {
+  const { comment, courseId, first_name, last_name, profile_pic } = req.body;
+  const authorId = req.user.id;
+
+  console.log(first_name, last_name);
+  // add data to db
+  try {
+    if (!comment) {
+      throw Error("All fields must me filled!");
+    }
+
+    const course = await prisma.courses.findUnique({
+      where: {
+        id: courseId,
+      },
+    });
+
+    if (!course) {
+      throw Error("No such course exists!");
+    }
+
+    const data = await prisma.comment.create({
+      data: {
+        comment,
+        courseId,
+        first_name,
+        last_name,
+        profile_pic,
+        authorId,
+      },
+    });
+
+    res.status(200).json("Added a comment");
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createCourse,
   getallCourse,
@@ -636,4 +871,8 @@ module.exports = {
   addContent,
   getAllContent,
   addQuiz,
+  updateCourseStatus,
+  addComment,
+  getAllCoursesByCategory,
+  getAllCoursesBySearch,
 };

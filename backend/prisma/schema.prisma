@@ -31,6 +31,7 @@ model User {
   updatedAt      DateTime  @updatedAt
   courses        Courses[] @relation("Enrollments") // Students can enroll in multiple courses
   coursesCreated Courses[] @relation("CreatedBy") // Teachers can create multiple courses
+  Comment        Comment[]
 }
 
 model Courses {
@@ -49,6 +50,7 @@ model Courses {
   teacherId         String
   students          User[]        @relation("Enrollments") // Course can have multiple enrolled students
   lessons           Lessons[] // One-to-many relationship with Lessions
+  Comment           Comment[]
 }
 
 model Lessons {
@@ -81,6 +83,20 @@ model Quiz {
   updatedAt DateTime @updatedAt
   lessons   Lessons? @relation(fields: [lessonsId], references: [id])
   lessonsId String?
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  comment   String
+  first_name     String?
+  last_name      String?
+  profile_pic    String?   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  courseId  String // Foreign key referencing the Courses table
+  course    Courses  @relation(fields: [courseId], references: [id])
+  authorId  String // Foreign key referencing the User table (author of the comment)
+  author    User     @relation(fields: [authorId], references: [id])
 }
 
 enum Role {

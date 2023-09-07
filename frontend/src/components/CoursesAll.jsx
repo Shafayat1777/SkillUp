@@ -18,7 +18,7 @@ const CoursesAll = ({
   const handleChangeUserStatus = async (courseId, courseStatus) => {
     if (user) {
       const response = await fetch(
-        `${REACT_APP_BACKEND_HOST}/courses/course/updateCourseStatus/${courseId}`,
+        `${process.env.REACT_APP_BACKEND_HOST}/courses/course/updateCourseStatus/${courseId}`,
         {
           method: "PATCH",
           headers: {
@@ -39,7 +39,7 @@ const CoursesAll = ({
 
   const handleClick = async (id) => {
     const response = await fetch(
-      `${REACT_APP_BACKEND_HOST}/courses/courses/ + ${id}`,
+      `${process.env.REACT_APP_BACKEND_HOST}/courses/courses/ + ${id}`,
       {
         method: "DELETE",
         headers: {

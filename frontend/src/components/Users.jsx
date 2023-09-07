@@ -31,7 +31,7 @@ const Users = ({ users, handleReload, closeShowDetails }) => {
   };
 
   const handleClick = async (id) => {
-    const response = await fetch(`${REACT_APP_BACKEND_HOST}/users/ + ${id}`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_HOST}/users/ + ${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${user.token}`,

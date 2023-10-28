@@ -74,6 +74,23 @@ This project has been created as a part of the CSE412 software engineering cours
       </tr>
     </table>
 
+## Technologies Used in this project
+
+- Programming Language: JavaScript
+- Markup Language: HTML, CSS
+- Responsiveness: Tailwind CSS
+- UI/Layout Design: Adobe XD, WireframeIO
+- Database: MySQL, PRISMA ORM
+- Modeling Database: ERDPlus
+- Deployed On: AWS EC2
+- Web Server: NodeJS, Socket.IO, WebRTC
+- Front-End: React
+- Authentication: JWT
+- Hashing Password: BCRYPT
+- Repository Management & Version Control: GitHub
+- Task/Project Management & Distribution: Trello
+- IDE: Visual Studio Code
+
 ## UI Layouts
 
 <img src="/screenshots/p16.png"

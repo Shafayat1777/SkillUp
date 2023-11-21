@@ -36,7 +36,7 @@ This project has been created as a part of the CSE412 software engineering cours
       </tr>
       <tr>
         <td>Md. Shafayat Hossain</td>
-        <td>Backend Developer</td>
+        <td>Backend Developer | Front-End Developer</td>
         <td>
           <a
             href="https://www.linkedin.com/in/shafayat-hossain-84a32b1b8/"
